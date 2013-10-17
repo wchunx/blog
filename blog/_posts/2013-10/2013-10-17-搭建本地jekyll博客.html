@@ -1,0 +1,230 @@
+---
+layout     : post
+title      : 搭建本地jekyll博客
+categories : develop
+tags       : org-mode jekyll
+description: |
+  记录我使用jekyll+emacs+org-mode搭建个人博客的过程
+---
+
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 搭建本地jekyll博客</a>
+<ul>
+<li><a href="#sec-1-1">1.1 安装jekyll</a></li>
+<li><a href="#sec-1-2">1.2 创建博客</a></li>
+</ul>
+</li>
+<li><a href="#sec-2">2 用Emacs写jekyll博客</a>
+<ul>
+<li><a href="#sec-2-1">2.1 org-jekyll-mode介绍</a></li>
+<li><a href="#sec-2-2">2.2 org-jekyll-mode的使用方法</a>
+<ul>
+<li><a href="#sec-2-2-1">2.2.1 发布当前文件</a></li>
+<li><a href="#sec-2-2-2">2.2.2 快捷键</a></li>
+</ul></li>
+</ul>
+</li>
+<li><a href="#sec-3">3 参考资料</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">搭建本地jekyll博客</h2>
+<div class="outline-text-2" id="text-1">
+
+
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">安装jekyll</h3>
+<div class="outline-text-3" id="text-1-1">
+
+
+
+
+<pre class="src src-shell">#&#23433;&#35013;ruby
+sudo apt-get install ruby1.9.1-dev
+#&#22312;&#22269;&#20869;&#21487;&#33021;Ruby&#30340;Gem sources&#24456;&#24930;&#65292;&#22312;install jekyll&#21069;&#21487;&#20197;&#25191;&#34892;&#19979;&#38754;&#20004;&#20010;&#21629;&#20196;
+&#26367;&#25442;gem sources&#20026;&#28120;&#23453;&#30340;gem&#38236;&#20687;&#12290;&#20294;&#25105;&#27809;&#26377;&#25442;&#65292;&#23433;&#35013;&#20063;&#26159;&#27809;&#38382;&#39064;&#30340;
+gem sources -r http://rubygems.org/
+gem sources -a http://ruby.taobao.org/
+#&#23433;&#35013;jekyll
+sudo gem install jekyll
+#&#23433;&#35013;rdiscount
+sudo gem install rdiscount
+#&#26597;&#30475;jekyll&#29256;&#26412;
+jekyll -v
+jekyll 1.2.1
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">创建博客</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>1.可以直接使用jekyll命令创建一个简单的jekyll站点架构
+</p>
+
+
+<pre class="example">jekyll new Myblog
+cd Myblog
+jekyll serve
+</pre>
+
+<p>
+启动了jekyll serve后直接在浏览器中访问<a href="http://localhost:4000">http://localhost:4000</a> 就可以看到效果了
+</p>
+<p>
+2.还可以直接clone现成的jekyll框架如<a href="#jekyllbootstrap.com">Jekyll-Bootstrap</a>或<a href="http://octopress.org/">Octopress</a>
+</p>
+
+
+<pre class="example">git clone https://github.com/plusjade/jekyll-bootstrap.git
+cd jekyll-bootstrap
+jekyll serve
+</pre>
+
+<p>
+访问<a href="http://localhost:4000">http://localhost:4000</a> 查看。
+</p>
+<p>
+在网上看到好的jekyll博客，就到github上搜索，直接clone下来，做些修改就可以用作自己的框架，
+更可以学习。
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">用Emacs写jekyll博客</h2>
+<div class="outline-text-2" id="text-2">
+
+<p>jekyll默认是将Markdown文档转换为静态网页，本身是不支持对org-mode的文件进行转换。但有一个
+开源项目<a href="https://github.com/jsuper/org-jekyll-mode">org-jeky-mode</a> 它可以将org文档自动转换为html并放到jekyll的_posts目录下。
+</p>
+</div>
+
+<div id="outline-container-2-1" class="outline-3">
+<h3 id="sec-2-1">org-jekyll-mode介绍</h3>
+<div class="outline-text-3" id="text-2-1">
+
+<p>org-jekyll-mode是一个emacs的插件，能够帮助用户使用org-mode来编写jekyll的博客文章,使用
+org-jekyll-mode既可以快速创建类似jekyll博客文章命名格式的org-mode文件，也能够创建一个文
+件名不带时间前缀的文件。
+</p>
+<p>
+同时，org-jekyll-mode能够将最终导出的文件格式化成标准的jekyll博客文章格式。如果你创建的
+org-mode文件的文件名是不带时间戳前缀的，那么org-jekyll-mode在导出最终的html文件之后，
+会在输出文件的文件名之前自动加上时间戳，如果你在org-mode-file中设定了#+DATE:选项，那么最
+终导出文件的时间戳则会以这个值为准，否则就采用当前时间。同时，org-jekyll-mode也可以直接在
+org-mode文件中控制最终导出文件的yaml font matter，目前包含了所有jekyll支持的yaml front
+matter keywords。不过，如果需要在org-mode文件中使用的话，这些关键字前面都需要加上#+YAML/
+前缀。同时keyword最好大写。
+</p></div>
+
+</div>
+
+<div id="outline-container-2-2" class="outline-3">
+<h3 id="sec-2-2">org-jekyll-mode的使用方法</h3>
+<div class="outline-text-3" id="text-2-2">
+
+<p>org-jekyll-mode使用非常简单，只需要将其最新的代码克隆到本机，在.emacs里面添加如下代码:
+</p>
+
+
+<pre class="example">;org-jekyll
+(add-to-list 'load-path "~/.emacs.d/plugins/org-jekyll-mode")
+(require 'org-jekyll-mode)
+(setq org-jekyll/jekyll-project-root "~/Myblog")
+(setq org-jekyll/org-mode-project-root "~/Myblog/org")
+</pre>
+
+<p>
+注意一些变量值的定义
+</p>
+<p>
+<b>org-jekyll/jekyll-project-root</b>
+</p>
+<p>
+这个变量指定了你的jekyll项目的根目录。因为org-jekyll-mode会根据这个路径，
+将其文件发布到这个目录的相应子目录下。
+</p>
+<p>
+<b>org-jekyll/org-mode-project-root</b>
+</p>
+<p>
+该变量指定了你的org-mode文件存放的目录。
+</p>
+<p>
+<b>org-jekyll/org-mode-static-files-folder-name</b>
+</p>
+<p>
+这个变量指定了你在org-mode项目目录下，用于存放静态文件，如：图片、css等文件的目录名。
+默认是你的org-mode项目的根目录。
+</p>
+</div>
+
+<div id="outline-container-2-2-1" class="outline-4">
+<h4 id="sec-2-2-1">发布当前文件</h4>
+<div class="outline-text-4" id="text-2-2-1">
+
+<p>org文件编辑完后只需执行M-x org-jekyll/publish-project即完成发布。
+</p></div>
+
+</div>
+
+<div id="outline-container-2-2-2" class="outline-4">
+<h4 id="sec-2-2-2">快捷键</h4>
+<div class="outline-text-4" id="text-2-2-2">
+
+<p><b>[C-c C-n]</b> 创建一个新的org-mode文件，但是其文件名并不会带上时间戳。如果需要将在某一个子目录
+下创建该文件，只需要在目录名和文件名之间使用斜杠分开即可，如：2013/hello-world 就会在
+org-mode-project-root下，如果没有2013目录，则创建，否则在2013目录下创建hello-world.org文件.
+</p>
+<p>
+<b>[C-c C-d]</b> 功能跟C-c C-n一样，不过这个快捷键创建的文件会带上时间 戳，也就是标准的jekyll post文件名格式。
+</p>
+<p>
+<b>[C-c C-p]</b> 发布当前文件
+</p></div>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3">参考资料</h2>
+<div class="outline-text-2" id="text-3">
+
+<p><a href="http://www.soimort.org/posts/157/">soimort</a>
+</p>
+<p>
+<a href="http://www.zhanxin.info/jekyll/">Jekyll教程</a>
+</p>
+<p>
+<a href="http://www.cnblogs.com/waterlin/archive/2011/10/09/2203996.html">Org-mode标记语言的一些疑问</a>
+</p>
+<p>
+<a href="http://demi-panda.com/2012/10/30/install-jekyll/">Linux安装Jekyll环境</a>
+</p>
+<p>
+<a href="http://jsuper.github.io/posts/using-org-mode-to-write-jekyll-post.html">使用org-mode撰写jekyll博文</a>
+</p>
+<p>
+<a href="http://pieux.github.io/blog/2013-05-02-set-up-octopress-with-org-mode.html">Octopress搭配Org Mode写博客</a>
+</p>
+<p>
+<a href="http://wenshanren.org/?p=327">Emacs：在 org-mode 中插入源代码块</a>
+</p>
+<p>
+<a href="http://www.cnblogs.com/holbrook/archive/2012/04/12/2444992.html">Emacs学习笔记(9):org-mode，最好的文档编辑利器，没有之一</a>
+</p></div>
+</div>
