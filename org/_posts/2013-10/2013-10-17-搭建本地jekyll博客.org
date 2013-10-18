@@ -1,18 +1,21 @@
 #+BEGIN_HTML
 ---
-layout     : post
-title      : 搭建本地jekyll博客
-categories : develop
-tags       : org-mode jekyll
-description: |
-  记录我使用jekyll+emacs+org-mode搭建个人博客的过程
+layout: post
+keywords: blog
+description: blog
+title: 搭建本地jekyll博客
+categories: [learning, jekyll,org-mode]
+tags: [jekyll]
+group: archive
+icon: globe
+featured: true
 ---
 #+END_HTML
 
 #+OPTIONS: ^:{}
 * 搭建本地jekyll博客
 ** 安装jekyll
-#+BEGIN_SRC shell
+#+BEGIN_SRC sh
 #安装ruby
 sudo apt-get install ruby1.9.1-dev
 #在国内可能Ruby的Gem sources很慢，在install jekyll前可以执行下面两个命令
@@ -29,7 +32,7 @@ jekyll 1.2.1
 #+END_SRC
 ** 创建博客
 1.可以直接使用jekyll命令创建一个简单的jekyll站点架构
-#+BEGIN_EXAMPLE shell
+#+BEGIN_EXAMPLE sh
 jekyll new Myblog
 cd Myblog
 jekyll serve
@@ -37,7 +40,7 @@ jekyll serve
 启动了jekyll serve后直接在浏览器中访问http://localhost:4000 就可以看到效果了
 
 2.还可以直接clone现成的jekyll框架如[[jekyllbootstrap.com][Jekyll-Bootstrap]]或[[http://octopress.org/][Octopress]]
-#+BEGIN_EXAMPLE shell
+#+BEGIN_EXAMPLE sh
 git clone https://github.com/plusjade/jekyll-bootstrap.git
 cd jekyll-bootstrap
 jekyll serve
