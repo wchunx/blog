@@ -4,11 +4,11 @@ layout: post
 keywords: blog
 description: blog
 title: 搭建本地jekyll博客
-categories: [learning, jekyll,org-mode]
-tags: [jekyll]
+categories: [Emacs, blog]
+tags: [jekyll, org-mode]
 group: archive
 icon: globe
-featured: true
+featured: false
 ---
 #+END_HTML
 
