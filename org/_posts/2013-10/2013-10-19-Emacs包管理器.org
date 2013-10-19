@@ -1,0 +1,98 @@
+#+BEGIN_HTML
+---
+layout: post
+keywords: 
+description: 
+title: Emacs包管理器
+categories: [Emacs]
+tags: [Emacs]
+group: archive
+icon: code
+featured: false
+---
+#+END_HTML
+#+OPTIONS: ^:{}
+* Emacs包管理器
+Emacs的包管理器简化了插件安装的过程。这里介绍两种ELPA和El-get。ELPA是官方包管理器。而El-get宣称支持多种安装方式，ELPA方法只是其中一种.
+
+** ELPA
+*** 安装和配置
+将下面的代码复制到Emacs的 *scratch* buffer中, 将光标移动到代码的最后, 然后按下 C-j,
+一切就都搞定了
+
+#+BEGIN_SRC sh
+(let ((buffer (url-retrieve-synchronously
+               "http://tromey.com/elpa/package-install.el")))
+ (save-excursion
+   (set-buffer buffer)
+   (goto-char (point-min))
+   (re-search-forward "^$" nil 'move)
+   (eval-region (point) (point-max))
+   (kill-buffer (current-buffer))))
+#+END_SRC
+
+上面的代码执行完毕后，会多出"~/.emacs.d/elpa"目录。所有通过ELPA安装的扩展都放在这里。
+并且.emacs中自动添加了相关代码。
+
+[[http://elpa.gnu.org/packages/][官方的源服务器]] 可选的扩展太少了， 添加marmalade的源。添加下面的代码到.emacs中。
+
+#+BEGIN_SRC elisp
+(require 'package)
+;; Add the original Emacs Lisp Package Archive
+(add-to-list 'package-archives
+             '("elpa" . "http://tromey.com/elpa/"))
+;; Add the user-contributed repository
+(add-to-list 'package-archives
+             '("marmalade" . "http://marmalade-repo.org/packages/"))
+(package-initialize)
+#+END_SRC
+
+M-x eval-buff报错Symbol's value as variable is void: package-archives，搜了下是
+package.el的版本问题。到[[http://marmalade-repo.org/][Marmalde]] 下载package.el替换掉原来的即可。
+
+*** 插件安装方式
+M-x package-list-packages会列出所有的扩展，将光标移动到需要安装的扩展上，按下i键，该扩展
+前就会出现I标记，选好之后按下x键即可安装选定的扩展。按键说明：
+| 按键 | 功能                   |
+|------+------------------------|
+| n    | 下移一行               |
+| p    | 上移一行               |
+| r    | 刷新扩展列表           |
+| i    | 标记为安装             |
+| d    | 标记为删除             |
+| u    | 取消标记               |
+| g    | 还原所有标记           |
+| x    | 执行标记               |
+| q    | 关闭当前窗口           |
+| h    | 帮助                   |
+| ?    | 查看当前扩展的详细信息 |
+** El-get
+*** 安装和配置
+安装方式类似ELPA，复制下面的代码到scratch中，移动光标到最后，按下C-j然后就可坐等安装完成了。
+
+#+BEGIN_SRC elisp
+;; So the idea is that you copy/paste this code into your *scratch* buffer,
+;; hit C-j, and you have a working el-get.
+(url-retrieve
+ "https://github.com/dimitri/el-get/raw/master/el-get-install.el"
+ (lambda (s)
+   (end-of-buffer)
+   (eval-print-last-sexp))
+#+END_SRC
+
+安装完毕后生成"~/.emacs.d/el-get/"目录。
+*** 扩展安装方式
+安装一个Lisp扩展,如:M-x : el-get-install RET emacs-w3m RET
+删除一个Lisp扩展,如:M-x : el-get-remove RET emacs-w3m RET
+升级一个Lisp扩展,如:M-x : el-get-update RET emacs-w3m RET
+升级全部Lisp扩展,如:M-x : el-get-update-all RET
+其他全部请看[[https://github.com/dimitri/el-get][官方文档]]
+** 参考资料
+[[http://xiaogaozi.blogspot.com/2011/01/elpa-emacs.html][ELPA: 下一代Emacs的扩展管理器]]
+[[http://emacser.com/el-get.htm][GNU Emacs的终极扩展管理工具 — el-get]]
+[[http://www.joshuazhang.net/posts/2013/Apr/el-get-intro.html][El-get——emacs包管理利器]]
+[[http://blog.venmos.com/blog/2012/08/30/el-get/][El-get Emacs里的 Apt-get]]
+[[http://blog.venmos.com/blog/2013/07/08/ace-jump-switch-windows/][Emacs快速切换光标位置与便捷切换窗口]]
+[[http://amazingjxq.com/2013/04/17/%E4%BD%BF%E7%94%A8el-get%E7%AE%A1%E7%90%86emacs%E5%8C%85/][使用el-get管理emacs包]]
+[[http://jerusalemdax.wordpress.com/2013/02/28/%E5%85%B3%E4%BA%8Eemacs%E7%9B%AE%E5%89%8D%E6%9C%80%E5%A5%BD%E7%9A%84%E9%85%8D%E7%BD%AE/][关于emacs目前最好的配置]]
+[[http://blog.csdn.net/redguardtoo/article/details/7222501][一年成为Emacs高手(像神一样使用编辑器)]]
