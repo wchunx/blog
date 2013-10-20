@@ -77,3 +77,5 @@ xcscope沿用了Emacs23的xcscope.el,yasnippet直接从ELPA安装即可。
 (require 'yasnippet)
 (yas-global-mode 1)
 #+END_SRC
+** 参考资料
+[[http://www.latelee.org/embedded-linux/64-learning-elinux-4-my-emacs-i.htmlhttp://www.latelee.org/embedded-linux/64-learning-elinux-4-my-emacs-i.html][嵌入式之行(4)：我的emacs(上)]]
