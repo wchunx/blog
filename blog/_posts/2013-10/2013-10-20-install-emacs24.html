@@ -1,0 +1,108 @@
+---
+layout: post
+keywords: 
+description: 
+title: 安装Emacs24.3.1
+categories: [Emacs]
+tags: [Emacs]
+group: archive
+icon: code
+featured: false
+---
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 安装Emacs24.3.1</a>
+<ul>
+<li><a href="#sec-1-1">1.1 卸载Emacs23</a></li>
+<li><a href="#sec-1-2">1.2 安装Emacs24.3.1</a></li>
+<li><a href="#sec-1-3">1.3 相关问题</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">安装Emacs24.3.1</h2>
+<div class="outline-text-2" id="text-1">
+
+
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">卸载Emacs23</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>之前用的Emacs是Ubuntu12.04系统apt-get下来的，要安装Emacs24.3.1需要先卸载掉。
+</p>
+
+
+<pre class="src src-sh">sudo apt-get purge emacs23* emacs23-bin-common* emacs23-common* emacsen-common &amp;&amp; sudo apt-get autoremove
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">安装Emacs24.3.1</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>用相对比较便捷的PPA方式安装
+</p>
+
+
+<pre class="src src-sh">sudo add-apt-repository ppa:cassou/emacs
+sudo apt-get update
+sudo apt-get install emacs24 emacs24-el emacs24-common-non-dfsg
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">相关问题</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>安装Emacs24后，继续使用以前Emacs23的.emacs出现了点问题，记录如下
+</p>
+<p>
+1.安装ELPA包管理器并安装扩展，Emacs启动报错“cannot open load file” for ~/.emacs.d/elpa/archives/-pkg
+</p>
+<p>
+解决办法：touch ~/.emacs.d/elpa/archives/-pkg
+</p>
+<p>
+2.启动Emacs报错Symbol's function definition is void: loop
+</p>
+<p>
+解决办法：.emacs添加 (require 'cl) 
+</p>
+<p>
+3.Emacs23中去掉工具栏菜单栏和滚动条的配置
+</p>
+
+
+<pre class="src src-elisp">(tool-bar-mode nil)  
+(menu-bar-mode nil)  
+(scroll-bar-mode nil)  
+</pre>
+
+<p>
+Emacs24中上面的设置是无效的，需要改为
+</p>
+
+
+<pre class="src src-elisp">(tool-bar-mode 0)  
+(menu-bar-mode 0)  
+(scroll-bar-mode 0)  
+</pre>
+
+
+</div>
+</div>
+</div>

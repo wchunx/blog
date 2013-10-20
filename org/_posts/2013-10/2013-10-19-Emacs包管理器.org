@@ -52,7 +52,9 @@ package.el的版本问题。到[[http://marmalade-repo.org/][Marmalde]] 下载pa
 
 *** 插件安装方式
 M-x package-list-packages会列出所有的扩展，将光标移动到需要安装的扩展上，按下i键，该扩展
-前就会出现I标记，选好之后按下x键即可安装选定的扩展。按键说明：
+前就会出现I标记，选好之后按下x键即可安装选定的扩展。
+
+按键说明：
 | 按键 | 功能                   |
 |------+------------------------|
 | n    | 下移一行               |
@@ -83,16 +85,27 @@ M-x package-list-packages会列出所有的扩展，将光标移动到需要安�
 安装完毕后生成"~/.emacs.d/el-get/"目录。
 *** 扩展安装方式
 安装一个Lisp扩展,如:M-x : el-get-install RET emacs-w3m RET
+
 删除一个Lisp扩展,如:M-x : el-get-remove RET emacs-w3m RET
+
 升级一个Lisp扩展,如:M-x : el-get-update RET emacs-w3m RET
+
 升级全部Lisp扩展,如:M-x : el-get-update-all RET
+
 其他全部请看[[https://github.com/dimitri/el-get][官方文档]]
 ** 参考资料
 [[http://xiaogaozi.blogspot.com/2011/01/elpa-emacs.html][ELPA: 下一代Emacs的扩展管理器]]
+
 [[http://emacser.com/el-get.htm][GNU Emacs的终极扩展管理工具 — el-get]]
+
 [[http://www.joshuazhang.net/posts/2013/Apr/el-get-intro.html][El-get——emacs包管理利器]]
+
 [[http://blog.venmos.com/blog/2012/08/30/el-get/][El-get Emacs里的 Apt-get]]
+
 [[http://blog.venmos.com/blog/2013/07/08/ace-jump-switch-windows/][Emacs快速切换光标位置与便捷切换窗口]]
+
 [[http://amazingjxq.com/2013/04/17/%E4%BD%BF%E7%94%A8el-get%E7%AE%A1%E7%90%86emacs%E5%8C%85/][使用el-get管理emacs包]]
+
 [[http://jerusalemdax.wordpress.com/2013/02/28/%E5%85%B3%E4%BA%8Eemacs%E7%9B%AE%E5%89%8D%E6%9C%80%E5%A5%BD%E7%9A%84%E9%85%8D%E7%BD%AE/][关于emacs目前最好的配置]]
+
 [[http://blog.csdn.net/redguardtoo/article/details/7222501][一年成为Emacs高手(像神一样使用编辑器)]]

@@ -1,0 +1,79 @@
+#+BEGIN_HTML
+---
+layout: post
+keywords: 
+description: 
+title: Emacs24.3.1安装cedet和ecb
+categories: [Emacs]
+tags: [Emacs]
+group: archive
+icon: compass
+featured: false
+---
+#+END_HTML
+* Emacs24.3.1安装cedet和ecb
+将Emacs23升级到Emacs24.3.1后，重新安装了cedet和ecb，记录在案。
+** 安装cedet
+到[[http://sourceforge.net/projects/cedet/?source=dlp][sourceforge]] 下载cedet-1.1.tar.gz,解压到.emacs.d/plugins/目录，make一下就ok了。
+** 安装ecb
+安装ecb的过程就麻烦一下。
+
+1.同样到[[http://sourceforge.net/projects/ecb/?source=directory][sourceforge]] 下载ecb-2.4.0.tar.gz,解压到.emacs.d/plugins/目录。
+
+2.make报错
+#+BEGIN_SRC sh
+Byte-compiling ECB with LOADPATH= ...
+emacs -batch -no-site-file -l ecb-compile-script --eval '(ecb-byte-compile t)'
+Cannot open load file: /home/latelee/.emacs.d/ecb-2.40/c:/Programme/emacs-22.3/site-lisp/package-development/cedet/common/cedet.el
+make: *** [ecb] 错误 255
+#+END_SRC
+ecb依赖于cedet的,修改Makefile文件，51行CEDET=这一行，它的默认路径不是我们安装cedet的路径，
+
+修改为实际cedet的路径。CEDET=~/.emacs.d/plugins/cedet-1.1
+
+再make报错
+#+BEGIN_SRC sh
+Error: ECB can only be used with cedet [1.0pre6, 1.0.9]! Please install it and restart Emacs!
+#+END_SRC
+最新的ecb-2.40只兼容cedet版本 1.0.6pre ~ 1.0.9，解决的方法是修改/path/to/ecb-2.40/ecb-upgrade.el，将1146行的
+
+(defconst ecb-required-cedet-version-max '(1 0 4 9))
+
+改为
+
+(defconst ecb-required-cedet-version-max '(1 1 4 9))
+
+再make，成功
+** xcscope和yasnippet的安装
+xcscope沿用了Emacs23的xcscope.el,yasnippet直接从ELPA安装即可。
+** 配置
+下面代码加入.emacs
+#+BEGIN_SRC elisp
+;cedet
+(load-file "~/.emacs.d/plugins/cedet-1.1/common/cedet.el")
+
+;ecb
+(add-to-list 'load-path "~/.emacs.d/plugins/ecb-2.40")
+(require 'ecb)
+(setq stack-trace-on-error nil)
+;鼠标支持：Emacs中执行“M-x ecb-customize-most-important”，找到“Ecb Primary Secondary Mouse Buttons”选项，将其设为“Primary: mouse-1, secondary: mouse-2”，并且>以“Save for Future Sessions”保存。
+;;;自动启动ecb
+;; (setq ecb-auto-activate t)
+;;;F7:打开ecb
+(global-set-key  [(f7)] 'ecb-activate)
+;;;F8:关闭ecb
+(global-set-key  [(f8)] 'ecb-deactivate)
+;关闭ecb启动窗口
+(setq ecb-tip-of-the-day nil)
+
+;安装cscope apt-get install cscope									 
+;cscope
+(load-file "~/.emacs.d/plugins/xcscope.el")
+(require 'xcscope)
+(setq cscope-do-not-update-database t)									 
+;yasnippet
+(add-to-list 'load-path
+             "~/.emacs.d/elpa/yasnippet-0.8.0")
+(require 'yasnippet)
+(yas-global-mode 1)
+#+END_SRC

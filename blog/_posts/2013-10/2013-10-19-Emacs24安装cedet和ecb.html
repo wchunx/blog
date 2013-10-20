@@ -1,0 +1,146 @@
+---
+layout: post
+keywords: 
+description: 
+title: Emacs24.3.1安装cedet和ecb
+categories: [Emacs]
+tags: [Emacs]
+group: archive
+icon: compass
+featured: false
+---
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 Emacs24.3.1安装cedet和ecb</a>
+<ul>
+<li><a href="#sec-1-1">1.1 安装cedet</a></li>
+<li><a href="#sec-1-2">1.2 安装ecb</a></li>
+<li><a href="#sec-1-3">1.3 xcscope和yasnippet的安装</a></li>
+<li><a href="#sec-1-4">1.4 配置</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">Emacs24.3.1安装cedet和ecb</h2>
+<div class="outline-text-2" id="text-1">
+
+<p>将Emacs23升级到Emacs24.3.1后，重新安装了cedet和ecb，记录在案。
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">安装cedet</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>到<a href="http://sourceforge.net/projects/cedet/?source=dlp">sourceforge</a> 下载cedet-1.1.tar.gz,解压到.emacs.d/plugins/目录，make一下就ok了。
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">安装ecb</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>安装ecb的过程就麻烦一下。
+</p>
+<p>
+1.同样到<a href="http://sourceforge.net/projects/ecb/?source=directory">sourceforge</a> 下载ecb-2.4.0.tar.gz,解压到.emacs.d/plugins/目录。
+</p>
+<p>
+2.make报错
+</p>
+
+
+<pre class="src src-sh">Byte-compiling ECB with <span class="org-variable-name">LOADPATH</span>= ...
+emacs -batch -no-site-file -l ecb-compile-script --eval <span class="org-string">'(ecb-byte-compile t)'</span>
+Cannot open load file: /home/latelee/.emacs.d/ecb-2.40/c:/Programme/emacs-22.3/site-lisp/package-development/cedet/common/cedet.el
+make: *** [ecb] &#38169;&#35823; 255
+</pre>
+
+<p>
+ecb依赖于cedet的,修改Makefile文件，51行CEDET=这一行，它的默认路径不是我们安装cedet的路径，
+</p>
+<p>
+修改为实际cedet的路径。CEDET=~/.emacs.d/plugins/cedet-1.1
+</p>
+<p>
+再make报错
+</p>
+
+
+<pre class="src src-sh">Error: ECB can only be used with cedet [1.0pre6, 1.0.9]! Please install it and restart Emacs!
+</pre>
+
+<p>
+最新的ecb-2.40只兼容cedet版本 1.0.6pre ~ 1.0.9，解决的方法是修改/path/to/ecb-2.40/ecb-upgrade.el，将1146行的
+</p>
+<p>
+(defconst ecb-required-cedet-version-max '(1 0 4 9))
+</p>
+<p>
+改为
+</p>
+<p>
+(defconst ecb-required-cedet-version-max '(1 1 4 9))
+</p>
+<p>
+再make，成功
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">xcscope和yasnippet的安装</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>xcscope沿用了Emacs23的xcscope.el,yasnippet直接从ELPA安装即可。
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">配置</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>下面代码加入.emacs
+</p>
+
+
+<pre class="src src-elisp"><span class="org-comment-delimiter">;</span><span class="org-comment">cedet</span>
+(load-file <span class="org-string">"~/.emacs.d/plugins/cedet-1.1/common/cedet.el"</span>)
+
+<span class="org-comment-delimiter">;</span><span class="org-comment">ecb</span>
+(add-to-list 'load-path <span class="org-string">"~/.emacs.d/plugins/ecb-2.40"</span>)
+(<span class="org-keyword">require</span> '<span class="org-constant">ecb</span>)
+(setq stack-trace-on-error nil)
+<span class="org-comment-delimiter">;</span><span class="org-comment">&#40736;&#26631;&#25903;&#25345;&#65306;Emacs&#20013;&#25191;&#34892;&#8220;M-x ecb-customize-most-important&#8221;&#65292;&#25214;&#21040;&#8220;Ecb Primary Secondary Mouse Buttons&#8221;&#36873;&#39033;&#65292;&#23558;&#20854;&#35774;&#20026;&#8220;Primary: mouse-1, secondary: mouse-2&#8221;&#65292;&#24182;&#19988;&gt;&#20197;&#8220;Save for Future Sessions&#8221;&#20445;&#23384;&#12290;</span>
+<span class="org-comment-delimiter">;;;</span><span class="org-comment">&#33258;&#21160;&#21551;&#21160;ecb</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">(setq ecb-auto-activate t)</span>
+<span class="org-comment-delimiter">;;;</span><span class="org-comment">F7:&#25171;&#24320;ecb</span>
+(global-set-key  [(f7)] 'ecb-activate)
+<span class="org-comment-delimiter">;;;</span><span class="org-comment">F8:&#20851;&#38381;ecb</span>
+(global-set-key  [(f8)] 'ecb-deactivate)
+<span class="org-comment-delimiter">;</span><span class="org-comment">&#20851;&#38381;ecb&#21551;&#21160;&#31383;&#21475;</span>
+(setq ecb-tip-of-the-day nil)
+
+<span class="org-comment-delimiter">;</span><span class="org-comment">&#23433;&#35013;cscope apt-get install cscope                                   </span>
+<span class="org-comment-delimiter">;</span><span class="org-comment">cscope</span>
+(load-file <span class="org-string">"~/.emacs.d/plugins/xcscope.el"</span>)
+(<span class="org-keyword">require</span> '<span class="org-constant">xcscope</span>)
+(setq cscope-do-not-update-database t)                                   
+<span class="org-comment-delimiter">;</span><span class="org-comment">yasnippet</span>
+(add-to-list 'load-path
+             <span class="org-string">"~/.emacs.d/elpa/yasnippet-0.8.0"</span>)
+(<span class="org-keyword">require</span> '<span class="org-constant">yasnippet</span>)
+(yas-global-mode 1)
+</pre>
+
+</div>
+</div>
+</div>
