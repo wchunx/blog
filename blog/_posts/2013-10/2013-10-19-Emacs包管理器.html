@@ -55,7 +55,10 @@ featured: false
 <h4 id="sec-1-1-1">安装和配置</h4>
 <div class="outline-text-4" id="text-1-1-1">
 
-<p>将下面的代码复制到Emacs的 <b>scratch</b> buffer中, 将光标移动到代码的最后, 然后按下 C-j,
+<p>Emacs24.3.1中已经集成了ELPA，不用在单独安装了。
+</p>
+<p>
+不过这里记录一下Emacs23中安装ELPA的过程：将下面的代码复制到Emacs的 <b>scratch</b> buffer中, 将光标移动到代码的最后, 然后按下 C-j,
 一切就都搞定了
 </p>
 
@@ -94,7 +97,7 @@ featured: false
 
 
 <p>
-M-x eval-buff报错Symbol's value as variable is void: package-archives，搜了下是
+手动安装ELPA，M-x eval-buff报错Symbol's value as variable is void: package-archives，搜了下是
 package.el的版本问题。到<a href="http://marmalade-repo.org/">Marmalde</a> 下载package.el替换掉原来的即可。
 </p>
 </div>

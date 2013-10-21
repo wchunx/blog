@@ -44,8 +44,18 @@ Error: ECB can only be used with cedet [1.0pre6, 1.0.9]! Please install it and r
 (defconst ecb-required-cedet-version-max '(1 1 4 9))
 
 再make，成功
-** xcscope和yasnippet的安装
+** xcscope的安装
 xcscope沿用了Emacs23的xcscope.el,yasnippet直接从ELPA安装即可。
+** yasnippet和auto-complete的安装
+从ELPA下在的yasnippet版本0.8.0，auto-complete为1.4，使用发现还是冲突的，所以我还是沿用了之前Emacs23中的配置
+
+用到的插件
+[[http://github.com/capitaomorte/yasnippet][yasnippet]]
+[[https://github.com/m2ym/auto-complete.git][auto-complete]]
+[[https://github.com/m2ym/popup-el.git][popup]]
+[[https://github.com/m2ym/fuzzy-el.git][fuzzy]]
+[[https://github.com/winterTTr/emacs-of-winterTTr/blob/master/.emacs.d/plugins/auto-complete-suite/pos-tip/pos-tip.el][pos-tip]]
+
 ** 配置
 下面代码加入.emacs
 #+BEGIN_SRC elisp
@@ -70,12 +80,58 @@ xcscope沿用了Emacs23的xcscope.el,yasnippet直接从ELPA安装即可。
 ;cscope
 (load-file "~/.emacs.d/plugins/xcscope.el")
 (require 'xcscope)
-(setq cscope-do-not-update-database t)									 
+(setq cscope-do-not-update-database t)
+
 ;yasnippet
 (add-to-list 'load-path
-             "~/.emacs.d/elpa/yasnippet-0.8.0")
+             "~/.emacs.d/plugins/yasnippet")
 (require 'yasnippet)
 (yas-global-mode 1)
+
+(add-to-list 'load-path
+             "~/.emacs.d/plugins/pos-tip")
+(add-to-list 'load-path
+             "~/.emacs.d/plugins/fuzzy-el")
+(add-to-list 'load-path
+             "~/.emacs.d/plugins/popup-el")
+(add-to-list 'load-path
+             "~/.emacs.d/plugins/auto-complete")
+
+;加载auto-complete及内置模版
+(require 'auto-complete-config)
+(add-to-list 'ac-dictionary-directories
+        "~/.emacs.d/plugins/auto-complete/dict")
+(ac-config-default)
+
+;quick-help,默认就是打开的
+;(setq ac-use-quick-help t)
+;(setq ac-quick-help-delay 1.0)
+
+;使用增强popup列表,pos-tip模式
+(require 'pos-tip)
+(setq ac-quick-help-prefer-pos-tip t)   ;default is t
+
+;关闭自动触发补全，定义TAB为触发键
+(setq ac-auto-start nil)   ;auto complete using clang is CPU sensitive
+(ac-set-trigger-key "<tab>")
+
+;设置tab键的使用模式
+(setq ac-dwim t)
+
+;使用backspace后，ac补全就消失，设置backspace删除后仍可出发补全
+(setq ac-trigger-commands
+      (cons 'backward-delete-char-untabify ac-trigger-commands))
+
+;fuzzy功能，输入错误信息也能模糊匹配
+(setq ac-fuzzy-enable t)
 #+END_SRC
 ** 参考资料
 [[http://www.latelee.org/embedded-linux/64-learning-elinux-4-my-emacs-i.htmlhttp://www.latelee.org/embedded-linux/64-learning-elinux-4-my-emacs-i.html][嵌入式之行(4)：我的emacs(上)]]
+
+[[http://blog.csdn.net/winterttr/article/details/7524336][emacs中使用auto-complete的详细设置]]
+
+[[http://www.cnblogs.com/coderzh/archive/2009/12/26/emacspythonide.html][Emacs中打造强大的Python IDE]]
+
+[[http://emacser.com/auto-complete.htm][Emacs才是世界上最强大的IDE － 用auto-complete实现自动补全]]
+
+[[http://backcomer.diandian.com/post/2013-03-11/40048253403][Emacs ecb配置小结]]

@@ -47,4 +47,3 @@ Emacs24中上面的设置是无效的，需要改为
 (menu-bar-mode 0)  
 (scroll-bar-mode 0)  
 #+END_SRC
-

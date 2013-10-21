@@ -17,7 +17,9 @@ Emacs的包管理器简化了插件安装的过程。这里介绍两种ELPA和El
 
 ** ELPA
 *** 安装和配置
-将下面的代码复制到Emacs的 *scratch* buffer中, 将光标移动到代码的最后, 然后按下 C-j,
+Emacs24.3.1中已经集成了ELPA，不用在单独安装了。
+
+不过这里记录一下Emacs23中安装ELPA的过程：将下面的代码复制到Emacs的 *scratch* buffer中, 将光标移动到代码的最后, 然后按下 C-j,
 一切就都搞定了
 
 #+BEGIN_SRC sh
@@ -47,7 +49,7 @@ Emacs的包管理器简化了插件安装的过程。这里介绍两种ELPA和El
 (package-initialize)
 #+END_SRC
 
-M-x eval-buff报错Symbol's value as variable is void: package-archives，搜了下是
+手动安装ELPA，M-x eval-buff报错Symbol's value as variable is void: package-archives，搜了下是
 package.el的版本问题。到[[http://marmalade-repo.org/][Marmalde]] 下载package.el替换掉原来的即可。
 
 *** 插件安装方式
