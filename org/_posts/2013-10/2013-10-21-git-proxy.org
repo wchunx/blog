@@ -1,0 +1,25 @@
+#+BEGIN_HTML
+---
+layout: post
+keywords: 
+description: 
+title: github使用http代理
+categories: [github]
+tags: [github]
+group: archive
+icon: github
+featured: false
+---
+#+END_HTML
+* github使用http代理
+今天使用git clone和push的时候竟然出现error:Failed connect to github.com:443的错误，没办法只能使用goagent了。
+运行下面两条命令就ok了。
+#+BEGIN_SRC sh
+git config http.proxy http://127.0.0.1:8087/
+git config http.sslVerify false
+#+END_SRC
+之后在push就可以了。
+* 参考资料
+[[http://cloudaice.com/use-git/][use git]]
+
+话说这人博客风格我挺喜欢，回头fork
