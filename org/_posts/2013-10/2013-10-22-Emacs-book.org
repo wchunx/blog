@@ -1,0 +1,16 @@
+#+BEGIN_HTML
+---
+layout: post
+keywords: 
+description: 
+title: Emacs杂记
+categories: [Emacs]
+tags: [Emacs]
+group: archive
+icon: compass
+featured: false
+---
+#+END_HTML
+* Emacs杂记
+** 为什么选择Emacs
+因为好奇开始学习和折腾Emacs，慢慢习惯，现在已经舍不得了，最然现在还只是个初学者，传说的神奇还没有深切体会，但会继续学下去的。

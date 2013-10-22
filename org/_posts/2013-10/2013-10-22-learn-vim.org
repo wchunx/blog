@@ -1,0 +1,18 @@
+#+BEGIN_HTML
+---
+layout: post
+keywords: 
+description: 
+title: Vim相关笔记
+categories: [Vim]
+tags: [Vim]
+group: archive
+icon: compass
+featured: false
+---
+#+END_HTML
+
+Vim 命令小抄
+#+BEGIN_HTML
+<img src ="/images/2013-10/vi-vim-cheat-sheet-list.png"/>
+#+END_HTML

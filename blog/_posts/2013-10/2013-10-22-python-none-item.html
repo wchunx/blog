@@ -1,0 +1,80 @@
+---
+layout: post
+keywords: 
+description: 
+title: Python去除列表中的空字符串
+categories: [Python]
+tags: [Python， list]
+group: archive
+icon: compass
+featured: false
+---
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 python去除列表中的空字符串</a>
+<ul>
+<li><a href="#sec-1-1">1.1 filter(lambda)</a></li>
+<li><a href="#sec-1-2">1.2 for循环</a></li>
+<li><a href="#sec-1-3">1.3 while循环</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">python去除列表中的空字符串</h2>
+<div class="outline-text-2" id="text-1">
+
+<p>今天写代码时遇到需要去除python列表中的空字符串的操作，总结了以下几种方法
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">filter(lambda)</h3>
+<div class="outline-text-3" id="text-1-1">
+
+
+
+
+<pre class="src src-python"><span class="org-builtin">list</span> = [<span class="org-string">''</span>,<span class="org-string">'12'</span>,<span class="org-string">'34'</span>,<span class="org-string">''</span>]
+<span class="org-builtin">list</span> = <span class="org-builtin">filter</span>(<span class="org-keyword">lambda</span> x:x != <span class="org-string">''</span>, <span class="org-builtin">list</span>)
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">for循环</h3>
+<div class="outline-text-3" id="text-1-2">
+
+
+
+
+<pre class="src src-python"><span class="org-builtin">list</span> = [<span class="org-string">''</span>,<span class="org-string">'12'</span>,<span class="org-string">'34'</span>,<span class="org-string">''</span>]
+<span class="org-builtin">list</span> = [ i <span class="org-keyword">for</span> i <span class="org-keyword">in</span> <span class="org-builtin">list</span> <span class="org-keyword">if</span> i != <span class="org-string">''</span>]
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">while循环</h3>
+<div class="outline-text-3" id="text-1-3">
+
+
+
+
+<pre class="src src-python"><span class="org-builtin">list</span> = [<span class="org-string">''</span>,<span class="org-string">'12'</span>,<span class="org-string">'34'</span>,<span class="org-string">''</span>]
+<span class="org-keyword">while</span> <span class="org-string">''</span> <span class="org-keyword">in</span> <span class="org-builtin">list</span>:
+    <span class="org-builtin">list</span>.remove(<span class="org-string">''</span>)
+</pre>
+
+</div>
+</div>
+</div>

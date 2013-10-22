@@ -1,0 +1,31 @@
+#+BEGIN_HTML
+---
+layout: post
+keywords: 
+description: 
+title: Python去除列表中的空字符串
+categories: [Python]
+tags: [Python， list]
+group: archive
+icon: compass
+featured: false
+---
+#+END_HTML
+* python去除列表中的空字符串
+今天写代码时遇到需要去除python列表中的空字符串的操作，总结了以下几种方法
+** filter(lambda)
+#+BEGIN_SRC python
+list = ['','12','34','']
+list = filter(lambda x:x != '', list)
+#+END_SRC
+** for循环
+#+BEGIN_SRC python
+list = ['','12','34','']
+list = [ i for i in list if i != '']
+#+END_SRC
+** while循环
+#+BEGIN_SRC python
+list = ['','12','34','']
+while '' in list:
+	list.remove('')
+#+END_SRC
