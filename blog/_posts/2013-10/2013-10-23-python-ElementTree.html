@@ -1,0 +1,147 @@
+---
+layout: post
+keywords: 
+description: 
+title: Python ElementTree解析XML
+categories: [Python]
+tags: [Python, xml, ElementTree]
+group: archive
+icon: code
+featured: false
+---
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 Python ElementTree解析XML</a>
+<ul>
+<li><a href="#sec-1-1">1.1 导入模块</a></li>
+<li><a href="#sec-1-2">1.2 ElementTree对象和Element对象</a>
+<ul>
+<li><a href="#sec-1-2-1">1.2.1 ElementTree对象</a></li>
+<li><a href="#sec-1-2-2">1.2.2 Element对象</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-3">1.3 解析</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">Python ElementTree解析XML</h2>
+<div class="outline-text-2" id="text-1">
+
+<p>XML是一种分级的数据形式，所以最自然的表示方法是将它表示为一棵树。ElementTree有两个对象来实现这个目的 － ElementTree将整个XML解析为一棵树，Element将单个结点解析为树。如果是整个文档级别的操作(比如说读，写，找到一些有趣的节点)通常用 ElementTree 。单个XML节点和它的子节点通常用Element
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">导入模块</h3>
+<div class="outline-text-3" id="text-1-1">
+
+
+
+
+<pre class="src src-python"><span class="org-keyword">import</span> xml.etree.ElementTree <span class="org-keyword">as</span> ET
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">ElementTree对象和Element对象</h3>
+<div class="outline-text-3" id="text-1-2">
+
+
+</div>
+
+<div id="outline-container-1-2-1" class="outline-4">
+<h4 id="sec-1-2-1">ElementTree对象</h4>
+<div class="outline-text-4" id="text-1-2-1">
+
+<p>tree=ET.parse(文件或xml字符串)，返回的对象是整个文档的对象tree
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2-2" class="outline-4">
+<h4 id="sec-1-2-2">Element对象</h4>
+<div class="outline-text-4" id="text-1-2-2">
+
+<p>表示xml节点，ElementTree调用函数的返回值通常是Element对象
+描述Element对象的属性：
+&lt;branch name="testing" hash="1cdf045c"&gt;something&lt;/branch&gt;
+tag:tag值 branch
+text:文本属性 something
+attrib:节点属性，通常为字典类型 {'hash': '1cdf045c', 'name': 'testing'}
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">解析</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>示例xml，test.xml
+</p>
+
+
+<pre class="src src-xml"><span class="org-nxml-processing-instruction-delimiter">&lt;?</span><span class="org-nxml-processing-instruction-target">xml</span> <span class="org-nxml-attribute-local-name">version</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">1.0</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-processing-instruction-delimiter">?&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">doc</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">branch1</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">one</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">num</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">001</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span>
+<span class="org-nxml-text">     beijing</span>
+<span class="org-nxml-text">  </span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">branch1</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">branch2</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">two</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">num</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">002</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span>
+    <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">sub-branch2</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">twenty-one</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span>
+<span class="org-nxml-text">      heibei</span>
+<span class="org-nxml-text">    </span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">sub-branch2</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">branch2</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">branch3</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">shanghai</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">branch3</span><span class="org-nxml-tag-delimiter">&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">doc</span><span class="org-nxml-tag-delimiter">&gt;</span>
+</pre>
+
+
+<pre class="src src-python"><span class="org-comment-delimiter">#</span><span class="org-comment">&#23548;&#20837;&#27169;&#22359;</span>
+<span class="org-keyword">import</span> xml.etree.ElementTree <span class="org-keyword">as</span> ET
+<span class="org-comment-delimiter">#</span><span class="org-comment">&#33719;&#21462;ElementTree&#23545;&#35937;</span>
+<span class="org-variable-name">tree</span> = ET.parse(r<span class="org-string">"/home/wchunx/test.xml"</span>)
+<span class="org-comment-delimiter">#</span><span class="org-comment">&#33719;&#21462;&#26681;&#33410;&#28857;</span>
+<span class="org-variable-name">root</span> = tree.getroot()
+<span class="org-comment-delimiter">#</span><span class="org-comment">&#22914;&#26524;&#35299;&#26512;xml&#26684;&#24335;&#30340;&#23383;&#31526;&#20018;&#65292;&#29992;fromstring()&#20989;&#25968;</span>
+&gt;&gt;&gt; ET.fromstring(<span class="org-string">"&lt;root&gt;&lt;item&gt;One&lt;/item&gt;&lt;item&gt;Two&lt;/item&gt;&lt;item&gt;Three&lt;/item&gt;&lt;/root&gt;"</span>)
+<span class="org-comment-delimiter">#</span><span class="org-comment">&#30452;&#25509;&#33719;&#21462;&#21040;&#26681;&#33410;&#28857;</span>
+&lt;Element <span class="org-string">'root'</span> at 0xb6bcd6cc&gt;
+<span class="org-comment-delimiter">#</span><span class="org-comment">&#19968;&#20010;&#33410;&#28857;&#30340;&#23383;&#33410;&#28857;&#24418;&#25104;&#19968;&#20010;&#21015;&#34920;&#65292;&#35775;&#38382;&#26681;&#33410;&#28857;&#30340;&#23376;&#33410;&#28857;</span>
+&gt;&gt;&gt; <span class="org-keyword">for</span> i <span class="org-keyword">in</span> <span class="org-builtin">range</span>(0, <span class="org-builtin">len</span>(root)):
+...     <span class="org-keyword">print</span> root[i].tag, root[i].text, root[i].attrib
+... 
+branch1 
+     beijing
+   {<span class="org-string">'num'</span>: <span class="org-string">'001'</span>, <span class="org-string">'name'</span>: <span class="org-string">'one'</span>}
+branch2 
+     {<span class="org-string">'num'</span>: <span class="org-string">'002'</span>, <span class="org-string">'name'</span>: <span class="org-string">'two'</span>}
+branch3 shanghai {}
+&gt;&gt;&gt; 
+<span class="org-comment-delimiter">#</span><span class="org-comment">&#21024;&#38500;&#33410;&#28857;,&#20004;&#31181;&#26041;&#27861;</span>
+&gt;&gt;&gt;root.remove(root[0])
+&gt;&gt;&gt;<span class="org-keyword">del</span> root[1]
+
+&gt;&gt;&gt; <span class="org-keyword">for</span> elem <span class="org-keyword">in</span> root:
+...     <span class="org-keyword">print</span> elem
+... 
+&lt;Element <span class="org-string">'branch2'</span> at 0xb6b5c5ac&gt;
+<span class="org-comment-delimiter">#</span><span class="org-comment">&#21024;&#38500;&#26576;&#33410;&#28857;&#19979;&#30340;&#25152;&#26377;&#23376;&#33410;&#28857;</span>
+&gt;&gt;&gt; root[0].clear()
+</pre>
+
+<p>
+<a href="http://kb.cnblogs.com/page/190321/">http://kb.cnblogs.com/page/190321/</a>
+<a href="http://www.cnblogs.com/ifantastic/archive/2013/04/12/3017110.html">http://www.cnblogs.com/ifantastic/archive/2013/04/12/3017110.html</a>
+</p></div>
+</div>
+</div>

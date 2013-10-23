@@ -1,0 +1,80 @@
+#+BEGIN_HTML
+---
+layout: post
+keywords: 
+description: 
+title: Python ElementTree解析XML
+categories: [Python]
+tags: [Python, xml, ElementTree]
+group: archive
+icon: code
+featured: false
+---
+#+END_HTML
+* Python ElementTree解析XML
+XML是一种分级的数据形式，所以最自然的表示方法是将它表示为一棵树。ElementTree有两个对象来实现这个目的 － ElementTree将整个XML解析为一棵树，Element将单个结点解析为树。如果是整个文档级别的操作(比如说读，写，找到一些有趣的节点)通常用 ElementTree 。单个XML节点和它的子节点通常用Element
+** 导入模块
+#+BEGIN_SRC python
+import xml.etree.ElementTree as ET
+#+END_SRC
+** ElementTree对象和Element对象
+*** ElementTree对象
+tree=ET.parse(文件或xml字符串)，返回的对象是整个文档的对象tree
+*** Element对象
+表示xml节点，ElementTree调用函数的返回值通常是Element对象
+描述Element对象的属性：
+<branch name="testing" hash="1cdf045c">something</branch>
+tag:tag值 branch
+text:文本属性 something
+attrib:节点属性，通常为字典类型 {'hash': '1cdf045c', 'name': 'testing'}
+** 解析
+示例xml，test.xml
+#+BEGIN_SRC xml
+<?xml version="1.0"?>
+<doc>
+  <branch1 name="one" num="001">
+     beijing
+  </branch1>
+  <branch2 name="two" num="002">
+    <sub-branch2 name="twenty-one">
+      heibei
+    </sub-branch2>
+  </branch2>
+  <branch3>shanghai</branch3>
+</doc>
+#+END_SRC
+#+BEGIN_SRC python
+#导入模块
+import xml.etree.ElementTree as ET
+#获取ElementTree对象
+tree = ET.parse(r"/home/wchunx/test.xml")
+#获取根节点
+root = tree.getroot()
+#如果解析xml格式的字符串，用fromstring()函数
+>>> ET.fromstring("<root><item>One</item><item>Two</item><item>Three</item></root>")
+#直接获取到根节点
+<Element 'root' at 0xb6bcd6cc>
+#一个节点的字节点形成一个列表，访问根节点的子节点
+>>> for i in range(0, len(root)):
+...     print root[i].tag, root[i].text, root[i].attrib
+... 
+branch1 
+     beijing
+   {'num': '001', 'name': 'one'}
+branch2 
+     {'num': '002', 'name': 'two'}
+branch3 shanghai {}
+>>> 
+#删除节点,两种方法
+>>>root.remove(root[0])
+>>>del root[1]
+
+>>> for elem in root:
+...     print elem
+... 
+<Element 'branch2' at 0xb6b5c5ac>
+#删除某节点下的所有子节点
+>>> root[0].clear()
+#+END_SRC
+http://kb.cnblogs.com/page/190321/
+http://www.cnblogs.com/ifantastic/archive/2013/04/12/3017110.html

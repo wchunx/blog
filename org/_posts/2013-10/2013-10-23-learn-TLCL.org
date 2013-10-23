@@ -1,0 +1,15 @@
+#+BEGIN_HTML
+---
+layout: post
+keywords: 
+description: 
+title: The Linux Command Line笔记 
+categories: [Linux]
+tags: [Linux]
+group: archive
+icon: compass
+featured: false
+---
+#+END_HTML
+* The Linux Command Line读书笔记
+[[http://billie66.github.io/TLCL/index.html][The Linxu Command Line中文版]]从不同方面介绍了Linux命令行的知识。包括命令行基本语言，配置文件，命令行程序以及shell编程等。
