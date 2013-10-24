@@ -22,10 +22,15 @@ import xml.etree.ElementTree as ET
 tree=ET.parse(文件或xml字符串)，返回的对象是整个文档的对象tree
 *** Element对象
 表示xml节点，ElementTree调用函数的返回值通常是Element对象
+
 描述Element对象的属性：
+
 <branch name="testing" hash="1cdf045c">something</branch>
+
 tag:tag值 branch
+
 text:文本属性 something
+
 attrib:节点属性，通常为字典类型 {'hash': '1cdf045c', 'name': 'testing'}
 ** 解析
 示例xml，test.xml
@@ -64,6 +69,20 @@ branch1
 branch2 
      {'num': '002', 'name': 'two'}
 branch3 shanghai {}
+#iter()方法可以节点进行深度遍历，遍历所有节点，包括自己，返回一个迭代器对象
+>>> for elem in root.iter():
+...     print elem.tag,elem.attrib
+... 
+doc {}
+branch1 {'num': '001', 'name': 'one'}
+branch2 {'num': '002', 'name': 'two'}
+sub-branch2 {'name': 'twenty-one'}
+branch3 {}
+#iter()，遍历有指定标签的节点
+>>> for elem in root.iter(tag='branch2'):
+...     print elem.tag, elem.attrib     
+... 
+branch2 {'num': '002', 'name': 'two'}
 >>> 
 #删除节点,两种方法
 >>>root.remove(root[0])
@@ -76,5 +95,196 @@ branch3 shanghai {}
 #删除某节点下的所有子节点
 >>> root[0].clear()
 #+END_SRC
+** 创建xml
+#+BEGIN_SRC python
+#创建节点，用Element()函数。创建root节点，指定tag为root
+root = ET.Element('root')
+#创建子节点，父节点为root.创建节点，添加到root下两步。
+a = ET.Element('one')
+root.append(a)
+#SubElement()函数专门用来创建子节点
+b = ET.SubElement(root, 'two')
+c = ET.SubElement(root, 'three')
+d = ET.SubElement(c, 'four')
+#节点同样支持切片操作，以及append,insert,remove方法
+nodes = root[0:2]
+root.remove(a)
+root.insert(0, a)
+#append,insert,remove的参数是节点而非tag,element is None查看节点存在，len(element)查看子节点数量
+#+END_SRC
+*** 父子节点的操作
+节点没有指向父节点的指针，如果涉及到父子节点的联系，最好通过操作父节点
+
+root.getchildren()获取root的直接子节点a,b,c的列表。
+
+for elem in root 遍历root的直接子节点a,b,c
+
+root.getiterator()获取root和其下层全部子节点root,a,b,c,d的列表
+#+BEGIN_SRC python
+#清晰列出父子节点的关系
+>>> for parent in root.getiterator():
+...     for child in parent:
+...             print (parent, child)
+... 
+(<Element 'root' at 0xb72541cc>, <Element 'one' at 0xb725c18c>)
+(<Element 'root' at 0xb72541cc>, <Element 'two' at 0xb6b1adac>)
+(<Element 'root' at 0xb72541cc>, <Element 'three' at 0xb6b1e36c>)
+(<Element 'three' at 0xb6b1e36c>, <Element 'four' at 0xb6b1ad2c>)
+#建立父子节点的映射关系
+>>> parent_map=dict((c,p) for p in root.getiterator() for c in p)
+>>> parent_map
+{<Element 'one' at 0xb725c18c>: <Element 'root' at 0xb72541cc>, <Element 'two' at 0xb6b1adac>: <Element 'root' at 0xb72541cc>, <Element 'four' at 0xb6b1ad2c>: <Element 'three' at 0xb6b1e36c>, <Element 'three' at 0xb6b1e36c>: <Element 'root' at 0xb72541cc>}
+#+END_SRC
+*** 操作节点属性attrib
+节点属性通常存储在一个字典中，可以用.attrib来访问
+#+BEGIN_SRC python
+#注意定义方式first = '1',不能写成'first' = '1'
+e = ET.SubElement(root, 'five', first = '1', second = '2')
+#可以通过attrib.get,attrib.keys和attrib.items以及set方法来操作attribute
+#获取'first'的值
+print e.attrib.get('first')
+1
+#上步的简写形式
+print e.get('first')
+1
+#键值列表（简写）
+print e.keys()
+['second', 'first']
+print e.items()
+[('second', '2'), ('first', '1')]
+#'third'不存在
+print elem.get('third')
+None
+print elem.get('third','default')
+default
+#添加数据
+elem.set('third','3')
+print elem.get('third','default')
+3
+#+END_SRC
+*** Text属性
+保存附加信息,通常为一个字符串,如果不添加text，通常默认是None或空字符串
+#+BEGIN_SRC python
+>>> f = ET.SubElement(e, 'six' ,ni = 'hello')
+>>> f.text = 'sample'
+#+END_SRC
+*** 节点对象与字符串之间的转换
+#+BEGIN_SRC python
+#字符串转化为Element，可以用XML()或fromstring()
+text = "<title font='large'>A sample text window</title>"
+elem = ET.XML(text)
+el = ET.fromstring(text)
+#Element转化为字符串
+text=et.tostring(elem)
+'<title font="large">A sample text window</title>'
+#+END_SRC
+*** xml的美化输出
+write函数输出的xml是紧凑的，美化输出可以使用indent函数，接受的参数为Element对象。
+#+BEGIN_SRC python
+def indent(elem, level=0):
+    i = "\n" + level*"  "
+    if len(elem):
+        if not elem.text or not elem.text.strip():
+            elem.text = i + "  "
+        if not elem.tail or not elem.tail.strip():
+            elem.tail = i
+        for elem in elem:
+            indent(elem, level+1)
+        if not elem.tail or not elem.tail.strip():
+            elem.tail = i
+    else:
+        if level and (not elem.tail or not elem.tail.strip()):
+            elem.tail = i
+#+END_SRC
+*** 生成xml
+#+BEGIN_SRC python
+#dump用于将element打印到标准输出，This function should be used for debugging only.
+>>> ET.dump(root)
+<root><one /><two /><three><four /></three><five first="1" second="2" third="3"><six ni="hello">sample</six></five></root>
+#ElementTree()方法由Element对象获取tree对象，tree对象的write()方法将xml内容写到文件或标准输出
+>>> tree = ET.ElementTree(root)
+>>> tree.write('good.xml')
+>>> import sys
+>>> tree.write(sys.stdout)
+#+END_SRC
+** 查找子节点
+#+BEGIN_SRC python
+>>> indent(root)
+>>> ET.dump(root)
+<root>
+  <one />
+  <two />
+  <three>
+    <four />
+  </three>
+  <five first="1" second="2" third="3">
+    <six ni="hello">sample</six>
+  </five>
+</root>
+#+END_SRC
+*** 常用函数
+find相关函数查找范围是一级子节点，iter查找包含当前节点在内的整个subtree
+
+find(pattern)返回第一个匹配的子节点，找不到则返回None
+
+findtext(pattern) 返回第一个匹配的子节点的text值
+
+findall(pattern) 返回匹配的全部子节点的列表
+
+pattern可以为一个标识:只匹配表层子节点，或使用XPath：可以在整个tree进行更准确的搜索
+
+getiterator(tag) 返回所有指定tag的节点列表
+
+getiterator()方法可以按深度优先顺序遍历整个tree，返回包含当前节点在内的所有节点的列表
+
+getchildren() 返回当前节点的所有一级子节点组成的列表
+*** XPATH语法
+| 语法              | 含义                                                                                   |
+|-------------------+----------------------------------------------------------------------------------------|
+| tag               | 搜索匹配给定tag的子节点。devices/graphic搜索所有devices的子节点下匹配graphic的孙子节点 |
+| *                 | 所有子节点。*/graphic所搜所有子节点下，匹配graphic的孙子节点                           |
+| .                 | 搜索当前节点，通常用于表示相对路径                                                     |
+| //                | 所搜当前节点下的所有级别子节点，.//egg搜索当前节点下所有级别匹配egg的节点              |
+| ..                | 搜索父节点                                                                             |
+| [@attrib]         | 搜索含有attrib属性的节点。root.find(".//five[@first]")                                 |
+| [@attrib='value'] | 搜索所有节点中attrib属性值为“value”的节点 root.find(".//five[@first='1']")             |
+| [tag]             | 精确匹配tag                                                                            |
+| [position]        | 搜索处于指定位置的节点 position可以为数字(1为第一个)，last()(代表最后一个)或与last()的相对位置，例如last()-1表示倒数第二个位置                                                                                       |
+** 一个完整的创建xml的例子
+#+BEGIN_SRC python
+import xml.etree.ElementTree as ET
+root = ET.Element('html')
+head = ET.SubElement(root,'head')
+title = ET.SubElement(head,'title')
+title.text = 'Page Title'
+body = ET.SubElement(root,'body')
+body.set('bgcolor','#ffffff')
+body.text = 'Hello,world'
+def indent(elem, level=0):
+    i = "\n" + level*"  "
+    if len(elem):
+        if not elem.text or not elem.text.strip():
+            elem.text = i + "  "
+        if not elem.tail or not elem.tail.strip():
+            elem.tail = i
+        for elem in elem:
+            indent(elem, level+1)
+        if not elem.tail or not elem.tail.strip():
+            elem.tail = i
+    else:
+        if level and (not elem.tail or not elem.tail.strip()):
+            elem.tail = i
+indent(root)
+tree=ET.ElementTree(root)
+tree.write('no.xml')
+import sys
+tree.write(sys.stdout)
+#+END_SRC
+** 参考资料
+[[http://effbot.org/zone/element.htm][Elements and Element Trees]]
+
+[[http://docs.python.org/2.7/][Python v2.7.5 documentation]]
+
 http://kb.cnblogs.com/page/190321/
+
 http://www.cnblogs.com/ifantastic/archive/2013/04/12/3017110.html

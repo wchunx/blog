@@ -1,0 +1,311 @@
+---
+layout: post
+keywords: 
+description: 
+title: Python minidom解析XML
+categories: [Python]
+tags: [Python, xml, minidom]
+group: archive
+icon: code
+featured: false
+---
+
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 Python minidom解析XML</a>
+<ul>
+<li><a href="#sec-1-1">1.1 导入模块</a></li>
+<li><a href="#sec-1-2">1.2 解析xml文件或字符串</a></li>
+<li><a href="#sec-1-3">1.3 获取节点</a>
+<ul>
+<li><a href="#sec-1-3-1">1.3.1 节点属性</a></li>
+<li><a href="#sec-1-3-2">1.3.2 访问子节点</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-4">1.4 生成XML</a></li>
+<li><a href="#sec-1-5">1.5 一个完整的xml</a></li>
+<li><a href="#sec-1-6">1.6 参考资料</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">Python minidom解析XML</h2>
+<div class="outline-text-2" id="text-1">
+
+<p>DOM是Document Object Model的简称，它是以对象树来表示一个XML文档的方法，使用它的好处就是你可以非常灵活的在对象中进行遍历。minidom从名字就可以看出这是dom的一个mini实现模块。
+</p>
+<p>
+test.xml
+</p>
+
+
+<pre class="src src-xml"><span class="org-nxml-processing-instruction-delimiter">&lt;?</span><span class="org-nxml-processing-instruction-target">xml</span> <span class="org-nxml-attribute-local-name">version</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">1.0</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-processing-instruction-delimiter">?&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">doc</span><span class="org-nxml-tag-delimiter">&gt;</span> 
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">branch1</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">one</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">num</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">001</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span>
+<span class="org-nxml-text">     beijing</span>
+<span class="org-nxml-text">  </span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">branch1</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">branch2</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">two</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">num</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">002</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span>
+    <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">sub-branch2</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">twenty-one</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span>
+<span class="org-nxml-text">      heibei</span>
+<span class="org-nxml-text">    </span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">sub-branch2</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">branch2</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">branch3</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">shanghai</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">branch3</span><span class="org-nxml-tag-delimiter">&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">doc</span><span class="org-nxml-tag-delimiter">&gt;</span>
+</pre>
+
+
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">导入模块</h3>
+<div class="outline-text-3" id="text-1-1">
+
+
+
+
+<pre class="src src-python"><span class="org-keyword">import</span> xml.dom.minidom <span class="org-keyword">as</span> minidom 
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">解析xml文件或字符串</h3>
+<div class="outline-text-3" id="text-1-2">
+
+
+
+
+<pre class="src src-python"><span class="org-comment-delimiter">#</span><span class="org-comment">&#35299;&#26512;xml&#25991;&#20214;&#65292;&#20004;&#31181;&#26041;&#24335;</span>
+<span class="org-variable-name">dom</span> = minidom.parse(<span class="org-string">'/home/wchunx/test.xml'</span>) <span class="org-comment-delimiter"># </span><span class="org-comment">parse an XML file by name</span>
+
+<span class="org-variable-name">datasource</span> = <span class="org-builtin">open</span>(<span class="org-string">'/home/wchunx/text.xml'</span>)
+<span class="org-variable-name">dom2</span> = minidom.parse(datasource)   <span class="org-comment-delimiter"># </span><span class="org-comment">parse an open file</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">&#35299;&#26512;xml&#23383;&#31526;&#20018;</span>
+<span class="org-variable-name">dom3</span> = minidom.parseString(<span class="org-string">'&lt;myxml&gt;Some data&lt;empty/&gt; some more data&lt;/myxml&gt;'</span>)
+</pre>
+
+<p>
+返回一个dom对象，以一个对象树的形式表示一个XML，便于之后的操作。
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">获取节点</h3>
+<div class="outline-text-3" id="text-1-3">
+
+
+
+
+<pre class="src src-python"><span class="org-comment-delimiter">#</span><span class="org-comment">&#33719;&#21462;&#26681;&#33410;&#28857;documentElement,&#27880;&#24847;&#27809;()</span>
+<span class="org-variable-name">root</span> = dom.documentElement
+</pre>
+
+
+</div>
+
+<div id="outline-container-1-3-1" class="outline-4">
+<h4 id="sec-1-3-1">节点属性</h4>
+<div class="outline-text-4" id="text-1-3-1">
+
+<p>每一个结点都有它的nodeName，nodeValue，nodeType属性。
+</p>
+
+
+<pre class="src src-python">&gt;&gt;&gt; <span class="org-keyword">print</span> root.nodeName, root.nodeValue, root.nodeType
+doc <span class="org-constant">None</span> 1
+</pre>
+
+<p>
+nodeName为结点名字。
+</p>
+<p>
+nodeValue是节点的值，只对文本节点有效。
+</p>
+<p>
+nodeType是节点的类型，现在有以下几种：
+</p>
+<p>
+‘ATTRIBUTE_NODE’,‘CDATA_SECTION_NODE’,‘COMMENT_NODE’,‘DOCUMENT_FRAGMENT_NODE’,
+</p>
+<p>
+‘DOCUMENT_NODE’,‘DOCUMENT_TYPE_NODE’,‘ELEMENT_NODE’,‘ENTITY_NODE’,
+</p>
+<p>
+‘ENTITY_REFERENCE_NODE’,‘NOTATION_NODE’,‘PROCESSING_INSTRUCTION_NODE’,‘TEXT_NODE’
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3-2" class="outline-4">
+<h4 id="sec-1-3-2">访问子节点</h4>
+<div class="outline-text-4" id="text-1-3-2">
+
+<p>对于已经知道名字的子节点，可以通过使用getElementsByTagName()方法访问
+</p>
+
+
+<pre class="src src-python">root.getElementsByTagName(<span class="org-string">"branch1"</span>) <span class="org-comment-delimiter">#</span><span class="org-comment">&#35835;&#21462;branch1&#23376;&#33410;&#28857;</span>
+</pre>
+
+<p>
+返回的结果是一个列表。如果要得到某节点下的所有子节点，可以使用childNodes属性:
+</p>
+
+
+<pre class="src src-python">&gt;&gt;&gt; root.childNodes
+[&lt;DOM Text node <span class="org-string">"u'\n  '"</span>&gt;, &lt;DOM Element: branch1 at 0xb6f9ae6c&gt;, &lt;DOM Text node <span class="org-string">"u'\n  '"</span>&gt;, &lt;DOM Element: branch2 at 0xb6fa102c&gt;, &lt;DOM Text node <span class="org-string">"u'\n  '"</span>&gt;, &lt;DOM Element: branch3 at 0xb6fa128c&gt;, &lt;DOM Text node <span class="org-string">"u'\n'"</span>&gt;]
+</pre>
+
+<p>
+返回的也是个列表，childNodes只保存了当前元素的第一层子结点。从结果可以看出每行的回车被看作了文本节点。
+</p>
+<p>
+getElementsByTagName()可以搜索当前元素的所有子元素，包括所有层次的子元素
+</p>
+
+
+<pre class="src src-python">&gt;&gt;&gt; root.getElementsByTagName(<span class="org-string">"sub-branch2"</span>)
+[&lt;DOM Element: sub-branch2 at 0xb6fa114c&gt;]
+</pre>
+
+<p>
+遍历子节点，并打印节点名字，在遍历是要先确定是Element node
+</p>
+
+
+<pre class="src src-python">&gt;&gt;&gt; <span class="org-keyword">for</span> node <span class="org-keyword">in</span> root.childNodes:
+...     <span class="org-keyword">if</span> node.nodeType == node.ELEMENT_NODE:
+...             <span class="org-keyword">print</span> node.nodeName
+... 
+branch1
+branch2
+branch3
+</pre>
+
+<p>
+感觉minidom在操作节点时并没有ElementTree方便
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">生成XML</h3>
+<div class="outline-text-3" id="text-1-4">
+
+
+
+
+<pre class="src src-python"><span class="org-keyword">import</span> xml.dom.minidom <span class="org-keyword">as</span> minidom
+<span class="org-variable-name">impl</span> = minidom.getDOMImplementation()
+<span class="org-comment-delimiter">#</span><span class="org-comment">&#29983;&#25104;dom&#23545;&#35937;</span>
+<span class="org-variable-name">dom</span> = impl.createDocument(<span class="org-constant">None</span>,<span class="org-string">'root'</span>, <span class="org-constant">None</span>)
+<span class="org-comment-delimiter">#</span><span class="org-comment">&#29983;&#25104;&#25991;&#26723;&#33410;&#28857;&#65288;&#26681;&#33410;&#28857;&#65289;</span>
+<span class="org-variable-name">root</span> = dom.documentElement
+<span class="org-comment-delimiter">#</span><span class="org-comment">&#29983;&#25104;Element_node item</span>
+<span class="org-variable-name">item</span> = dom.createElement(<span class="org-string">'item'</span>)
+<span class="org-comment-delimiter">#</span><span class="org-comment">&#29983;&#25104;&#25991;&#26412;&#33410;&#28857;text</span>
+<span class="org-variable-name">text</span> = dom.createTextNode(<span class="org-string">'test'</span>)
+<span class="org-comment-delimiter">#</span><span class="org-comment">&#23558;text&#20316;&#20026;&#23376;&#33410;&#28857;&#21152;&#20837;item&#65292;&#20351;item&#26377;&#25991;&#26412;&#20869;&#23481;</span>
+item.appendChild(text)
+&lt;DOM Text node &#8220;test&#8221;&gt;
+<span class="org-comment-delimiter">#</span><span class="org-comment">&#20351;&#29992;setAttribute&#20026;item&#28155;&#21152;&#23646;&#24615;</span>
+item.setAttribute(<span class="org-string">'id'</span>, <span class="org-string">'idvalue'</span>)
+<span class="org-comment-delimiter">#</span><span class="org-comment">&#28155;&#21152;item&#20026;root&#30340;&#23376;&#33410;&#28857;</span>
+root.appendChild(item)
+&lt;DOM Element: item at 0xb9cf80&gt;
+<span class="org-keyword">print</span> root.toxml()
+&lt;root&gt;&lt;item <span class="org-builtin">id</span>=<span class="org-string">"idvalue"</span>&gt;test&lt;/item&gt;&lt;/root&gt;
+<span class="org-keyword">print</span> dom.toxml()
+&lt;?xml <span class="org-variable-name">version</span>=<span class="org-string">"1.0"</span> ?&gt;&lt;root&gt;&lt;item <span class="org-builtin">id</span>=<span class="org-string">"idvalue"</span>&gt;test&lt;/item&gt;&lt;/root&gt;
+<span class="org-keyword">print</span> dom.toprettyxml()
+&lt;?xml <span class="org-variable-name">version</span>=<span class="org-string">"1.0"</span> ?&gt;
+&lt;root&gt;
+    &lt;item <span class="org-builtin">id</span>=<span class="org-string">"idvalue"</span>&gt;test&lt;/item&gt;
+&lt;/root&gt;
+<span class="org-keyword">print</span> dom.toprettyxml(encoding=<span class="org-string">'UTF-8'</span>)
+&lt;?xml <span class="org-variable-name">version</span>=<span class="org-string">"1.0"</span> <span class="org-variable-name">encoding</span>=<span class="org-string">"UTF-8"</span>?&gt;
+&lt;root&gt;
+    &lt;item <span class="org-builtin">id</span>=<span class="org-string">"idvalue"</span>&gt;test&lt;/item&gt;
+&lt;/root&gt;
+</pre>
+
+<p>
+dom对象输出xml的方法为toxml()和toprettyxml().toxml()输出紧凑格式的XML文本,toprettyxml()输出美化后的XML文本,将每个结点后面都加入了回车符，并且自动处理缩近。.
+</p>
+<p>
+minidom在输出xml文件时操作比较简单，可以用ElementTree创建和操作节点，minidom输出。
+</p></div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">一个完整的xml</h3>
+<div class="outline-text-3" id="text-1-5">
+
+
+
+
+<pre class="src src-python">dom&#23545;&#35937;doc,&#26681;&#33410;&#28857;&#23545;&#35937;host_node,&#23376;&#33410;&#28857;&#23545;&#35937;ip_node,port_node,status_node,
+<span class="org-comment-delimiter">#</span><span class="org-comment">&#27880;&#24847;&#33410;&#28857;&#23545;&#35937;&#21517;&#31216;&#21644;&#33410;&#28857;&#23545;&#35937;&#30340;text</span>
+<span class="org-variable-name">host_ip</span>=<span class="org-string">'192.168.0.1'</span>
+<span class="org-variable-name">host_port</span>=<span class="org-string">'7443'</span>
+<span class="org-variable-name">host_status</span>=<span class="org-string">'7202'</span>
+
+<span class="org-keyword">import</span> xml.dom.minidom <span class="org-keyword">as</span> minidom
+<span class="org-comment-delimiter">#</span><span class="org-comment">&#29983;&#25104;dom&#23545;&#35937;</span>
+<span class="org-variable-name">dom</span> = minidom.Document()
+<span class="org-comment-delimiter">#</span><span class="org-comment">&#29983;&#25104;&#33410;&#28857;host_node</span>
+<span class="org-variable-name">host_node</span> = doc.createElement(<span class="org-string">'node'</span>)
+<span class="org-variable-name">host_node.attributes</span>[<span class="org-string">'type'</span>] = <span class="org-string">'host'</span>
+doc.appendChild(host_node)
+&lt;DOM Element: node at 0xb72988ac&gt;
+<span class="org-comment-delimiter">#</span><span class="org-comment">&#29983;&#25104;ip&#33410;&#28857;</span>
+<span class="org-variable-name">ip_node</span> = doc.createElement(<span class="org-string">'ip'</span>)
+ip_node.appendChild(doc.createTextNode(host_ip))
+&lt;DOM Text node <span class="org-string">"'192.168.0.'..."</span>&gt;
+host_node.appendChild(ip_node)
+&lt;DOM Element: ip at 0xb6e5bfcc&gt;
+<span class="org-comment-delimiter">#</span><span class="org-comment">&#29983;&#25104;port&#33410;&#28857;</span>
+<span class="org-variable-name">port_node</span> = doc.createElement(<span class="org-string">'port'</span>)
+port_node.appendChild(doc.createTextNode(host_port))
+&lt;DOM Text node <span class="org-string">"'7443'"</span>&gt;
+host_node.appendChild(port_node)
+&lt;DOM Element: port at 0xb6e6416c&gt;
+<span class="org-comment-delimiter">#</span><span class="org-comment">&#29983;&#25104;status&#33410;&#28857;</span>
+<span class="org-variable-name">status_node</span> = doc.createElement(<span class="org-string">'status'</span>)
+status_node.appendChild(doc.createTextNode(host_status))
+&lt;DOM Text node <span class="org-string">"'7202'"</span>&gt;
+host_node.appendChild(status_node)
+&lt;DOM Element: status at 0xb6a646cc&gt;
+<span class="org-comment-delimiter">#</span><span class="org-comment">&#36755;&#20986;</span>
+<span class="org-keyword">print</span> doc.toprettyxml()
+&lt;?xml <span class="org-variable-name">version</span>=<span class="org-string">"1.0"</span> ?&gt;
+&lt;node <span class="org-builtin">type</span>=<span class="org-string">"host"</span>&gt;
+    &lt;ip&gt;192.168.0.1&lt;/ip&gt;
+    &lt;port&gt;7443&lt;/port&gt;
+    &lt;status&gt;7202&lt;/status&gt;
+&lt;/node&gt;
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6">参考资料</h3>
+<div class="outline-text-3" id="text-1-6">
+
+<p><a href="http://blog.donews.com/limodou/archive/2004/07/15/43755.aspx">使用minidom来处理XML的示例</a>
+</p></div>
+</div>
+</div>

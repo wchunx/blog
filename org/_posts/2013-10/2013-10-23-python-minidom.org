@@ -1,0 +1,181 @@
+#+BEGIN_HTML
+---
+layout: post
+keywords: 
+description: 
+title: Python minidom解析XML
+categories: [Python]
+tags: [Python, xml, minidom]
+group: archive
+icon: code
+featured: false
+---
+#+END_HTML
+
+#+OPTIONS: ^:{}
+* Python minidom解析XML
+DOM是Document Object Model的简称，它是以对象树来表示一个XML文档的方法，使用它的好处就是你可以非常灵活的在对象中进行遍历。minidom从名字就可以看出这是dom的一个mini实现模块。
+
+test.xml
+#+BEGIN_SRC xml
+<?xml version="1.0"?>
+<doc> 
+  <branch1 name="one" num="001">
+     beijing
+  </branch1>
+  <branch2 name="two" num="002">
+    <sub-branch2 name="twenty-one">
+      heibei
+    </sub-branch2>
+  </branch2>
+  <branch3>shanghai</branch3>
+</doc>
+#+END_SRC
+** 导入模块
+#+BEGIN_SRC python
+import xml.dom.minidom as minidom 
+#+END_SRC
+** 解析xml文件或字符串
+#+BEGIN_SRC python
+#解析xml文件，两种方式
+dom = minidom.parse('/home/wchunx/test.xml') # parse an XML file by name
+
+datasource = open('/home/wchunx/text.xml')
+dom2 = minidom.parse(datasource)   # parse an open file
+#解析xml字符串
+dom3 = minidom.parseString('<myxml>Some data<empty/> some more data</myxml>')
+#+END_SRC
+返回一个dom对象，以一个对象树的形式表示一个XML，便于之后的操作。
+** 获取节点
+#+BEGIN_SRC python
+#获取根节点documentElement,注意没()
+root = dom.documentElement
+#+END_SRC
+*** 节点属性
+每一个结点都有它的nodeName，nodeValue，nodeType属性。
+#+BEGIN_SRC python 
+>>> print root.nodeName, root.nodeValue, root.nodeType
+doc None 1
+#+END_SRC
+nodeName为结点名字。
+
+nodeValue是节点的值，只对文本节点有效。
+
+nodeType是节点的类型，现在有以下几种：
+
+‘ATTRIBUTE_NODE’,‘CDATA_SECTION_NODE’,‘COMMENT_NODE’,‘DOCUMENT_FRAGMENT_NODE’,
+
+‘DOCUMENT_NODE’,‘DOCUMENT_TYPE_NODE’,‘ELEMENT_NODE’,‘ENTITY_NODE’,
+
+‘ENTITY_REFERENCE_NODE’,‘NOTATION_NODE’,‘PROCESSING_INSTRUCTION_NODE’,‘TEXT_NODE’
+*** 访问子节点
+对于已经知道名字的子节点，可以通过使用getElementsByTagName()方法访问
+#+BEGIN_SRC python
+root.getElementsByTagName("branch1") #读取branch1子节点
+#+END_SRC
+返回的结果是一个列表。如果要得到某节点下的所有子节点，可以使用childNodes属性:
+#+BEGIN_SRC python
+>>> root.childNodes
+[<DOM Text node "u'\n  '">, <DOM Element: branch1 at 0xb6f9ae6c>, <DOM Text node "u'\n  '">, <DOM Element: branch2 at 0xb6fa102c>, <DOM Text node "u'\n  '">, <DOM Element: branch3 at 0xb6fa128c>, <DOM Text node "u'\n'">]
+#+END_SRC
+返回的也是个列表，childNodes只保存了当前元素的第一层子结点。从结果可以看出每行的回车被看作了文本节点。
+
+getElementsByTagName()可以搜索当前元素的所有子元素，包括所有层次的子元素
+#+BEGIN_SRC python
+>>> root.getElementsByTagName("sub-branch2")
+[<DOM Element: sub-branch2 at 0xb6fa114c>]
+#+END_SRC
+遍历子节点，并打印节点名字，在遍历是要先确定是Element node
+#+BEGIN_SRC python
+>>> for node in root.childNodes:
+...     if node.nodeType == node.ELEMENT_NODE:
+...             print node.nodeName
+... 
+branch1
+branch2
+branch3
+#+END_SRC
+感觉minidom在操作节点时并没有ElementTree方便
+** 生成XML
+#+BEGIN_SRC python
+import xml.dom.minidom as minidom
+impl = minidom.getDOMImplementation()
+#生成dom对象
+dom = impl.createDocument(None,'root', None)
+#生成文档节点（根节点）
+root = dom.documentElement
+#生成Element_node item
+item = dom.createElement('item')
+#生成文本节点text
+text = dom.createTextNode('test')
+#将text作为子节点加入item，使item有文本内容
+item.appendChild(text)
+<DOM Text node “test”>
+#使用setAttribute为item添加属性
+item.setAttribute('id', 'idvalue')
+#添加item为root的子节点
+root.appendChild(item)
+<DOM Element: item at 0xb9cf80>
+print root.toxml()
+<root><item id="idvalue">test</item></root>
+print dom.toxml()
+<?xml version="1.0" ?><root><item id="idvalue">test</item></root>
+print dom.toprettyxml()
+<?xml version="1.0" ?>
+<root>
+	<item id="idvalue">test</item>
+</root>
+print dom.toprettyxml(encoding='UTF-8')
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<item id="idvalue">test</item>
+</root>
+#+END_SRC
+dom对象输出xml的方法为toxml()和toprettyxml().toxml()输出紧凑格式的XML文本,toprettyxml()输出美化后的XML文本,将每个结点后面都加入了回车符，并且自动处理缩近。.
+
+minidom在输出xml文件时操作比较简单，可以用ElementTree创建和操作节点，minidom输出。
+** 一个完整的xml
+#+BEGIN_SRC python
+dom对象doc,根节点对象host_node,子节点对象ip_node,port_node,status_node,
+#注意节点对象名称和节点对象的text
+host_ip='192.168.0.1'
+host_port='7443'
+host_status='7202'
+ 
+import xml.dom.minidom as minidom
+#生成dom对象
+dom = minidom.Document()
+#生成节点host_node
+host_node = doc.createElement('node')
+host_node.attributes['type'] = 'host'
+doc.appendChild(host_node)
+<DOM Element: node at 0xb72988ac>
+#生成ip节点
+ip_node = doc.createElement('ip')
+ip_node.appendChild(doc.createTextNode(host_ip))
+<DOM Text node "'192.168.0.'...">
+host_node.appendChild(ip_node)
+<DOM Element: ip at 0xb6e5bfcc>
+#生成port节点
+port_node = doc.createElement('port')
+port_node.appendChild(doc.createTextNode(host_port))
+<DOM Text node "'7443'">
+host_node.appendChild(port_node)
+<DOM Element: port at 0xb6e6416c>
+#生成status节点
+status_node = doc.createElement('status')
+status_node.appendChild(doc.createTextNode(host_status))
+<DOM Text node "'7202'">
+host_node.appendChild(status_node)
+<DOM Element: status at 0xb6a646cc>
+#输出
+print doc.toprettyxml()
+<?xml version="1.0" ?>
+<node type="host">
+    <ip>192.168.0.1</ip>
+    <port>7443</port>
+    <status>7202</status>
+</node>
+#+END_SRC
+** 参考资料
+[[http://blog.donews.com/limodou/archive/2004/07/15/43755.aspx][使用minidom来处理XML的示例]]
