@@ -18,6 +18,48 @@ featured: false
 <ul>
 <li><a href="#sec-1-1">1.1 线程类型</a></li>
 <li><a href="#sec-1-2">1.2 线程的生命周期</a></li>
+<li><a href="#sec-1-3">1.3 Python对多线程的支持</a>
+<ul>
+<li><a href="#sec-1-3-1">1.3.1 实现模块</a>
+<ul>
+<li><a href="#sec-1-3-1-1">1.3.1.1 thread：多线程的底层支持模块，一般不建议使用；</a></li>
+<li><a href="#sec-1-3-1-2">1.3.1.2 threading：对thread进行了封装，将一些线程的操作对象化，提供下列类：</a></li>
+<li><a href="#sec-1-3-1-3">1.3.1.3 Queue队列</a></li>
+</ul></li>
+</ul>
+</li>
+<li><a href="#sec-1-4">1.4 创建线程</a>
+<ul>
+<li><a href="#sec-1-4-1">1.4.1 1.定义线程要执行的函数，并将这个函数作为参数传递到threading.Thread对象里。</a></li>
+<li><a href="#sec-1-4-2">1.4.2 2.定义一个类，继承自threading.Thread,并重写run()方法。</a></li>
+<li><a href="#sec-1-4-3">1.4.3 其它函数</a>
+<ul>
+<li><a href="#sec-1-4-3-1">1.4.3.1 为线程指定name,setName()</a></li>
+<li><a href="#sec-1-4-3-2">1.4.3.2 线程管理，join和setDaemon</a></li>
+</ul></li>
+</ul>
+</li>
+<li><a href="#sec-1-5">1.5 互斥锁</a>
+<ul>
+<li><a href="#sec-1-5-1">1.5.1 互斥锁同步</a></li>
+<li><a href="#sec-1-5-2">1.5.2 同步阻塞</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-6">1.6 死锁和可重入锁</a>
+<ul>
+<li><a href="#sec-1-6-1">1.6.1 死锁</a></li>
+<li><a href="#sec-1-6-2">1.6.2 避免死锁</a></li>
+<li><a href="#sec-1-6-3">1.6.3 可重入锁</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-7">1.7 条件变量</a></li>
+<li><a href="#sec-1-8">1.8 使用Event实现线程间通信</a></li>
+<li><a href="#sec-1-9">1.9 同步队列</a>
+<ul>
+<li><a href="#sec-1-9-1">1.9.1 类型</a></li>
+<li><a href="#sec-1-9-2">1.9.2 常用方法</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -56,30 +98,777 @@ featured: false
 3.Running运行。
 4.Blocked阻塞。暂停运行，解除阻塞后进入Runnable状态重新等待调度。
 5.Dead消亡。线程方法执行完毕返回或者异常终止。
-</p>
-
-
-
-<p> 
-一般一个条件表达式都是在一个互斥锁的保护下被检查。当条件表达式未被满足时，线程将仍然阻塞在这个条件变量上。当另一个线程改变了条件的值并向条件变量发出信号时，等待在这个条件变量上的一个线程或所有线程被唤醒，接着都试图再次占有相应的互斥锁。
-</p>
-<p>
-阻塞在条件变量上的线程被唤醒以后
-</p>
-<p>
- 有的时候仅仅依靠锁住共享资源来使用它是不够的。有时候共享资源只有某些状态的时候才能够使用。比方说，某个线程如果要从堆栈中读取数据，那么如果栈中没有数据就必须等待数据被压栈。这种情况下的同步使用互斥锁是不够的。另一种同步的方式－－条件变量，就可以使用在这种情况下。
-</p>
-<p>
-      条件变量的使用总是和互斥锁及共享资源联系在一起的。线程首先锁住互斥锁，然后检验共享资源的状态是否处于可使用的状态。如果不是，那么线程就要等待条件变量。要指向这样的操作就必须在等待的时候将互斥锁解锁，以便其他线程可以访问共享资源并改变其状态。它还得保证从等到得线程返回时互斥体是被上锁得。当另一个线程改变了共享资源的状态时，它就要通知正在等待条件变量的线程，使之重新变回被互斥锁阻塞的线程。
-</p>
-<p>
-条件变量使我们可以睡眠等待某种条件出现。
-       条件变量是利用线程间共享的全局变量进行同步的一种机制，主要包括两个动作：一个线程等待"条件变量的激活"而挂起；另一个线程使"条件变量激活"。为了防止竞争，条件变量的使用总是和一个互斥锁结合在一起。
-</p>
-<p>
-一个生产者获取到锁，生产条件不满足，执行wait，释放锁并进入睡眠状态，线程登记进入waiting池
-一个消费者获得锁，满足消费条件，改变条件，并发出通知。条件变量从waiting池中挑选一个线程通知其acquire(睡眠的线程被唤醒)
-notifyall方法通知waiting池中的所有线程尝试acquire内部锁。由于上述机制，处于waiting状态的线程只能通过notify方法唤醒，所以notifyAll的作用在于防止有线程永远处于沉默状态。notify方法其实属于线程间通信
+可能有3种情况从Running进入Blocked：
+1.同步：线程中获取同步锁，但是资源已经被其他线程锁定时，进入Locked状态，直到该资源可获取（获取的顺序由Lock队列控制）
+2.睡眠：线程运行sleep()或join()方法后，线程进入Sleeping状态。区别在于sleep等待固定的时间，而join是等待子线程执行完。当然join也可以指定一个“超时时间”。从语义上来说，如果两个线程a,b, 在a中调用b.join()，相当于合并(join)成一个线程。最常见的情况是在主线程中join所有的子线程。
+3.等待：线程中执行wait()方法后，线程进入Waiting状态，等待其他线程的通知(notify）。
 </p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">Python对多线程的支持</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>Python这门解释性语言也有专门的线程模型，Python虚拟机使用GIL（Global Interpreter Lock，全局解释器锁）来互斥线程对共享资源的访问，但暂时无法利用多处理器的优势。
+</p>
+<p>
+在Python中我们主要是通过thread和 threading这两个模块来实现的，其中Python的threading模块是对thread做了一些包装的，可以更加方便的被使用，所以我们使用 threading模块实现多线程编程。这篇文章我们主要来看看Python对多线程编程的支持。
+</p>
+<p>
+在语言层面，Python对多线程提供了很好的支持，Python中多线程相关的模块包括：thread，threading，Queue，可以方便地支持创建线程、互斥锁、信号量、同步等特性。下面就是官网上介绍threading模块的基本资料及功能：
+</p>
+</div>
+
+<div id="outline-container-1-3-1" class="outline-4">
+<h4 id="sec-1-3-1">实现模块</h4>
+<div class="outline-text-4" id="text-1-3-1">
+
+
+</div>
+
+<div id="outline-container-1-3-1-1" class="outline-5">
+<h5 id="sec-1-3-1-1">thread：多线程的底层支持模块，一般不建议使用；</h5>
+<div class="outline-text-5" id="text-1-3-1-1">
+
+</div>
+
+</div>
+
+<div id="outline-container-1-3-1-2" class="outline-5">
+<h5 id="sec-1-3-1-2">threading：对thread进行了封装，将一些线程的操作对象化，提供下列类：</h5>
+<div class="outline-text-5" id="text-1-3-1-2">
+
+<ul>
+<li>Thread 线程类，这是我们用的最多的一个类，你可以指定线程函数执行或者继承自它都可以实现子线程功能；
+</li>
+<li>Timer与Thread类似，但要等待一段时间后才开始运行；
+</li>
+<li>Lock 锁原语，这个我们可以对全局变量互斥时使用；
+</li>
+<li>RLock 可重入锁，使单线程可以再次获得已经获得的锁；
+</li>
+<li>Condition 条件变量，能让一个线程停下来，等待其他线程满足某个“条件”；
+</li>
+<li>Event 通用的条件变量。多个线程可以等待某个事件发生，在事件发生后，所有的线程都被激活；
+</li>
+<li>Semaphore为等待锁的线程提供一个类似“等候室”的结构；
+</li>
+<li>BoundedSemaphore 与semaphore类似，但不允许超过初始值；
+</li>
+<li>Queue：实现了多生产者（Producer）、多消费者（Consumer）的队列，支持锁原语，能够在多个线程之间提供很好的同步支持。
+</li>
+</ul>
+
+<ul>
+<li id="sec-1-3-1-2-1">其中Thread类<br/>
+是主要的线程类，可以创建进程实例。该类提供的函数包括：
+<ul>
+<li>getName(self) 返回线程的名字
+</li>
+<li>isAlive(self) 布尔标志，表示这个线程是否还在运行中
+</li>
+<li>isDaemon(self) 返回线程的daemon标志
+</li>
+<li>join(self, timeout=None) 程序挂起，直到线程结束，如果给出timeout，则最多阻塞timeout秒
+</li>
+<li>run(self) 定义线程的功能函数
+</li>
+<li>setDaemon(self, daemonic) 把线程的daemon标志设为daemonic
+</li>
+<li>setName(self, name) 设置线程的名字
+</li>
+<li>start(self) 开始线程执行
+</li>
+</ul>
+
+</li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-1-3-1-3" class="outline-5">
+<h5 id="sec-1-3-1-3">Queue队列</h5>
+<div class="outline-text-5" id="text-1-3-1-3">
+
+<ul>
+<li>Queue队列,先进先出
+</li>
+<li>LifoQueue后入先出（LIFO）队列
+</li>
+<li>PriorityQueue 优先队列
+</li>
+</ul>
+
+
+<p>
+接下来就开始详细讲解threading实现多线程编程。
+</p></div>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">创建线程</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>用threading.Thread类创建线程一般有两种方式
+</p>
+</div>
+
+<div id="outline-container-1-4-1" class="outline-4">
+<h4 id="sec-1-4-1">1.定义线程要执行的函数，并将这个函数作为参数传递到threading.Thread对象里。</h4>
+<div class="outline-text-4" id="text-1-4-1">
+
+
+
+
+<pre class="src src-python"><span class="org-comment-delimiter">#</span><span class="org-comment">!/usr/bin/python</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">-*- coding: utf-8 -*-</span>
+<span class="org-keyword">import</span> threading
+<span class="org-comment-delimiter">#</span><span class="org-comment">&#23450;&#20041;&#32447;&#31243;&#20013;&#35201;&#25191;&#34892;&#30340;&#20989;&#25968;,&#25171;&#21360;&#32447;&#31243;&#21517;</span>
+<span class="org-keyword">def</span> <span class="org-function-name">thread_fun</span>(num):
+    <span class="org-keyword">for</span> n <span class="org-keyword">in</span> <span class="org-builtin">range</span>(0, <span class="org-builtin">int</span>(num)):
+        <span class="org-keyword">print</span> <span class="org-string">" I come from %s, num: %s"</span> %( threading.currentThread().getName(), n)
+
+<span class="org-keyword">def</span> <span class="org-function-name">test</span>(thread_num):
+    <span class="org-variable-name">thread_list</span> = <span class="org-builtin">list</span>();
+    <span class="org-comment-delimiter"># </span><span class="org-comment">&#20808;&#21019;&#24314;&#32447;&#31243;&#23545;&#35937;</span>
+    <span class="org-keyword">for</span> i <span class="org-keyword">in</span> <span class="org-builtin">range</span>(0, thread_num):
+        <span class="org-variable-name">thread_name</span> = <span class="org-string">"thread_%s"</span> %i
+        thread_list.append(threading.Thread(target = thread_fun, name = thread_name, args = (20,)))
+
+    <span class="org-comment-delimiter"># </span><span class="org-comment">&#21551;&#21160;&#25152;&#26377;&#32447;&#31243;</span>
+    <span class="org-keyword">for</span> thread <span class="org-keyword">in</span> thread_list:
+        thread.start()
+
+    <span class="org-comment-delimiter"># </span><span class="org-comment">&#20027;&#32447;&#31243;&#25384;&#20010;&#35843;&#29992;&#23376;&#32447;&#31243;&#30340;join()&#65292;&#22914;&#26524;&#23376;&#32447;&#31243;&#36824;&#26410;&#36864;&#20986;&#65292;&#20027;&#32447;&#31243;&#23601;&#38459;&#22622;&#30452;&#21040;&#30693;&#36947;&#35813;&#23376;&#32447;&#31243;&#36864;&#20986;&#21518;&#25165;&#32487;&#32493;&#25191;&#34892;&#12290;&#31561;&#24453;&#25152;&#26377;&#23376;&#32447;&#31243;&#36864;&#20986;&#21518;&#65292;&#25191;&#34892;&#21518;&#38754;&#30340;&#20195;&#30721;</span>
+    <span class="org-keyword">for</span> thread <span class="org-keyword">in</span> thread_list:
+        thread.join()
+
+<span class="org-keyword">if</span> <span class="org-builtin">__name__</span> == <span class="org-string">"__main__"</span>:
+    test(3)
+</pre>
+
+<p>
+其中threading.Thread原型为class threading.Thread(group=None, target=None, name=None, args=(), kwargs={})
+target为要执行的函数对象，将被线程run()方法调用。name为线程名字，默认形式为'Thread-N'。args为元组，kwargs为字典，用于向target函数传递参数
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-1-4-2" class="outline-4">
+<h4 id="sec-1-4-2">2.定义一个类，继承自threading.Thread,并重写run()方法。</h4>
+<div class="outline-text-4" id="text-1-4-2">
+
+
+
+
+<pre class="src src-python"><span class="org-comment-delimiter">#</span><span class="org-comment">!/usr/bin/python</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">-*- coding: utf-8 -*-</span>
+<span class="org-keyword">import</span> threading
+
+<span class="org-keyword">class</span> <span class="org-type">MyThread</span>(threading.Thread):
+    <span class="org-keyword">def</span> <span class="org-function-name">__init__</span>(<span class="org-keyword">self</span>):
+        threading.Thread.__init__(<span class="org-keyword">self</span>);
+
+    <span class="org-keyword">def</span> <span class="org-function-name">run</span>(<span class="org-keyword">self</span>):
+        <span class="org-keyword">print</span> <span class="org-string">"I am %s"</span> %<span class="org-keyword">self</span>.name
+
+<span class="org-keyword">if</span> <span class="org-builtin">__name__</span> == <span class="org-string">"__main__"</span>:
+    <span class="org-keyword">for</span> thread <span class="org-keyword">in</span> <span class="org-builtin">range</span>(0, 5):
+        t = MyThread()
+        t.start()
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-1-4-3" class="outline-4">
+<h4 id="sec-1-4-3">其它函数</h4>
+<div class="outline-text-4" id="text-1-4-3">
+
+
+</div>
+
+<div id="outline-container-1-4-3-1" class="outline-5">
+<h5 id="sec-1-4-3-1">为线程指定name,setName()</h5>
+<div class="outline-text-5" id="text-1-4-3-1">
+
+
+
+
+<pre class="src src-python"><span class="org-keyword">def</span> <span class="org-function-name">__init__</span>(<span class="org-keyword">self</span>):
+     threading.Thread.__init__(<span class="org-keyword">self</span>)
+     <span class="org-keyword">self</span>.setName(<span class="org-string">"new"</span> + <span class="org-keyword">self</span>.name)
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-1-4-3-2" class="outline-5">
+<h5 id="sec-1-4-3-2">线程管理，join和setDaemon</h5>
+<div class="outline-text-5" id="text-1-4-3-2">
+
+<p>python中，主线程结束后，会默认等待子线程结束后，自己才退出。如果希望主线程不等待子线程，而是在退出是自动结束所有子，就需要设置子线程为daemon线程.
+</p>
+<p>
+The entire Python program exits when no alive non-daemon threads are left.
+</p>
+<p>
+python对于thread的管理中有两个函数：join和setDaemon。
+</p><ul>
+<li>join：如在一个线程B中调用thread.join()，则thread结束后，线程B才会接着thread.join()往后运行。
+</li>
+<li>setDaemon：当我们在程序运行中，执行一个主线程，如果主线程又创建一个子线程，主线程和子线程就分兵两路，当主线程完成想退出时，会检验子线程是否完成。如果子线程未完成，则主线程会等待子线程完成后再退出。但是有时候我们需要的是，只要主线程完成了，不管子线程是否完成，都要和主线程一起退出，这时就可以用setDaemon方法，并设置其参数为True。比如主线程A启动了子线程B，调用b.setDaemaon(True)，则主线程结束时，会把子线程B也杀死，setDaemon()必须在start()前调用。t.setDaemon(True)是Python2.6以前的写法，Python2.6后加入了t.daemon=True的写法。
+</li>
+</ul>
+
+
+</div>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">互斥锁</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p>多个线程访问共享数据时，需要同步控制。
+用5个线程，对全局计数num，进行加1操作
+</p>
+
+
+<pre class="src src-python"><span class="org-comment-delimiter">#</span><span class="org-comment">!/usr/bin/python</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">-*- coding: utf-8 -*-</span>
+<span class="org-keyword">import</span> threading
+<span class="org-keyword">import</span> time
+
+<span class="org-keyword">class</span> <span class="org-type">MyThread</span>(threading.Thread):
+    <span class="org-keyword">def</span> <span class="org-function-name">__init__</span>(<span class="org-keyword">self</span>):
+        threading.Thread.__init__(<span class="org-keyword">self</span>)
+
+    <span class="org-keyword">def</span> <span class="org-function-name">run</span>(<span class="org-keyword">self</span>):
+        <span class="org-keyword">global</span> num
+        time.sleep(1)
+        <span class="org-variable-name">num</span> = num+1
+        <span class="org-keyword">print</span> <span class="org-string">"%s set num to %s"</span> % (<span class="org-keyword">self</span>.name, num)
+<span class="org-variable-name">num</span> = 0
+<span class="org-keyword">def</span> <span class="org-function-name">test</span>():
+    <span class="org-keyword">for</span> i <span class="org-keyword">in</span> <span class="org-builtin">range</span>(0, 100):
+        <span class="org-variable-name">my_thread</span> = MyThread()
+        my_thread.start()
+<span class="org-keyword">if</span> <span class="org-builtin">__name__</span> == <span class="org-string">'__main__'</span>:
+    test()
+<span class="org-comment-delimiter">#</span><span class="org-comment">&#19979;&#38754;&#26159;&#36755;&#20986;&#30340;&#19968;&#37096;&#20998;</span>
+Thread-62 <span class="org-builtin">set</span> num to 53
+Thread-39 <span class="org-builtin">set</span> num to 39
+Thread-43 <span class="org-builtin">set</span> num to 55
+Thread-46 <span class="org-builtin">set</span> num to 57
+Thread-51 <span class="org-builtin">set</span> num to 47
+Thread-52 <span class="org-builtin">set</span> num to 59
+Thread-56 <span class="org-builtin">set</span> num to 61
+Thread-59 <span class="org-builtin">set</span> num to 62
+Thread-49 <span class="org-builtin">set</span> num to 58
+Thread-63 <span class="org-builtin">set</span> num to 63
+</pre>
+
+<p>
+由于每个线程互相独立，相互之间没有任何关系，100个线程都去访问num这个公共资源，，出现了num被抢占的情况。问题产生的原因就是没有控制多个线程对同一资源的访问，对数据造成破坏，使得线程运行的结果不可预期。这种现象称为“线程不安全”。
+</p>
+</div>
+
+<div id="outline-container-1-5-1" class="outline-4">
+<h4 id="sec-1-5-1">互斥锁同步</h4>
+<div class="outline-text-4" id="text-1-5-1">
+
+<p>上面的例子引出了多线程编程的最常见问题：数据共享。当多个线程都修改某一个共享数据的时候，需要进行同步控制。
+</p>
+<p>
+线程同步能够保证多个线程安全访问竞争资源，最简单的同步机制是引入互斥锁。互斥锁为资源引入一个状态：锁定/非锁定。某个线程要更改共享数据时，先将其锁定，此时资源的状态为“锁定”，其他线程不能更改；直到该线程释放资源，将资源的状态变成“非锁定”，其他的线程才能再次锁定该资源。互斥锁保证了每次只有一个线程进行写入操作，从而保证了多线程情况下数据的正确性。
+</p>
+<p>
+threading模块中定义了Lock类，可以方便的处理锁定：
+</p>
+
+
+<pre class="src src-python"><span class="org-comment-delimiter">#</span><span class="org-comment">&#21019;&#24314;&#38145;</span>
+<span class="org-variable-name">mutex</span> = threading.Lock()
+<span class="org-comment-delimiter">#</span><span class="org-comment">&#38145;&#23450;</span>
+mutex.acquire([timeout])
+<span class="org-comment-delimiter">#</span><span class="org-comment">&#37322;&#25918;</span>
+mutex.release()
+</pre>
+
+<p>
+对上面的程序进行整改，为此我们需要添加一个互斥锁变量mutex = threading.Lock()，然后在争夺资源的时候之前我们会先抢占这把锁mutex.acquire()，对资源使用完成之后我们在释放这把锁mutex.release()。代码如下：
+</p>
+
+
+<pre class="src src-python"><span class="org-keyword">import</span> threading
+<span class="org-keyword">import</span> time
+
+<span class="org-variable-name">num</span> = 0
+<span class="org-variable-name">mutex</span> = threading.Lock()
+
+<span class="org-keyword">class</span> <span class="org-type">MyThread</span>(threading.Thread):
+    <span class="org-keyword">def</span> <span class="org-function-name">__init__</span>(<span class="org-keyword">self</span>):
+        threading.Thread.__init__(<span class="org-keyword">self</span>)
+
+    <span class="org-keyword">def</span> <span class="org-function-name">run</span>(<span class="org-keyword">self</span>):
+        <span class="org-keyword">global</span> num, mutex
+        time.sleep(1);
+        <span class="org-keyword">if</span> mutex.acquire():
+            <span class="org-variable-name">num</span> += 1
+            <span class="org-keyword">print</span> <span class="org-string">"%s set num to %s"</span> % (<span class="org-keyword">self</span>.name, num)
+            mutex.release()
+
+<span class="org-keyword">if</span> <span class="org-builtin">__name__</span> == <span class="org-string">"__main__"</span>:
+    <span class="org-keyword">for</span> i <span class="org-keyword">in</span> <span class="org-builtin">range</span>(0, 100):
+        my_thread = MyThread()
+        my_thread.start()
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-1-5-2" class="outline-4">
+<h4 id="sec-1-5-2">同步阻塞</h4>
+<div class="outline-text-4" id="text-1-5-2">
+
+<p>当一个线程调用锁的acquire()方法获得锁时，锁就进入“locked”状态。每次只有一个线程可以获得锁。如果此时另一个线程试图获得这个锁，该线程就会变为“blocked”状态，称为“同步阻塞”
+</p>
+<p>
+直到拥有锁的线程调用锁的release()方法释放锁之后，锁进入“unlocked”状态。线程调度程序从处于同步阻塞状态的线程中选择一个来获得锁，并使得该线程进入运行（running）状态。
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6">死锁和可重入锁</h3>
+<div class="outline-text-3" id="text-1-6">
+
+
+</div>
+
+<div id="outline-container-1-6-1" class="outline-4">
+<h4 id="sec-1-6-1">死锁</h4>
+<div class="outline-text-4" id="text-1-6-1">
+
+<p>在线程间共享多个资源的时候，如果两个线程分别占有一部分资源并且同时等待对方的资源，就会造成死锁，进程成了死锁进程。尽管死锁很少发生，但一旦发生就会造成应用的停止响应。
+</p>
+
+
+<pre class="src src-python"><span class="org-comment-delimiter">#</span><span class="org-comment">-*- coding: utf-8 -*-</span>
+<span class="org-keyword">import</span> threading
+
+<span class="org-variable-name">counterA</span> = 0
+<span class="org-variable-name">counterB</span> = 0
+
+<span class="org-variable-name">mutexA</span> = threading.Lock()
+<span class="org-variable-name">mutexB</span> = threading.Lock()
+
+<span class="org-keyword">class</span> <span class="org-type">MyThread</span>(threading.Thread):
+    <span class="org-keyword">def</span> <span class="org-function-name">__init__</span>(<span class="org-keyword">self</span>):
+        threading.Thread.__init__(<span class="org-keyword">self</span>)
+
+    <span class="org-keyword">def</span> <span class="org-function-name">run</span>(<span class="org-keyword">self</span>):
+        <span class="org-keyword">self</span>.fun1()
+        <span class="org-keyword">self</span>.fun2()
+
+    <span class="org-keyword">def</span> <span class="org-function-name">fun1</span>(<span class="org-keyword">self</span>):
+        <span class="org-keyword">global</span> mutexA, mutexB
+        <span class="org-keyword">if</span> mutexA.acquire():
+            <span class="org-keyword">print</span> <span class="org-string">"I am %s , get res: %s"</span> %(<span class="org-keyword">self</span>.name, <span class="org-string">"ResA"</span>)
+
+            <span class="org-keyword">if</span> mutexB.acquire():
+                <span class="org-keyword">print</span> <span class="org-string">"I am %s , get res: %s"</span> %(<span class="org-keyword">self</span>.name, <span class="org-string">"ResB"</span>)
+                mutexB.release()
+
+        mutexA.release()
+
+    <span class="org-keyword">def</span> <span class="org-function-name">fun2</span>(<span class="org-keyword">self</span>):
+        <span class="org-keyword">global</span> mutexA, mutexB
+        <span class="org-keyword">if</span> mutexB.acquire():
+            <span class="org-keyword">print</span> <span class="org-string">"I am %s , get res: %s"</span> %(<span class="org-keyword">self</span>.name, <span class="org-string">"ResB"</span>)
+
+            <span class="org-keyword">if</span> mutexA.acquire():
+                <span class="org-keyword">print</span> <span class="org-string">"I am %s , get res: %s"</span> %(<span class="org-keyword">self</span>.name, <span class="org-string">"ResA"</span>)
+                mutexA.release()
+
+        mutexB.release()
+
+<span class="org-keyword">if</span> <span class="org-builtin">__name__</span> == <span class="org-string">"__main__"</span>:
+    <span class="org-keyword">for</span> i <span class="org-keyword">in</span> <span class="org-builtin">range</span>(0, 100):
+        my_thread = MyThread()
+        my_thread.start()
+</pre>
+
+<p>
+上边这段代码，很有可能发生死锁，但我测试时没出现。
+</p></div>
+
+</div>
+
+<div id="outline-container-1-6-2" class="outline-4">
+<h4 id="sec-1-6-2">避免死锁</h4>
+<div class="outline-text-4" id="text-1-6-2">
+
+<p>避免死锁主要方法就是：正确有序的分配资源，避免死锁算法中最有代表性的算法是Dijkstra E.W 于1968年提出的银行家算法。
+</p></div>
+
+</div>
+
+<div id="outline-container-1-6-3" class="outline-4">
+<h4 id="sec-1-6-3">可重入锁</h4>
+<div class="outline-text-4" id="text-1-6-3">
+
+<p>当一个线程“迭代”请求同一个资源，直接就会造成死锁：
+</p>
+
+
+<pre class="src src-python"><span class="org-keyword">import</span> threading
+<span class="org-keyword">import</span> time
+
+<span class="org-keyword">class</span> <span class="org-type">MyThread</span>(threading.Thread):
+    <span class="org-keyword">def</span> <span class="org-function-name">run</span>(<span class="org-keyword">self</span>):
+        <span class="org-keyword">global</span> num 
+        time.sleep(1)
+
+        <span class="org-keyword">if</span> mutex.acquire(1):  
+            <span class="org-variable-name">num</span> = num+1
+            <span class="org-variable-name">msg</span> = <span class="org-keyword">self</span>.name+<span class="org-string">' set num to '</span>+<span class="org-builtin">str</span>(num)
+            <span class="org-keyword">print</span> msg
+            mutex.acquire()
+            mutex.release()
+            mutex.release()
+<span class="org-variable-name">num</span> = 0
+<span class="org-variable-name">mutex</span> = threading.Lock()
+<span class="org-keyword">def</span> <span class="org-function-name">test</span>():
+    <span class="org-keyword">for</span> i <span class="org-keyword">in</span> <span class="org-builtin">range</span>(5):
+        <span class="org-variable-name">t</span> = MyThread()
+        t.start()
+<span class="org-keyword">if</span> <span class="org-builtin">__name__</span> == <span class="org-string">'__main__'</span>:
+    test()
+<span class="org-comment-delimiter">#</span><span class="org-comment">&#36816;&#34892;&#32467;&#26524;</span>
+Thread-1 <span class="org-builtin">set</span> num to 1
+</pre>
+
+<p>
+之后就直接挂起了，这种情况形成了最简单的死锁。
+那有没有一种情况可以在某一个线程使用互斥锁访问某一个竞争资源时，可以再次获取呢？
+</p>
+<p>
+在Python中为了支持在同一线程中多次请求同一资源，python提供了“可重入锁”：threading.RLock。
+</p>
+<p>
+这个RLock内部维护着一个Lock和一个counter变量，counter记录了acquire的次数，从而使得资源可以被多次require。直到一个线程所有的acquire都被release，其他的线程才能获得资源。
+</p>
+<p>
+上面的例子如果使用RLock代替Lock，则不会发生死锁：
+</p>
+<p>
+只需将上述代码中的
+</p>
+
+
+<pre class="src src-python"><span class="org-variable-name">mutex</span> = threading.Lock()
+</pre>
+
+<p>
+替换成
+</p>
+
+
+<pre class="src src-python"><span class="org-variable-name">mutex</span> = threading.Lock()
+</pre>
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-1-7" class="outline-3">
+<h3 id="sec-1-7">条件变量</h3>
+<div class="outline-text-3" id="text-1-7">
+
+<p>目前我们已经会使用Lock去对公共资源进行互斥访问了，也探讨了同一线程可以使用RLock可重入锁，但是尽管如此我们只不过才处理了一些程序中简单的同步现象，我们甚至还不能很合理的去解决使用Lock锁带来的死锁问题。所以我们得学会使用更深层的解决同步问题。
+</p>
+<p>
+有的时候仅仅依靠锁住共享资源来使用它是不够的。有时候共享资源只有某些状态的时候才能够使用。比方说，某个线程如果要从堆栈中读取数据，那么如果栈中没有数据就必须等待数据被压栈。这种情况下的同步使用互斥锁是不够的。另一种同步的方式－－条件变量，就可以使用在这种情况下。
+</p>
+<p>
+条件变量是利用线程间共享的全局变量进行同步的一种机制，主要包括两个动作：一个线程等待"条件变量的激活"而挂起；另一个线程使"条件变量激活"。
+</p>
+<p>
+为了防止竞争，条件变量的使用总是和一个互斥锁结合在一起。线程首先锁住互斥锁，然后检验共享资源的状态，判断条件是否满足。如果条件不满足，那么线程就要等待条件变量改变，而且必须在等待的时候先将互斥锁解锁，以便其他线程可以访问共享资源并改变其状态。当另一个线程改变了共享资源的状态时，它就要通知正在等待条件变量的线程，使之重申请锁判断条件。不断的重复这一过程，从而解决复杂的同步问题。
+</p>
+<p>
+Python提供的Condition对象即条件变量，除了提供与Lock类似的acquire和release方法外，还提供了wait和notify方法。
+</p>
+<p>
+使用Condition的主要方式为：线程首先acquire一个条件变量，然后判断条件。如果条件不满足则wait；如果条件满足，进行一些处理改变条件后，通过notify方法通知其他线程，其他处于wait状态的线程接到通知后会重新判断条件。不断的重复这一过程，从而解决复杂的同步问题。
+</p>
+<p>
+可以认为Condition对象维护了一个锁（Lock/RLock)和一个waiting池。线程通过acquire获得Condition对象，当调用wait方法时，线程会释放Condition内部的锁并进入blocked状态，同时在waiting池中记录这个线程。当调用notify方法时，Condition对象会从waiting池中挑选一个线程，通知其调用acquire方法尝试取到锁。
+</p>
+<p>
+Condition对象的构造函数可以接受一个Lock/RLock对象作为参数，如果没有指定，则Condition对象会在内部自行创建一个RLock。
+</p>
+<p>
+除了notify方法外，Condition对象还提供了notifyAll方法，可以通知waiting池中的所有线程尝试acquire内部锁。由于上述机制，处于waiting状态的线程只能通过notify方法唤醒，所以notifyAll的作用在于防止有线程永远处于沉默状态。
+</p>
+<p>
+下面我们通过很著名的“生产者-消费者”模型来来演示下，在Python中使用Condition实现复杂同步。生产者的条件是如果产品数量小于10个，就生产一个，消费者的条件是如果产品数量大于1个，就消费1个。
+</p>
+
+
+<pre class="src src-python"><span class="org-keyword">import</span> threading
+<span class="org-keyword">import</span> time
+
+<span class="org-variable-name">condition</span> = threading.Condition()
+<span class="org-variable-name">products</span> = 0
+
+<span class="org-keyword">class</span> <span class="org-type">Producer</span>(threading.Thread):
+    <span class="org-keyword">def</span> <span class="org-function-name">__init__</span>(<span class="org-keyword">self</span>):
+        threading.Thread.__init__(<span class="org-keyword">self</span>)
+
+    <span class="org-keyword">def</span> <span class="org-function-name">run</span>(<span class="org-keyword">self</span>):
+        <span class="org-keyword">global</span> condition, products
+        <span class="org-keyword">while</span> <span class="org-constant">True</span>:
+            <span class="org-keyword">if</span> condition.acquire():
+                <span class="org-keyword">if</span> products &lt; 10:
+                    <span class="org-variable-name">products</span> += 1;
+                    <span class="org-keyword">print</span> <span class="org-string">"Producer(%s):deliver one, now products:%s"</span> %(<span class="org-keyword">self</span>.name, products)
+                    condition.notify()
+                <span class="org-keyword">else</span>:
+                    <span class="org-keyword">print</span> <span class="org-string">"Producer(%s):already 10, stop deliver, now products:%s"</span> %(<span class="org-keyword">self</span>.name, products)
+                    condition.wait();
+                condition.release()
+                time.sleep(2)
+
+<span class="org-keyword">class</span> <span class="org-type">Consumer</span>(threading.Thread):
+    <span class="org-keyword">def</span> <span class="org-function-name">__init__</span>(<span class="org-keyword">self</span>):
+        threading.Thread.__init__(<span class="org-keyword">self</span>)
+
+    <span class="org-keyword">def</span> <span class="org-function-name">run</span>(<span class="org-keyword">self</span>):
+        <span class="org-keyword">global</span> condition, products
+        <span class="org-keyword">while</span> <span class="org-constant">True</span>:
+            <span class="org-keyword">if</span> condition.acquire():
+                <span class="org-keyword">if</span> products &gt; 1:
+                    <span class="org-variable-name">products</span> -= 1
+                    <span class="org-keyword">print</span> <span class="org-string">"Consumer(%s):consume one, now products:%s"</span> %(<span class="org-keyword">self</span>.name, products)
+                    condition.notify()
+                <span class="org-keyword">else</span>:
+                    <span class="org-keyword">print</span> <span class="org-string">"Consumer(%s):only 1, stop consume, products:%s"</span> %(<span class="org-keyword">self</span>.name, products)
+                    condition.wait();
+                condition.release()
+                time.sleep(2)
+
+<span class="org-keyword">if</span> <span class="org-builtin">__name__</span> == <span class="org-string">"__main__"</span>:
+    <span class="org-keyword">for</span> p <span class="org-keyword">in</span> <span class="org-builtin">range</span>(0, 2):
+        p = Producer()
+        p.start()
+
+    <span class="org-keyword">for</span> c <span class="org-keyword">in</span> <span class="org-builtin">range</span>(0, 10):
+        c = Consumer()
+        c.start()
+</pre>
+
+<p>
+运行结果
+</p>
+
+
+<pre class="src src-sh"><span class="org-function-name">Producer</span>(Thread-1):deliver one, now products:1
+<span class="org-function-name">Producer</span>(Thread-2):deliver one, now products:2
+<span class="org-function-name">Consumer</span>(Thread-3):consume one, now products:1
+<span class="org-function-name">Consumer</span>(Thread-4):only 1, stop consume, products:1
+<span class="org-function-name">Consumer</span>(Thread-5):only 1, stop consume, products:1
+<span class="org-function-name">Consumer</span>(Thread-6):only 1, stop consume, products:1
+<span class="org-function-name">Consumer</span>(Thread-7):only 1, stop consume, products:1
+<span class="org-function-name">Consumer</span>(Thread-8):only 1, stop consume, products:1
+<span class="org-function-name">Consumer</span>(Thread-9):only 1, stop consume, products:1
+<span class="org-function-name">Consumer</span>(Thread-10):only 1, stop consume, products:1
+<span class="org-function-name">Consumer</span>(Thread-11):only 1, stop consume, products:1
+<span class="org-function-name">Consumer</span>(Thread-12):only 1, stop consume, products:1
+<span class="org-function-name">Producer</span>(Thread-1):deliver one, now products:2
+<span class="org-function-name">Producer</span>(Thread-2):deliver one, now products:3
+<span class="org-function-name">Consumer</span>(Thread-3):consume one, now products:2
+...
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-1-8" class="outline-3">
+<h3 id="sec-1-8">使用Event实现线程间通信</h3>
+<div class="outline-text-3" id="text-1-8">
+
+<p>很多时候，线程之间会有互相通信的需要。常见的情形是次要线程为主要线程执行特定的任务，在执行过程中需要不断报告执行的进度情况。前面的条件变量同步已经涉及到了线程间的通信（threading.Condition的notify方法）。更通用的方式是使用threading.Event对象。
+</p>
+<p>
+threading.Event可以使一个线程等待其他线程的通知。其内置了一个标志，初始值为False。线程通过wait()方法进入等待状态，直到另一个线程调用set()方法将内置标志设置为True时，Event通知所有等待状态的线程恢复运行。还可以通过isSet()方法查询Envent对象内置状态的当前值。
+</p>
+
+
+<pre class="src src-python"><span class="org-keyword">import</span> threading
+<span class="org-keyword">import</span> time
+
+<span class="org-keyword">class</span> <span class="org-type">MyThread</span>(threading.Thread):
+    <span class="org-keyword">def</span> <span class="org-function-name">__init__</span>(<span class="org-keyword">self</span>, signal):
+        threading.Thread.__init__(<span class="org-keyword">self</span>)
+        <span class="org-keyword">self</span>.singal = signal
+
+    <span class="org-keyword">def</span> <span class="org-function-name">run</span>(<span class="org-keyword">self</span>):
+        <span class="org-keyword">print</span> <span class="org-string">"I am %s,I will sleep ..."</span>%<span class="org-keyword">self</span>.name
+        <span class="org-keyword">self</span>.singal.wait()
+        <span class="org-keyword">print</span> <span class="org-string">"I am %s, I awake..."</span> %<span class="org-keyword">self</span>.name
+
+<span class="org-keyword">if</span> <span class="org-builtin">__name__</span> == <span class="org-string">"__main__"</span>:
+    singal = threading.Event()
+    <span class="org-keyword">for</span> t <span class="org-keyword">in</span> <span class="org-builtin">range</span>(0, 3):
+        thread = MyThread(singal)
+        thread.start()
+
+    <span class="org-keyword">print</span> <span class="org-string">"main thread sleep 3 seconds... "</span>
+    time.sleep(3)
+
+    singal.<span class="org-builtin">set</span>()
+</pre>
+
+<p>
+执行结果
+</p>
+
+
+<pre class="src src-sh">I am Thread-1,I will sleep ...
+I am Thread-2,I will sleep ...
+main thread sleep 3 seconds... 
+I am Thread-3,I will sleep ...
+I am Thread-1, I awake...
+I am Thread-2, I awake...
+I am Thread-3, I awake...
+</pre>
+
+<p>
+主线程创建三个子线程，并都通过wait()方法进入等待状态，3s后主线程用Event的set()方法，将三个子线程唤醒。
+</p></div>
+
+</div>
+
+<div id="outline-container-1-9" class="outline-3">
+<h3 id="sec-1-9">同步队列</h3>
+<div class="outline-text-3" id="text-1-9">
+
+<p>Queue模块提供了同步的、线程安全的队列类,实现了支持多producer和多consumer队列。当共享信息需要安全的在多线程之间交换时，Queue非常有用。Queue的默认长度是无限的，但是可以设置其构造函数的maxsize参数来设定其长度。
+</p>
+</div>
+
+<div id="outline-container-1-9-1" class="outline-4">
+<h4 id="sec-1-9-1">类型</h4>
+<div class="outline-text-4" id="text-1-9-1">
+
+<p>python queue模块有三种队列:
+1、python queue模块的FIFO队列先进先出。
+2、LifoQueue类似于堆。即先进后出。
+3、PriorityQueue，优先级队列级别越低越先出来。
+这些队列都实现了锁原语，能够在多线程中直接使用。
+针对这三种队列分别有三个构造函数:
+1、class Queue.Queue(maxsize) FIFO 
+2、class Queue.LifoQueue(maxsize) LIFO 
+3、class Queue.PriorityQueue(maxsize) 优先级队列 
+</p></div>
+
+</div>
+
+<div id="outline-container-1-9-2" class="outline-4">
+<h4 id="sec-1-9-2">常用方法</h4>
+<div class="outline-text-4" id="text-1-9-2">
+
+<ul>
+<li>Queue.Queue(maxsize=0)   创建FIFO队列， 如果maxsize小于1就表示队列长度无限
+</li>
+<li>Queue.LifoQueue(maxsize=0)   创建LIFO队列， 如果maxsize小于1就表示队列长度无限
+</li>
+<li>Queue.qsize()   返回队列的大小
+</li>
+<li>Queue.empty()   如果队列为空，返回True,反之False
+</li>
+<li>Queue.full()   如果队列满了，返回True,反之False
+</li>
+<li>Queue.put(item, [block[, timeout]])   写队列，timeout等待时间
+</li>
+</ul>
+
+<p>在队尾插入item，block=true时，写入是阻塞式的，阻塞时间有timeout确定。block=true,timeout=None(默认)，队列满后线程阻塞，直到队列空出位置继续写入。timeout如果有值，阻塞timout时间后如果还没有位置写入就抛出抛出exception Queue.Full的异常。
+</p>
+<p>
+block=False,写入是非阻塞的，队列满后即抛出exception Queue.Full异常，这种情况下忽略timeout参数。
+</p><ul>
+<li>Queue.put<sub>nowait</sub>(item)
+</li>
+</ul>
+
+<p>等同于put(item,False)
+</p><ul>
+<li>Queue.get([block[, timeout]])   读队列，timeout等待时间
+</li>
+</ul>
+
+<p>从队头删除并返回一个项目。默认为阻塞方式读取数据(block=ture),队列为空时阻塞线程直至超时。block=False，队列为空时抛出except Queue.Empty。
+</p><ul>
+<li>Queue.get<sub>nowait</sub>()
+</li>
+</ul>
+
+<p>等同于get(False)
+</p><ul>
+<li>Queue.queue.clear()   清空队列
+</li>
+<li>Queue.task<sub>done</sub>() 每次get()相当于去完成一个任务，随后调用task<sub>done</sub>()，告诉队列任务完成。
+</li>
+<li>Queue.join() 阻塞等待，队列任务完成后，再继续执行
+</li>
+</ul>
+
+
+
+
+<pre class="src src-python"><span class="org-keyword">import</span> threading
+<span class="org-keyword">import</span> Queue
+<span class="org-keyword">def</span> <span class="org-function-name">worker</span>():
+    <span class="org-keyword">while</span> <span class="org-constant">True</span>:
+        <span class="org-variable-name">item</span> = q.get()
+        <span class="org-keyword">print</span> <span class="org-string">"My name is %s,I got %s and I have done my task"</span> % (threading.currentThread().getName(), item)
+        q.task_done()
+
+<span class="org-variable-name">q</span> = Queue.Queue()
+<span class="org-keyword">for</span> i <span class="org-keyword">in</span> <span class="org-builtin">range</span>(0, 5):
+     <span class="org-variable-name">t</span> = threading.Thread(target=worker)
+     <span class="org-variable-name">t.daemon</span> = <span class="org-constant">True</span>
+     t.start()
+
+<span class="org-keyword">for</span> item <span class="org-keyword">in</span> <span class="org-builtin">range</span>(0, 5):
+    q.put(item)
+
+<span class="org-keyword">print</span> <span class="org-string">"main thread block until all tasks are done"</span>
+q.join()
+<span class="org-keyword">print</span> <span class="org-string">"all task are done,I will go on"</span>
+</pre>
+
+<p>
+主线程中使用q.join，导致主线程阻塞，q.task<sub>dome</sub>()表示完成一个任务，当队列任务全部完成后，主线程停止阻塞，继续执行。
+</p></div>
+</div>
 </div>
 </div>
