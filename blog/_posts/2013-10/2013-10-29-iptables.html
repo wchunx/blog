@@ -1,0 +1,646 @@
+---
+layout: post
+keywords: 
+description: 
+title: iptables命令介绍 
+categories: [network]
+tags: [network,iptables]
+group: archive
+icon: compass
+featured: false
+---
+
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 iptables命令介绍</a>
+<ul>
+<li><a href="#sec-1-1">1.1 一、iptables的表与链</a></li>
+<li><a href="#sec-1-2">1.2 二、IPTABLES 规则(Rules)</a>
+<ul>
+<li><a href="#sec-1-2-1">1.2.1 目标值（Target Values）</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-3">1.3 三、清空所有iptables规则</a></li>
+<li><a href="#sec-1-4">1.4 四、永久生效</a>
+<ul>
+<li><a href="#sec-1-4-1">1.4.1 1.ubuntu</a></li>
+<li><a href="#sec-1-4-2">1.4.2 2.CentOS,RedHat</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-5">1.5 五、追加iptables规则</a>
+<ul>
+<li><a href="#sec-1-5-1">1.5.1 基本参数</a>
+<ul>
+<li><a href="#sec-1-5-1-1">1.5.1.1 -p 协议（protocol）</a></li>
+<li><a href="#sec-1-5-1-2">1.5.1.2 -s 源地址（source）</a></li>
+<li><a href="#sec-1-5-1-3">1.5.1.3 -d 目的地址（destination）</a></li>
+<li><a href="#sec-1-5-1-4">1.5.1.4 -j 执行目标（jump to target）</a></li>
+<li><a href="#sec-1-5-1-5">1.5.1.5 -i 输入接口（input interface）</a></li>
+<li><a href="#sec-1-5-1-6">1.5.1.6 -o 输出（out interface）</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-5-2">1.5.2 扩展参数</a>
+<ul>
+<li><a href="#sec-1-5-2-1">1.5.2.1 &ndash;sport 源端口（source port）针对 -p tcp 或者 -p udp</a></li>
+<li><a href="#sec-1-5-2-2">1.5.2.2 &ndash;dport 目的端口（destination port）针对-p tcp 或者 -p udp</a></li>
+<li><a href="#sec-1-5-2-3">1.5.2.3 &ndash;tcp-flags TCP标志 针对-p tcp</a></li>
+<li><a href="#sec-1-5-2-4">1.5.2.4 &ndash;icmp-type ICMP类型 针对-p icmp</a></li>
+</ul></li>
+</ul>
+</li>
+<li><a href="#sec-1-6">1.6 六、更改默认策略</a></li>
+<li><a href="#sec-1-7">1.7 七、检查数据包状态</a>
+<ul>
+<li><a href="#sec-1-7-1">1.7.1 1.SSH</a></li>
+<li><a href="#sec-1-7-2">1.7.2 2.HTTP</a></li>
+<li><a href="#sec-1-7-3">1.7.3 3.完整配置</a></li>
+</ul></li>
+</ul>
+</li>
+<li><a href="#sec-2">2 参考资料</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">iptables命令介绍</h2>
+<div class="outline-text-2" id="text-1">
+
+<p>iptables 防火墙可以用于创建过滤(filter)与NAT规则。所有Linux发行版都能使用iptables，因此理解如何配置iptables将会帮助你更有 效地管理Linux防火墙。如果你是第一次接触iptables，你会觉得它很复杂，但是一旦你理解iptables的工作原理，你会发现其实它很简单。
+</p>
+<p>
+首先介绍iptables的结构：iptables -&gt; Tables -&gt; Chains -&gt; Rules. 简单地讲，tables由chains组成，而chains又由rules组成。如下图所示。
+</p>
+
+
+<img src ="/images/2013-10/iptables-table-chain-rule-structure.png>"/>
+
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">一、iptables的表与链</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>iptables具有Filter, NAT, Mangle, Raw四种内建表：
+</p><ol>
+<li>Filter表
+</li>
+</ol>
+
+<p>Filter表示iptables的默认表，因此如果你没有自定义表，那么就默认使用filter表，它具有以下三种内建链：
+</p><ul>
+<li>INPUT链 – 处理来自外部的数据。
+</li>
+<li>OUTPUT链 – 处理向外发送的数据。
+</li>
+<li>FORWARD链 – 将数据转发到本机的其他网卡设备上
+</li>
+<li>NAT表
+</li>
+</ul>
+
+<p>NAT表有三种内建链：
+</p><ul>
+<li>PREROUTING链 – 处理刚到达本机并在路由转发前的数据包。它会转换数据包中的目标IP地址（destination ip address），通常用于DNAT(destination NAT)。
+</li>
+<li>POSTROUTING链 – 处理即将离开本机的数据包。它会转换数据包中的源IP地址（source ip address），通常用于SNAT（source NAT）。
+</li>
+<li>OUTPUT链 – 处理本机产生的数据包。
+</li>
+<li>Mangle表
+</li>
+</ul>
+
+<p>Mangle表用于指定如何处理数据包。它能改变TCP头中的QoS位。Mangle表具有5个内建链：
+</p><ul>
+<li>PREROUTING
+</li>
+<li>OUTPUT
+</li>
+<li>FORWARD
+</li>
+<li>INPUT
+</li>
+<li>POSTROUTING
+</li>
+<li>Raw表
+</li>
+</ul>
+
+<p>Raw表用于处理异常，它具有2个内建链：
+</p><ul>
+<li>PREROUTING chain
+</li>
+<li>OUTPUT chain
+</li>
+<li>小结
+</li>
+</ul>
+
+<p>下图展示了iptables的三个内建表：
+</p>
+
+
+<img src ="/images/2013-10/iptables-filter-nat-mangle-tables.png>"/>
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">二、IPTABLES 规则(Rules)</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>牢记以下三点式理解iptables规则的关键：
+</p><ul>
+<li>Rules包括一个条件和一个目标(target)
+</li>
+<li>如果满足条件，就执行目标(target)中的规则或者特定值。
+</li>
+<li>如果不满足条件，就判断下一条Rules。
+</li>
+</ul>
+
+
+</div>
+
+<div id="outline-container-1-2-1" class="outline-4">
+<h4 id="sec-1-2-1">目标值（Target Values）</h4>
+<div class="outline-text-4" id="text-1-2-1">
+
+<p>下面是你可以在target里指定的特殊值：
+</p><ul>
+<li>ACCEPT – 允许防火墙接收数据包
+</li>
+<li>DROP – 防火墙丢弃包
+</li>
+<li>QUEUE – 防火墙将数据包移交到用户空间
+</li>
+<li>RETURN – 防火墙停止执行当前链中的后续Rules，并返回到调用链(the calling chain)中。
+</li>
+</ul>
+
+<p>如果你执行iptables -nvL你将看到防火墙上的可用规则。下例说明当前系统没有定义防火墙，你可以看到，它显示了默认的filter表，以及表内默认的input链, forward链, output链。
+</p>
+
+
+<pre class="src src-sh">iptables -nvL
+Chain INPUT (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt<span style="color: #1c86ee;"> in</span>     out     source               destination         
+
+Chain FORWARD (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt<span style="color: #1c86ee;"> in</span>     out     source               destination         
+
+Chain OUTPUT (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt<span style="color: #1c86ee;"> in</span>     out     source               destination         
+</pre>
+
+<p>
+如果不指定-t选项，就只会显示默认的filter表。如果要查看其它表需用-t指定。查看NAT表：
+</p>
+
+
+<pre class="src src-sh">iptables -t nat -nvL
+</pre>
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">三、清空所有iptables规则</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>在配置iptables之前，你通常需要用iptables -nvL命令或者iptables -S命令查看有无现存规则.删除现有规则：
+</p>
+
+
+<pre class="src src-sh">iptables --flush
+&#25110;
+iptables -F
+</pre>
+
+<p>
+这两条命令是等效的。但是并非执行后就万事大吉了。你仍然需要检查规则是不是真的清空了，因为有的linux发行版上这个命令不会清除NAT表中的规则，此时只能手动清除：
+</p>
+
+
+<pre class="src src-sh">iptables -t NAT -F
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">四、永久生效</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>当你删除、添加规则后，这些更改并不能永久生效，这些规则很有可能在系统重启后恢复原样。为了让配置永久生效，根据平台的不同，具体操作也不同。下面进行简单介绍：
+</p>
+</div>
+
+<div id="outline-container-1-4-1" class="outline-4">
+<h4 id="sec-1-4-1">1.ubuntu</h4>
+<div class="outline-text-4" id="text-1-4-1">
+
+<p>首先，保存现有的规则：
+</p>
+
+
+<pre class="src src-sh">iptables-save &gt; /etc/iptables.rules
+</pre>
+
+<p>
+然后新建一个bash脚本，并保存到/etc/network/if-pre-up.d/目录下：
+</p>
+
+
+<pre class="src src-sh"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">!/bin/</span><span style="color: #1c86ee;">bash</span>
+iptables-restore &lt; /etc/iptables.rules
+</pre>
+
+<p>
+这样，每次系统重启后iptables规则都会被自动加载。
+注意：不要尝试在.bashrc或者.profile中执行以上命令，因为用户通常不是root，而且这只能在登录时加载iptables规则。
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4-2" class="outline-4">
+<h4 id="sec-1-4-2">2.CentOS,RedHat</h4>
+<div class="outline-text-4" id="text-1-4-2">
+
+
+
+
+<pre class="src src-sh"><span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">&#20445;&#23384;iptables&#35268;&#21017;</span>
+service iptables save
+<span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">&#37325;&#21551;iptables&#26381;&#21153;</span>
+service iptables stop
+service iptables start
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#26597;&#30475;&#24403;&#21069;&#35268;&#21017;&#65306;</span>
+cat  /etc/sysconfig/iptables
+</pre>
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">五、追加iptables规则</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p>可以使用iptables -A命令追加新规则，其中-A表示Append。因此，新的规则将追加到链尾。(iptables -I命令会将规则添加到链头)
+</p>
+</div>
+
+<div id="outline-container-1-5-1" class="outline-4">
+<h4 id="sec-1-5-1">基本参数</h4>
+<div class="outline-text-4" id="text-1-5-1">
+
+<p>以下这些规则参数用于描述数据包的协议、源地址、目的地址、允许经过的网络接口，以及如何处理这些数据包。这些描述是对规则的基本描述。
+</p>
+</div>
+
+<div id="outline-container-1-5-1-1" class="outline-5">
+<h5 id="sec-1-5-1-1">-p 协议（protocol）</h5>
+<div class="outline-text-5" id="text-1-5-1-1">
+
+<ul>
+<li>指定规则的协议，如tcp, udp, icmp等，可以使用all来指定所有协议。
+</li>
+<li>如果不指定-p参数，则默认是all值。这并不明智，请总是明确指定协议名称。
+</li>
+<li>可以使用协议名(如tcp)，或者是协议值（比如6代表tcp）来指定协议。映射关系请查看/etc/protocols
+</li>
+<li>还可以使用–protocol参数代替-p参数
+</li>
+</ul>
+
+</div>
+
+</div>
+
+<div id="outline-container-1-5-1-2" class="outline-5">
+<h5 id="sec-1-5-1-2">-s 源地址（source）</h5>
+<div class="outline-text-5" id="text-1-5-1-2">
+
+<ul>
+<li>指定数据包的源地址
+</li>
+<li>参数可以使IP地址、网络地址、主机名
+</li>
+<li>例如：-s 192.168.1.101指定IP地址
+</li>
+<li>例如：-s 192.168.1.10/24指定网络地址
+</li>
+<li>如果不指定-s参数，就代表所有地址
+</li>
+<li>还可以使用–src或者–source
+</li>
+</ul>
+
+</div>
+
+</div>
+
+<div id="outline-container-1-5-1-3" class="outline-5">
+<h5 id="sec-1-5-1-3">-d 目的地址（destination）</h5>
+<div class="outline-text-5" id="text-1-5-1-3">
+
+<ul>
+<li>指定目的地址
+</li>
+<li>参数和-s相同
+</li>
+<li>还可以使用–dst或者–destination
+</li>
+</ul>
+
+</div>
+
+</div>
+
+<div id="outline-container-1-5-1-4" class="outline-5">
+<h5 id="sec-1-5-1-4">-j 执行目标（jump to target）</h5>
+<div class="outline-text-5" id="text-1-5-1-4">
+
+<ul>
+<li>-j代表”jump to target”
+</li>
+<li>-j指定了当与规则(Rule)匹配时如何处理数据包
+</li>
+<li>可能的值是ACCEPT, DROP, QUEUE, RETURN
+</li>
+<li>还可以指定其他链（Chain）作为目标
+</li>
+</ul>
+
+</div>
+
+</div>
+
+<div id="outline-container-1-5-1-5" class="outline-5">
+<h5 id="sec-1-5-1-5">-i 输入接口（input interface）</h5>
+<div class="outline-text-5" id="text-1-5-1-5">
+
+<ul>
+<li>-i代表输入接口(input interface)
+</li>
+<li>-i指定了要处理来自哪个接口的数据包
+</li>
+<li>这些数据包即将进入INPUT, FORWARD, PREROUTE链
+</li>
+<li>例如：-i eth0指定了要处理经由eth0进入的数据包
+</li>
+<li>如果不指定-i参数，那么将处理进入所有接口的数据包
+</li>
+<li>如果出现! -i eth0，那么将处理所有经由eth0以外的接口进入的数据包
+</li>
+<li>如果出现-i eth+，那么将处理所有经由eth开头的接口进入的数据包
+</li>
+<li>还可以使用–in-interface参数
+</li>
+</ul>
+
+</div>
+
+</div>
+
+<div id="outline-container-1-5-1-6" class="outline-5">
+<h5 id="sec-1-5-1-6">-o 输出（out interface）</h5>
+<div class="outline-text-5" id="text-1-5-1-6">
+
+<ul>
+<li>-o代表”output interface”
+</li>
+<li>-o指定了数据包由哪个接口输出
+</li>
+<li>这些数据包即将进入FORWARD, OUTPUT, POSTROUTING链
+</li>
+<li>如果不指定-o选项，那么系统上的所有接口都可以作为输出接口
+</li>
+<li>如果出现! -o eth0，那么将从eth0以外的接口输出
+</li>
+<li>如果出现-i eth+，那么将仅从eth开头的接口输出
+</li>
+<li>还可以使用–out-interface参数
+</li>
+</ul>
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-1-5-2" class="outline-4">
+<h4 id="sec-1-5-2">扩展参数</h4>
+<div class="outline-text-4" id="text-1-5-2">
+
+<p>对规则有了一个基本描述之后，有时候我们还希望指定端口、TCP标志、ICMP类型等内容
+</p>
+</div>
+
+<div id="outline-container-1-5-2-1" class="outline-5">
+<h5 id="sec-1-5-2-1">&ndash;sport 源端口（source port）针对 -p tcp 或者 -p udp</h5>
+<div class="outline-text-5" id="text-1-5-2-1">
+
+<ul>
+<li>缺省情况下，将匹配所有端口
+</li>
+<li>可以指定端口号或者端口名称，例如”–sport 22″与”–sport ssh”。
+</li>
+<li>/etc/services文件描述了上述映射关系。
+</li>
+<li>从性能上讲，使用端口号更好
+</li>
+<li>使用冒号可以匹配端口范围，如”–sport 22:100″
+</li>
+<li>还可以使用”–source-port”
+</li>
+</ul>
+
+</div>
+
+</div>
+
+<div id="outline-container-1-5-2-2" class="outline-5">
+<h5 id="sec-1-5-2-2">&ndash;dport 目的端口（destination port）针对-p tcp 或者 -p udp</h5>
+<div class="outline-text-5" id="text-1-5-2-2">
+
+<ul>
+<li>参数和&ndash;sport类似
+</li>
+<li>还可以使用”–destination-port”
+</li>
+</ul>
+
+</div>
+
+</div>
+
+<div id="outline-container-1-5-2-3" class="outline-5">
+<h5 id="sec-1-5-2-3">&ndash;tcp-flags TCP标志 针对-p tcp</h5>
+<div class="outline-text-5" id="text-1-5-2-3">
+
+<ul>
+<li>可以指定由逗号分隔的多个参数
+</li>
+<li>有效值可以是：SYN, ACK, FIN, RST, URG, PSH
+</li>
+<li>可以使用ALL或者NONE
+</li>
+</ul>
+
+</div>
+
+</div>
+
+<div id="outline-container-1-5-2-4" class="outline-5">
+<h5 id="sec-1-5-2-4">&ndash;icmp-type ICMP类型 针对-p icmp</h5>
+<div class="outline-text-5" id="text-1-5-2-4">
+
+<ul>
+<li>&ndash;icmp-type 0 表示Echo Reply
+</li>
+<li>&ndash;icmp-type 8 表示Echo
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6">六、更改默认策略</h3>
+<div class="outline-text-3" id="text-1-6">
+
+<p>查看当前规则时可以看到所有的链旁边都有policy ACCEPT标注，这表明当前链的默认策略为ACCEPT。这种情况下，如果没有明确添加DROP规则，那么默认情况下将采用ACCEPT策略进行过滤。
+</p>
+<p>
+更改链的默认动作：
+</p>
+
+
+<pre class="src src-sh">iptables -P FORWARD DROP
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-1-7" class="outline-3">
+<h3 id="sec-1-7">七、检查数据包状态</h3>
+<div class="outline-text-3" id="text-1-7">
+
+
+</div>
+
+<div id="outline-container-1-7-1" class="outline-4">
+<h4 id="sec-1-7-1">1.SSH</h4>
+<div class="outline-text-4" id="text-1-7-1">
+
+
+
+
+<pre class="src src-sh"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">1.&#20801;&#35768;&#25509;&#25910;&#36828;&#31243;&#20027;&#26426;&#30340;SSH&#35831;&#27714;</span>
+iptables -A INPUT -i eth0 -p tcp --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">2.&#20801;&#35768;&#21457;&#36865;&#26412;&#22320;&#20027;&#26426;&#30340;SSH&#21709;&#24212;</span>
+iptables -A OUTPUT -o eth0 -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT
+</pre>
+
+<ul>
+<li>-m state: 启用状态匹配模块（state matching module）
+</li>
+<li>&ndash;state: 状态匹配模块的参数。当SSH客户端第一个数据包到达服务器时，状态字段为NEW；建立连接后数据包的状态字段都是ESTABLISHED
+</li>
+<li>&ndash;sport 22: sshd监听22端口，同时也通过该端口和客户端建立连接、传送数据。因此对于SSH服务器而言，源端口就是22
+</li>
+<li>&ndash;dport 22: ssh客户端程序可以从本机的随机端口与SSH服务器的22端口建立连接。因此对于SSH客户端而言，目的端口就是22
+</li>
+</ul>
+
+<p>如果服务器也需要使用SSH连接其他远程主机，则还需要增加以下配置：
+</p>
+
+
+<pre class="src src-sh"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">1.&#36865;&#20986;&#30340;&#25968;&#25454;&#21253;&#30446;&#30340;&#31471;&#21475;&#20026;22</span>
+iptables -A OUTPUT -o eth0 -p tcp --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">2.&#25509;&#25910;&#30340;&#25968;&#25454;&#21253;&#28304;&#31471;&#21475;&#20026;22</span>
+iptables -A INPUT -i eth0 -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-1-7-2" class="outline-4">
+<h4 id="sec-1-7-2">2.HTTP</h4>
+<div class="outline-text-4" id="text-1-7-2">
+
+<p>HTTP的配置与SSH类似
+</p>
+
+
+<pre class="src src-sh"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">1.&#20801;&#35768;&#25509;&#25910;&#36828;&#31243;&#20027;&#26426;&#30340;HTTP&#35831;&#27714;</span>
+iptables -A INPUT -i eth0 -p tcp --dport 80 -m state --state NEW,ESTABLISHED -j ACCEPT
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">1.&#20801;&#35768;&#21457;&#36865;&#26412;&#22320;&#20027;&#26426;&#30340;HTTP&#21709;&#24212;</span>
+iptables -A OUTPUT -o eth0 -p tcp --sport 80 -m state --state ESTABLISHED -j ACCEPT
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-1-7-3" class="outline-4">
+<h4 id="sec-1-7-3">3.完整配置</h4>
+<div class="outline-text-4" id="text-1-7-3">
+
+
+
+
+<pre class="src src-sh"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">1.&#21024;&#38500;&#29616;&#26377;&#35268;&#21017;</span>
+iptables -F
+
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">2.&#37197;&#32622;&#40664;&#35748;&#38142;&#31574;&#30053;</span>
+iptables -P INPUT DROP
+iptables -P FORWARD DROP
+iptables -P OUTPUT DROP
+
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">3.&#20801;&#35768;&#36828;&#31243;&#20027;&#26426;&#36827;&#34892;SSH&#36830;&#25509;</span>
+iptables -A INPUT -i eth0 -p tcp --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A OUTPUT -o eth0 -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT
+
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">4.&#20801;&#35768;&#26412;&#22320;&#20027;&#26426;&#36827;&#34892;SSH&#36830;&#25509;</span>
+iptables -A OUTPUT -o eth0 -p tcp --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A INPUT -i eth0 -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT
+
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">5.&#20801;&#35768;HTTP&#35831;&#27714;</span>
+iptables -A INPUT -i eth0 -p tcp --dport 80 -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A OUTPUT -o eth0 -p tcp --sport 80 -m state --state ESTABLISHED -j ACCEPT
+</pre>
+
+</div>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">参考资料</h2>
+<div class="outline-text-2" id="text-2">
+
+<p><a href="http://lesca.me/archives/iptables-tutorial-structures-configuratios-examples.html">iptables详细教程</a>
+</p>
+
+<p>
+<a href="http://www.thegeekstuff.com/2011/06/iptables-rules-examples/">25 Most Frequently Used Linux IPTables Rules Examples</a>
+</p></div>
+</div>

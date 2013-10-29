@@ -1,0 +1,15 @@
+#+BEGIN_HTML
+---
+layout: post
+keywords: 
+description: 
+title: something 
+categories: [something]
+tags: [something]
+group: archive
+icon: globe
+featured: false
+---
+#+END_HTML
+
+[[http://ciniao.me/article.php?id=9][用python来开发webgame服务端]]

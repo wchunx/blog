@@ -17,6 +17,11 @@ featured: false
 <li><a href="#sec-1">1 Emacs杂记</a>
 <ul>
 <li><a href="#sec-1-1">1.1 为什么选择Emacs</a></li>
+<li><a href="#sec-1-2">1.2 org-mode写jekyll代码高亮的问题</a>
+<ul>
+<li><a href="#sec-1-2-1">1.2.1 参考</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -36,5 +41,46 @@ featured: false
 
 <p>因为好奇开始学习和折腾Emacs，慢慢习惯，现在已经舍不得了，最然现在还只是个初学者，传说的神奇还没有深切体会，但会继续学下去的。
 </p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">org-mode写jekyll代码高亮的问题</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>为了使输出的代码高亮，在.emacs中设置(setq org-export-htmlize-output-type 'inline-css) ，对于htmlize，这个变量如果设为css,则需要
+下载一个css文件（比如 orgmode.org网站的css文件）才能着色，选择inline-css则依据emacs当前外观主题，下面为org-publish，添加defadvice，使得发布博客时使用whiteboard风格。
+</p>
+
+
+
+<pre class="src src-elisp">(<span style="color: #1c86ee;">defadvice</span> <span style="color: #cd9b1d;">org-publish</span> (around fsh-org-publish-advice
+                                        (project <span style="color: #00688b;">&amp;optional</span> force async) activate)
+  <span style="color: #cd853f;">"Change theme before publishing, for getting a good html code highlight style through</span>
+<span style="color: #cd853f;">htmlize."</span>
+  (<span style="color: #1c86ee;">let</span> ((thems custom-enabled-themes))
+      (<span style="color: #1c86ee;">dolist</span> (theme thems)
+        (disable-theme theme))
+      (load-theme 'whiteboard)
+      ad-do-it
+      (disable-theme 'whiteboard)
+      (<span style="color: #1c86ee;">dolist</span> (theme thems)
+        (enable-theme theme))
+      ))
+</pre>
+
+
+</div>
+
+<div id="outline-container-1-2-1" class="outline-4">
+<h4 id="sec-1-2-1">参考</h4>
+<div class="outline-text-4" id="text-1-2-1">
+
+<p><a href="http://ar.newsmth.net/thread-8fac5033e0ec5a-1.html">org-mode 中引用代码片段时语法着色的问题</a>
+</p>
+<p>
+<a href="http://fasheng.github.io/blog/2013-10-06-change-code-color-style-when-publish-org-mode-to-html.html">设置org-mode导出为html时的代码高亮风格</a>
+</p></div>
+</div>
 </div>
 </div>

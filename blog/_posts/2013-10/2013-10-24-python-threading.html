@@ -225,30 +225,30 @@ featured: false
 
 
 
-<pre class="src src-python"><span class="org-comment-delimiter">#</span><span class="org-comment">!/usr/bin/python</span>
-<span class="org-comment-delimiter">#</span><span class="org-comment">-*- coding: utf-8 -*-</span>
-<span class="org-keyword">import</span> threading
-<span class="org-comment-delimiter">#</span><span class="org-comment">&#23450;&#20041;&#32447;&#31243;&#20013;&#35201;&#25191;&#34892;&#30340;&#20989;&#25968;,&#25171;&#21360;&#32447;&#31243;&#21517;</span>
-<span class="org-keyword">def</span> <span class="org-function-name">thread_fun</span>(num):
-    <span class="org-keyword">for</span> n <span class="org-keyword">in</span> <span class="org-builtin">range</span>(0, <span class="org-builtin">int</span>(num)):
-        <span class="org-keyword">print</span> <span class="org-string">" I come from %s, num: %s"</span> %( threading.currentThread().getName(), n)
+<pre class="src src-python"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">!/usr/bin/python</span>
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">-*- coding: utf-8 -*-</span>
+<span style="color: #1c86ee;">import</span> threading
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#23450;&#20041;&#32447;&#31243;&#20013;&#35201;&#25191;&#34892;&#30340;&#20989;&#25968;,&#25171;&#21360;&#32447;&#31243;&#21517;</span>
+<span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">thread_fun</span>(num):
+    <span style="color: #1c86ee;">for</span> n <span style="color: #1c86ee;">in</span> <span style="color: #cd6600;">range</span>(0, <span style="color: #cd6600;">int</span>(num)):
+        <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">" I come from %s, num: %s"</span> %( threading.currentThread().getName(), n)
 
-<span class="org-keyword">def</span> <span class="org-function-name">test</span>(thread_num):
-    <span class="org-variable-name">thread_list</span> = <span class="org-builtin">list</span>();
-    <span class="org-comment-delimiter"># </span><span class="org-comment">&#20808;&#21019;&#24314;&#32447;&#31243;&#23545;&#35937;</span>
-    <span class="org-keyword">for</span> i <span class="org-keyword">in</span> <span class="org-builtin">range</span>(0, thread_num):
-        <span class="org-variable-name">thread_name</span> = <span class="org-string">"thread_%s"</span> %i
+<span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">test</span>(thread_num):
+    <span style="color: #2e8b57;">thread_list</span> = <span style="color: #cd6600;">list</span>();
+    <span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">&#20808;&#21019;&#24314;&#32447;&#31243;&#23545;&#35937;</span>
+    <span style="color: #1c86ee;">for</span> i <span style="color: #1c86ee;">in</span> <span style="color: #cd6600;">range</span>(0, thread_num):
+        <span style="color: #2e8b57;">thread_name</span> = <span style="color: #8b7355;">"thread_%s"</span> %i
         thread_list.append(threading.Thread(target = thread_fun, name = thread_name, args = (20,)))
 
-    <span class="org-comment-delimiter"># </span><span class="org-comment">&#21551;&#21160;&#25152;&#26377;&#32447;&#31243;</span>
-    <span class="org-keyword">for</span> thread <span class="org-keyword">in</span> thread_list:
+    <span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">&#21551;&#21160;&#25152;&#26377;&#32447;&#31243;</span>
+    <span style="color: #1c86ee;">for</span> thread <span style="color: #1c86ee;">in</span> thread_list:
         thread.start()
 
-    <span class="org-comment-delimiter"># </span><span class="org-comment">&#20027;&#32447;&#31243;&#25384;&#20010;&#35843;&#29992;&#23376;&#32447;&#31243;&#30340;join()&#65292;&#22914;&#26524;&#23376;&#32447;&#31243;&#36824;&#26410;&#36864;&#20986;&#65292;&#20027;&#32447;&#31243;&#23601;&#38459;&#22622;&#30452;&#21040;&#30693;&#36947;&#35813;&#23376;&#32447;&#31243;&#36864;&#20986;&#21518;&#25165;&#32487;&#32493;&#25191;&#34892;&#12290;&#31561;&#24453;&#25152;&#26377;&#23376;&#32447;&#31243;&#36864;&#20986;&#21518;&#65292;&#25191;&#34892;&#21518;&#38754;&#30340;&#20195;&#30721;</span>
-    <span class="org-keyword">for</span> thread <span class="org-keyword">in</span> thread_list:
+    <span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">&#20027;&#32447;&#31243;&#25384;&#20010;&#35843;&#29992;&#23376;&#32447;&#31243;&#30340;join()&#65292;&#22914;&#26524;&#23376;&#32447;&#31243;&#36824;&#26410;&#36864;&#20986;&#65292;&#20027;&#32447;&#31243;&#23601;&#38459;&#22622;&#30452;&#21040;&#30693;&#36947;&#35813;&#23376;&#32447;&#31243;&#36864;&#20986;&#21518;&#25165;&#32487;&#32493;&#25191;&#34892;&#12290;&#31561;&#24453;&#25152;&#26377;&#23376;&#32447;&#31243;&#36864;&#20986;&#21518;&#65292;&#25191;&#34892;&#21518;&#38754;&#30340;&#20195;&#30721;</span>
+    <span style="color: #1c86ee;">for</span> thread <span style="color: #1c86ee;">in</span> thread_list:
         thread.join()
 
-<span class="org-keyword">if</span> <span class="org-builtin">__name__</span> == <span class="org-string">"__main__"</span>:
+<span style="color: #1c86ee;">if</span> <span style="color: #cd6600;">__name__</span> == <span style="color: #8b7355;">"__main__"</span>:
     test(3)
 </pre>
 
@@ -267,19 +267,19 @@ target为要执行的函数对象，将被线程run()方法调用。name为线�
 
 
 
-<pre class="src src-python"><span class="org-comment-delimiter">#</span><span class="org-comment">!/usr/bin/python</span>
-<span class="org-comment-delimiter">#</span><span class="org-comment">-*- coding: utf-8 -*-</span>
-<span class="org-keyword">import</span> threading
+<pre class="src src-python"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">!/usr/bin/python</span>
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">-*- coding: utf-8 -*-</span>
+<span style="color: #1c86ee;">import</span> threading
 
-<span class="org-keyword">class</span> <span class="org-type">MyThread</span>(threading.Thread):
-    <span class="org-keyword">def</span> <span class="org-function-name">__init__</span>(<span class="org-keyword">self</span>):
-        threading.Thread.__init__(<span class="org-keyword">self</span>);
+<span style="color: #1c86ee;">class</span> <span style="color: #00688b;">MyThread</span>(threading.Thread):
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">__init__</span>(<span style="color: #1c86ee;">self</span>):
+        threading.Thread.__init__(<span style="color: #1c86ee;">self</span>);
 
-    <span class="org-keyword">def</span> <span class="org-function-name">run</span>(<span class="org-keyword">self</span>):
-        <span class="org-keyword">print</span> <span class="org-string">"I am %s"</span> %<span class="org-keyword">self</span>.name
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">run</span>(<span style="color: #1c86ee;">self</span>):
+        <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"I am %s"</span> %<span style="color: #1c86ee;">self</span>.name
 
-<span class="org-keyword">if</span> <span class="org-builtin">__name__</span> == <span class="org-string">"__main__"</span>:
-    <span class="org-keyword">for</span> thread <span class="org-keyword">in</span> <span class="org-builtin">range</span>(0, 5):
+<span style="color: #1c86ee;">if</span> <span style="color: #cd6600;">__name__</span> == <span style="color: #8b7355;">"__main__"</span>:
+    <span style="color: #1c86ee;">for</span> thread <span style="color: #1c86ee;">in</span> <span style="color: #cd6600;">range</span>(0, 5):
         t = MyThread()
         t.start()
 </pre>
@@ -302,9 +302,9 @@ target为要执行的函数对象，将被线程run()方法调用。name为线�
 
 
 
-<pre class="src src-python"><span class="org-keyword">def</span> <span class="org-function-name">__init__</span>(<span class="org-keyword">self</span>):
-     threading.Thread.__init__(<span class="org-keyword">self</span>)
-     <span class="org-keyword">self</span>.setName(<span class="org-string">"new"</span> + <span class="org-keyword">self</span>.name)
+<pre class="src src-python"><span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">__init__</span>(<span style="color: #1c86ee;">self</span>):
+     threading.Thread.__init__(<span style="color: #1c86ee;">self</span>)
+     <span style="color: #1c86ee;">self</span>.setName(<span style="color: #8b7355;">"new"</span> + <span style="color: #1c86ee;">self</span>.name)
 </pre>
 
 </div>
@@ -345,38 +345,38 @@ python对于thread的管理中有两个函数：join和setDaemon。
 </p>
 
 
-<pre class="src src-python"><span class="org-comment-delimiter">#</span><span class="org-comment">!/usr/bin/python</span>
-<span class="org-comment-delimiter">#</span><span class="org-comment">-*- coding: utf-8 -*-</span>
-<span class="org-keyword">import</span> threading
-<span class="org-keyword">import</span> time
+<pre class="src src-python"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">!/usr/bin/python</span>
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">-*- coding: utf-8 -*-</span>
+<span style="color: #1c86ee;">import</span> threading
+<span style="color: #1c86ee;">import</span> time
 
-<span class="org-keyword">class</span> <span class="org-type">MyThread</span>(threading.Thread):
-    <span class="org-keyword">def</span> <span class="org-function-name">__init__</span>(<span class="org-keyword">self</span>):
-        threading.Thread.__init__(<span class="org-keyword">self</span>)
+<span style="color: #1c86ee;">class</span> <span style="color: #00688b;">MyThread</span>(threading.Thread):
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">__init__</span>(<span style="color: #1c86ee;">self</span>):
+        threading.Thread.__init__(<span style="color: #1c86ee;">self</span>)
 
-    <span class="org-keyword">def</span> <span class="org-function-name">run</span>(<span class="org-keyword">self</span>):
-        <span class="org-keyword">global</span> num
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">run</span>(<span style="color: #1c86ee;">self</span>):
+        <span style="color: #1c86ee;">global</span> num
         time.sleep(1)
-        <span class="org-variable-name">num</span> = num+1
-        <span class="org-keyword">print</span> <span class="org-string">"%s set num to %s"</span> % (<span class="org-keyword">self</span>.name, num)
-<span class="org-variable-name">num</span> = 0
-<span class="org-keyword">def</span> <span class="org-function-name">test</span>():
-    <span class="org-keyword">for</span> i <span class="org-keyword">in</span> <span class="org-builtin">range</span>(0, 100):
-        <span class="org-variable-name">my_thread</span> = MyThread()
+        <span style="color: #2e8b57;">num</span> = num+1
+        <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"%s set num to %s"</span> % (<span style="color: #1c86ee;">self</span>.name, num)
+<span style="color: #2e8b57;">num</span> = 0
+<span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">test</span>():
+    <span style="color: #1c86ee;">for</span> i <span style="color: #1c86ee;">in</span> <span style="color: #cd6600;">range</span>(0, 100):
+        <span style="color: #2e8b57;">my_thread</span> = MyThread()
         my_thread.start()
-<span class="org-keyword">if</span> <span class="org-builtin">__name__</span> == <span class="org-string">'__main__'</span>:
+<span style="color: #1c86ee;">if</span> <span style="color: #cd6600;">__name__</span> == <span style="color: #8b7355;">'__main__'</span>:
     test()
-<span class="org-comment-delimiter">#</span><span class="org-comment">&#19979;&#38754;&#26159;&#36755;&#20986;&#30340;&#19968;&#37096;&#20998;</span>
-Thread-62 <span class="org-builtin">set</span> num to 53
-Thread-39 <span class="org-builtin">set</span> num to 39
-Thread-43 <span class="org-builtin">set</span> num to 55
-Thread-46 <span class="org-builtin">set</span> num to 57
-Thread-51 <span class="org-builtin">set</span> num to 47
-Thread-52 <span class="org-builtin">set</span> num to 59
-Thread-56 <span class="org-builtin">set</span> num to 61
-Thread-59 <span class="org-builtin">set</span> num to 62
-Thread-49 <span class="org-builtin">set</span> num to 58
-Thread-63 <span class="org-builtin">set</span> num to 63
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#19979;&#38754;&#26159;&#36755;&#20986;&#30340;&#19968;&#37096;&#20998;</span>
+Thread-62 <span style="color: #cd6600;">set</span> num to 53
+Thread-39 <span style="color: #cd6600;">set</span> num to 39
+Thread-43 <span style="color: #cd6600;">set</span> num to 55
+Thread-46 <span style="color: #cd6600;">set</span> num to 57
+Thread-51 <span style="color: #cd6600;">set</span> num to 47
+Thread-52 <span style="color: #cd6600;">set</span> num to 59
+Thread-56 <span style="color: #cd6600;">set</span> num to 61
+Thread-59 <span style="color: #cd6600;">set</span> num to 62
+Thread-49 <span style="color: #cd6600;">set</span> num to 58
+Thread-63 <span style="color: #cd6600;">set</span> num to 63
 </pre>
 
 <p>
@@ -398,11 +398,11 @@ threading模块中定义了Lock类，可以方便的处理锁定：
 </p>
 
 
-<pre class="src src-python"><span class="org-comment-delimiter">#</span><span class="org-comment">&#21019;&#24314;&#38145;</span>
-<span class="org-variable-name">mutex</span> = threading.Lock()
-<span class="org-comment-delimiter">#</span><span class="org-comment">&#38145;&#23450;</span>
+<pre class="src src-python"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#21019;&#24314;&#38145;</span>
+<span style="color: #2e8b57;">mutex</span> = threading.Lock()
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#38145;&#23450;</span>
 mutex.acquire([timeout])
-<span class="org-comment-delimiter">#</span><span class="org-comment">&#37322;&#25918;</span>
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#37322;&#25918;</span>
 mutex.release()
 </pre>
 
@@ -411,26 +411,26 @@ mutex.release()
 </p>
 
 
-<pre class="src src-python"><span class="org-keyword">import</span> threading
-<span class="org-keyword">import</span> time
+<pre class="src src-python"><span style="color: #1c86ee;">import</span> threading
+<span style="color: #1c86ee;">import</span> time
 
-<span class="org-variable-name">num</span> = 0
-<span class="org-variable-name">mutex</span> = threading.Lock()
+<span style="color: #2e8b57;">num</span> = 0
+<span style="color: #2e8b57;">mutex</span> = threading.Lock()
 
-<span class="org-keyword">class</span> <span class="org-type">MyThread</span>(threading.Thread):
-    <span class="org-keyword">def</span> <span class="org-function-name">__init__</span>(<span class="org-keyword">self</span>):
-        threading.Thread.__init__(<span class="org-keyword">self</span>)
+<span style="color: #1c86ee;">class</span> <span style="color: #00688b;">MyThread</span>(threading.Thread):
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">__init__</span>(<span style="color: #1c86ee;">self</span>):
+        threading.Thread.__init__(<span style="color: #1c86ee;">self</span>)
 
-    <span class="org-keyword">def</span> <span class="org-function-name">run</span>(<span class="org-keyword">self</span>):
-        <span class="org-keyword">global</span> num, mutex
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">run</span>(<span style="color: #1c86ee;">self</span>):
+        <span style="color: #1c86ee;">global</span> num, mutex
         time.sleep(1);
-        <span class="org-keyword">if</span> mutex.acquire():
-            <span class="org-variable-name">num</span> += 1
-            <span class="org-keyword">print</span> <span class="org-string">"%s set num to %s"</span> % (<span class="org-keyword">self</span>.name, num)
+        <span style="color: #1c86ee;">if</span> mutex.acquire():
+            <span style="color: #2e8b57;">num</span> += 1
+            <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"%s set num to %s"</span> % (<span style="color: #1c86ee;">self</span>.name, num)
             mutex.release()
 
-<span class="org-keyword">if</span> <span class="org-builtin">__name__</span> == <span class="org-string">"__main__"</span>:
-    <span class="org-keyword">for</span> i <span class="org-keyword">in</span> <span class="org-builtin">range</span>(0, 100):
+<span style="color: #1c86ee;">if</span> <span style="color: #cd6600;">__name__</span> == <span style="color: #8b7355;">"__main__"</span>:
+    <span style="color: #1c86ee;">for</span> i <span style="color: #1c86ee;">in</span> <span style="color: #cd6600;">range</span>(0, 100):
         my_thread = MyThread()
         my_thread.start()
 </pre>
@@ -467,47 +467,47 @@ mutex.release()
 </p>
 
 
-<pre class="src src-python"><span class="org-comment-delimiter">#</span><span class="org-comment">-*- coding: utf-8 -*-</span>
-<span class="org-keyword">import</span> threading
+<pre class="src src-python"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">-*- coding: utf-8 -*-</span>
+<span style="color: #1c86ee;">import</span> threading
 
-<span class="org-variable-name">counterA</span> = 0
-<span class="org-variable-name">counterB</span> = 0
+<span style="color: #2e8b57;">counterA</span> = 0
+<span style="color: #2e8b57;">counterB</span> = 0
 
-<span class="org-variable-name">mutexA</span> = threading.Lock()
-<span class="org-variable-name">mutexB</span> = threading.Lock()
+<span style="color: #2e8b57;">mutexA</span> = threading.Lock()
+<span style="color: #2e8b57;">mutexB</span> = threading.Lock()
 
-<span class="org-keyword">class</span> <span class="org-type">MyThread</span>(threading.Thread):
-    <span class="org-keyword">def</span> <span class="org-function-name">__init__</span>(<span class="org-keyword">self</span>):
-        threading.Thread.__init__(<span class="org-keyword">self</span>)
+<span style="color: #1c86ee;">class</span> <span style="color: #00688b;">MyThread</span>(threading.Thread):
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">__init__</span>(<span style="color: #1c86ee;">self</span>):
+        threading.Thread.__init__(<span style="color: #1c86ee;">self</span>)
 
-    <span class="org-keyword">def</span> <span class="org-function-name">run</span>(<span class="org-keyword">self</span>):
-        <span class="org-keyword">self</span>.fun1()
-        <span class="org-keyword">self</span>.fun2()
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">run</span>(<span style="color: #1c86ee;">self</span>):
+        <span style="color: #1c86ee;">self</span>.fun1()
+        <span style="color: #1c86ee;">self</span>.fun2()
 
-    <span class="org-keyword">def</span> <span class="org-function-name">fun1</span>(<span class="org-keyword">self</span>):
-        <span class="org-keyword">global</span> mutexA, mutexB
-        <span class="org-keyword">if</span> mutexA.acquire():
-            <span class="org-keyword">print</span> <span class="org-string">"I am %s , get res: %s"</span> %(<span class="org-keyword">self</span>.name, <span class="org-string">"ResA"</span>)
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">fun1</span>(<span style="color: #1c86ee;">self</span>):
+        <span style="color: #1c86ee;">global</span> mutexA, mutexB
+        <span style="color: #1c86ee;">if</span> mutexA.acquire():
+            <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"I am %s , get res: %s"</span> %(<span style="color: #1c86ee;">self</span>.name, <span style="color: #8b7355;">"ResA"</span>)
 
-            <span class="org-keyword">if</span> mutexB.acquire():
-                <span class="org-keyword">print</span> <span class="org-string">"I am %s , get res: %s"</span> %(<span class="org-keyword">self</span>.name, <span class="org-string">"ResB"</span>)
+            <span style="color: #1c86ee;">if</span> mutexB.acquire():
+                <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"I am %s , get res: %s"</span> %(<span style="color: #1c86ee;">self</span>.name, <span style="color: #8b7355;">"ResB"</span>)
                 mutexB.release()
 
         mutexA.release()
 
-    <span class="org-keyword">def</span> <span class="org-function-name">fun2</span>(<span class="org-keyword">self</span>):
-        <span class="org-keyword">global</span> mutexA, mutexB
-        <span class="org-keyword">if</span> mutexB.acquire():
-            <span class="org-keyword">print</span> <span class="org-string">"I am %s , get res: %s"</span> %(<span class="org-keyword">self</span>.name, <span class="org-string">"ResB"</span>)
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">fun2</span>(<span style="color: #1c86ee;">self</span>):
+        <span style="color: #1c86ee;">global</span> mutexA, mutexB
+        <span style="color: #1c86ee;">if</span> mutexB.acquire():
+            <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"I am %s , get res: %s"</span> %(<span style="color: #1c86ee;">self</span>.name, <span style="color: #8b7355;">"ResB"</span>)
 
-            <span class="org-keyword">if</span> mutexA.acquire():
-                <span class="org-keyword">print</span> <span class="org-string">"I am %s , get res: %s"</span> %(<span class="org-keyword">self</span>.name, <span class="org-string">"ResA"</span>)
+            <span style="color: #1c86ee;">if</span> mutexA.acquire():
+                <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"I am %s , get res: %s"</span> %(<span style="color: #1c86ee;">self</span>.name, <span style="color: #8b7355;">"ResA"</span>)
                 mutexA.release()
 
         mutexB.release()
 
-<span class="org-keyword">if</span> <span class="org-builtin">__name__</span> == <span class="org-string">"__main__"</span>:
-    <span class="org-keyword">for</span> i <span class="org-keyword">in</span> <span class="org-builtin">range</span>(0, 100):
+<span style="color: #1c86ee;">if</span> <span style="color: #cd6600;">__name__</span> == <span style="color: #8b7355;">"__main__"</span>:
+    <span style="color: #1c86ee;">for</span> i <span style="color: #1c86ee;">in</span> <span style="color: #cd6600;">range</span>(0, 100):
         my_thread = MyThread()
         my_thread.start()
 </pre>
@@ -535,31 +535,31 @@ mutex.release()
 </p>
 
 
-<pre class="src src-python"><span class="org-keyword">import</span> threading
-<span class="org-keyword">import</span> time
+<pre class="src src-python"><span style="color: #1c86ee;">import</span> threading
+<span style="color: #1c86ee;">import</span> time
 
-<span class="org-keyword">class</span> <span class="org-type">MyThread</span>(threading.Thread):
-    <span class="org-keyword">def</span> <span class="org-function-name">run</span>(<span class="org-keyword">self</span>):
-        <span class="org-keyword">global</span> num 
+<span style="color: #1c86ee;">class</span> <span style="color: #00688b;">MyThread</span>(threading.Thread):
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">run</span>(<span style="color: #1c86ee;">self</span>):
+        <span style="color: #1c86ee;">global</span> num 
         time.sleep(1)
 
-        <span class="org-keyword">if</span> mutex.acquire(1):  
-            <span class="org-variable-name">num</span> = num+1
-            <span class="org-variable-name">msg</span> = <span class="org-keyword">self</span>.name+<span class="org-string">' set num to '</span>+<span class="org-builtin">str</span>(num)
-            <span class="org-keyword">print</span> msg
+        <span style="color: #1c86ee;">if</span> mutex.acquire(1):  
+            <span style="color: #2e8b57;">num</span> = num+1
+            <span style="color: #2e8b57;">msg</span> = <span style="color: #1c86ee;">self</span>.name+<span style="color: #8b7355;">' set num to '</span>+<span style="color: #cd6600;">str</span>(num)
+            <span style="color: #1c86ee;">print</span> msg
             mutex.acquire()
             mutex.release()
             mutex.release()
-<span class="org-variable-name">num</span> = 0
-<span class="org-variable-name">mutex</span> = threading.Lock()
-<span class="org-keyword">def</span> <span class="org-function-name">test</span>():
-    <span class="org-keyword">for</span> i <span class="org-keyword">in</span> <span class="org-builtin">range</span>(5):
-        <span class="org-variable-name">t</span> = MyThread()
+<span style="color: #2e8b57;">num</span> = 0
+<span style="color: #2e8b57;">mutex</span> = threading.Lock()
+<span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">test</span>():
+    <span style="color: #1c86ee;">for</span> i <span style="color: #1c86ee;">in</span> <span style="color: #cd6600;">range</span>(5):
+        <span style="color: #2e8b57;">t</span> = MyThread()
         t.start()
-<span class="org-keyword">if</span> <span class="org-builtin">__name__</span> == <span class="org-string">'__main__'</span>:
+<span style="color: #1c86ee;">if</span> <span style="color: #cd6600;">__name__</span> == <span style="color: #8b7355;">'__main__'</span>:
     test()
-<span class="org-comment-delimiter">#</span><span class="org-comment">&#36816;&#34892;&#32467;&#26524;</span>
-Thread-1 <span class="org-builtin">set</span> num to 1
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#36816;&#34892;&#32467;&#26524;</span>
+Thread-1 <span style="color: #cd6600;">set</span> num to 1
 </pre>
 
 <p>
@@ -580,7 +580,7 @@ Thread-1 <span class="org-builtin">set</span> num to 1
 </p>
 
 
-<pre class="src src-python"><span class="org-variable-name">mutex</span> = threading.Lock()
+<pre class="src src-python"><span style="color: #2e8b57;">mutex</span> = threading.Lock()
 </pre>
 
 <p>
@@ -588,7 +588,7 @@ Thread-1 <span class="org-builtin">set</span> num to 1
 </p>
 
 
-<pre class="src src-python"><span class="org-variable-name">mutex</span> = threading.Lock()
+<pre class="src src-python"><span style="color: #2e8b57;">mutex</span> = threading.Lock()
 </pre>
 
 </div>
@@ -631,54 +631,54 @@ Condition对象的构造函数可以接受一个Lock/RLock对象作为参数，�
 </p>
 
 
-<pre class="src src-python"><span class="org-keyword">import</span> threading
-<span class="org-keyword">import</span> time
+<pre class="src src-python"><span style="color: #1c86ee;">import</span> threading
+<span style="color: #1c86ee;">import</span> time
 
-<span class="org-variable-name">condition</span> = threading.Condition()
-<span class="org-variable-name">products</span> = 0
+<span style="color: #2e8b57;">condition</span> = threading.Condition()
+<span style="color: #2e8b57;">products</span> = 0
 
-<span class="org-keyword">class</span> <span class="org-type">Producer</span>(threading.Thread):
-    <span class="org-keyword">def</span> <span class="org-function-name">__init__</span>(<span class="org-keyword">self</span>):
-        threading.Thread.__init__(<span class="org-keyword">self</span>)
+<span style="color: #1c86ee;">class</span> <span style="color: #00688b;">Producer</span>(threading.Thread):
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">__init__</span>(<span style="color: #1c86ee;">self</span>):
+        threading.Thread.__init__(<span style="color: #1c86ee;">self</span>)
 
-    <span class="org-keyword">def</span> <span class="org-function-name">run</span>(<span class="org-keyword">self</span>):
-        <span class="org-keyword">global</span> condition, products
-        <span class="org-keyword">while</span> <span class="org-constant">True</span>:
-            <span class="org-keyword">if</span> condition.acquire():
-                <span class="org-keyword">if</span> products &lt; 10:
-                    <span class="org-variable-name">products</span> += 1;
-                    <span class="org-keyword">print</span> <span class="org-string">"Producer(%s):deliver one, now products:%s"</span> %(<span class="org-keyword">self</span>.name, products)
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">run</span>(<span style="color: #1c86ee;">self</span>):
+        <span style="color: #1c86ee;">global</span> condition, products
+        <span style="color: #1c86ee;">while</span> <span style="color: #6e8b3d;">True</span>:
+            <span style="color: #1c86ee;">if</span> condition.acquire():
+                <span style="color: #1c86ee;">if</span> products &lt; 10:
+                    <span style="color: #2e8b57;">products</span> += 1;
+                    <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"Producer(%s):deliver one, now products:%s"</span> %(<span style="color: #1c86ee;">self</span>.name, products)
                     condition.notify()
-                <span class="org-keyword">else</span>:
-                    <span class="org-keyword">print</span> <span class="org-string">"Producer(%s):already 10, stop deliver, now products:%s"</span> %(<span class="org-keyword">self</span>.name, products)
+                <span style="color: #1c86ee;">else</span>:
+                    <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"Producer(%s):already 10, stop deliver, now products:%s"</span> %(<span style="color: #1c86ee;">self</span>.name, products)
                     condition.wait();
                 condition.release()
                 time.sleep(2)
 
-<span class="org-keyword">class</span> <span class="org-type">Consumer</span>(threading.Thread):
-    <span class="org-keyword">def</span> <span class="org-function-name">__init__</span>(<span class="org-keyword">self</span>):
-        threading.Thread.__init__(<span class="org-keyword">self</span>)
+<span style="color: #1c86ee;">class</span> <span style="color: #00688b;">Consumer</span>(threading.Thread):
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">__init__</span>(<span style="color: #1c86ee;">self</span>):
+        threading.Thread.__init__(<span style="color: #1c86ee;">self</span>)
 
-    <span class="org-keyword">def</span> <span class="org-function-name">run</span>(<span class="org-keyword">self</span>):
-        <span class="org-keyword">global</span> condition, products
-        <span class="org-keyword">while</span> <span class="org-constant">True</span>:
-            <span class="org-keyword">if</span> condition.acquire():
-                <span class="org-keyword">if</span> products &gt; 1:
-                    <span class="org-variable-name">products</span> -= 1
-                    <span class="org-keyword">print</span> <span class="org-string">"Consumer(%s):consume one, now products:%s"</span> %(<span class="org-keyword">self</span>.name, products)
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">run</span>(<span style="color: #1c86ee;">self</span>):
+        <span style="color: #1c86ee;">global</span> condition, products
+        <span style="color: #1c86ee;">while</span> <span style="color: #6e8b3d;">True</span>:
+            <span style="color: #1c86ee;">if</span> condition.acquire():
+                <span style="color: #1c86ee;">if</span> products &gt; 1:
+                    <span style="color: #2e8b57;">products</span> -= 1
+                    <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"Consumer(%s):consume one, now products:%s"</span> %(<span style="color: #1c86ee;">self</span>.name, products)
                     condition.notify()
-                <span class="org-keyword">else</span>:
-                    <span class="org-keyword">print</span> <span class="org-string">"Consumer(%s):only 1, stop consume, products:%s"</span> %(<span class="org-keyword">self</span>.name, products)
+                <span style="color: #1c86ee;">else</span>:
+                    <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"Consumer(%s):only 1, stop consume, products:%s"</span> %(<span style="color: #1c86ee;">self</span>.name, products)
                     condition.wait();
                 condition.release()
                 time.sleep(2)
 
-<span class="org-keyword">if</span> <span class="org-builtin">__name__</span> == <span class="org-string">"__main__"</span>:
-    <span class="org-keyword">for</span> p <span class="org-keyword">in</span> <span class="org-builtin">range</span>(0, 2):
+<span style="color: #1c86ee;">if</span> <span style="color: #cd6600;">__name__</span> == <span style="color: #8b7355;">"__main__"</span>:
+    <span style="color: #1c86ee;">for</span> p <span style="color: #1c86ee;">in</span> <span style="color: #cd6600;">range</span>(0, 2):
         p = Producer()
         p.start()
 
-    <span class="org-keyword">for</span> c <span class="org-keyword">in</span> <span class="org-builtin">range</span>(0, 10):
+    <span style="color: #1c86ee;">for</span> c <span style="color: #1c86ee;">in</span> <span style="color: #cd6600;">range</span>(0, 10):
         c = Consumer()
         c.start()
 </pre>
@@ -688,21 +688,21 @@ Condition对象的构造函数可以接受一个Lock/RLock对象作为参数，�
 </p>
 
 
-<pre class="src src-sh"><span class="org-function-name">Producer</span>(Thread-1):deliver one, now products:1
-<span class="org-function-name">Producer</span>(Thread-2):deliver one, now products:2
-<span class="org-function-name">Consumer</span>(Thread-3):consume one, now products:1
-<span class="org-function-name">Consumer</span>(Thread-4):only 1, stop consume, products:1
-<span class="org-function-name">Consumer</span>(Thread-5):only 1, stop consume, products:1
-<span class="org-function-name">Consumer</span>(Thread-6):only 1, stop consume, products:1
-<span class="org-function-name">Consumer</span>(Thread-7):only 1, stop consume, products:1
-<span class="org-function-name">Consumer</span>(Thread-8):only 1, stop consume, products:1
-<span class="org-function-name">Consumer</span>(Thread-9):only 1, stop consume, products:1
-<span class="org-function-name">Consumer</span>(Thread-10):only 1, stop consume, products:1
-<span class="org-function-name">Consumer</span>(Thread-11):only 1, stop consume, products:1
-<span class="org-function-name">Consumer</span>(Thread-12):only 1, stop consume, products:1
-<span class="org-function-name">Producer</span>(Thread-1):deliver one, now products:2
-<span class="org-function-name">Producer</span>(Thread-2):deliver one, now products:3
-<span class="org-function-name">Consumer</span>(Thread-3):consume one, now products:2
+<pre class="src src-sh"><span style="color: #cd9b1d;">Producer</span>(Thread-1):deliver one, now products:1
+<span style="color: #cd9b1d;">Producer</span>(Thread-2):deliver one, now products:2
+<span style="color: #cd9b1d;">Consumer</span>(Thread-3):consume one, now products:1
+<span style="color: #cd9b1d;">Consumer</span>(Thread-4):only 1, stop consume, products:1
+<span style="color: #cd9b1d;">Consumer</span>(Thread-5):only 1, stop consume, products:1
+<span style="color: #cd9b1d;">Consumer</span>(Thread-6):only 1, stop consume, products:1
+<span style="color: #cd9b1d;">Consumer</span>(Thread-7):only 1, stop consume, products:1
+<span style="color: #cd9b1d;">Consumer</span>(Thread-8):only 1, stop consume, products:1
+<span style="color: #cd9b1d;">Consumer</span>(Thread-9):only 1, stop consume, products:1
+<span style="color: #cd9b1d;">Consumer</span>(Thread-10):only 1, stop consume, products:1
+<span style="color: #cd9b1d;">Consumer</span>(Thread-11):only 1, stop consume, products:1
+<span style="color: #cd9b1d;">Consumer</span>(Thread-12):only 1, stop consume, products:1
+<span style="color: #cd9b1d;">Producer</span>(Thread-1):deliver one, now products:2
+<span style="color: #cd9b1d;">Producer</span>(Thread-2):deliver one, now products:3
+<span style="color: #cd9b1d;">Consumer</span>(Thread-3):consume one, now products:2
 ...
 </pre>
 
@@ -721,29 +721,29 @@ threading.Event可以使一个线程等待其他线程的通知。其内置了�
 </p>
 
 
-<pre class="src src-python"><span class="org-keyword">import</span> threading
-<span class="org-keyword">import</span> time
+<pre class="src src-python"><span style="color: #1c86ee;">import</span> threading
+<span style="color: #1c86ee;">import</span> time
 
-<span class="org-keyword">class</span> <span class="org-type">MyThread</span>(threading.Thread):
-    <span class="org-keyword">def</span> <span class="org-function-name">__init__</span>(<span class="org-keyword">self</span>, signal):
-        threading.Thread.__init__(<span class="org-keyword">self</span>)
-        <span class="org-keyword">self</span>.singal = signal
+<span style="color: #1c86ee;">class</span> <span style="color: #00688b;">MyThread</span>(threading.Thread):
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">__init__</span>(<span style="color: #1c86ee;">self</span>, signal):
+        threading.Thread.__init__(<span style="color: #1c86ee;">self</span>)
+        <span style="color: #1c86ee;">self</span>.singal = signal
 
-    <span class="org-keyword">def</span> <span class="org-function-name">run</span>(<span class="org-keyword">self</span>):
-        <span class="org-keyword">print</span> <span class="org-string">"I am %s,I will sleep ..."</span>%<span class="org-keyword">self</span>.name
-        <span class="org-keyword">self</span>.singal.wait()
-        <span class="org-keyword">print</span> <span class="org-string">"I am %s, I awake..."</span> %<span class="org-keyword">self</span>.name
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">run</span>(<span style="color: #1c86ee;">self</span>):
+        <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"I am %s,I will sleep ..."</span>%<span style="color: #1c86ee;">self</span>.name
+        <span style="color: #1c86ee;">self</span>.singal.wait()
+        <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"I am %s, I awake..."</span> %<span style="color: #1c86ee;">self</span>.name
 
-<span class="org-keyword">if</span> <span class="org-builtin">__name__</span> == <span class="org-string">"__main__"</span>:
+<span style="color: #1c86ee;">if</span> <span style="color: #cd6600;">__name__</span> == <span style="color: #8b7355;">"__main__"</span>:
     singal = threading.Event()
-    <span class="org-keyword">for</span> t <span class="org-keyword">in</span> <span class="org-builtin">range</span>(0, 3):
+    <span style="color: #1c86ee;">for</span> t <span style="color: #1c86ee;">in</span> <span style="color: #cd6600;">range</span>(0, 3):
         thread = MyThread(singal)
         thread.start()
 
-    <span class="org-keyword">print</span> <span class="org-string">"main thread sleep 3 seconds... "</span>
+    <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"main thread sleep 3 seconds... "</span>
     time.sleep(3)
 
-    singal.<span class="org-builtin">set</span>()
+    singal.<span style="color: #cd6600;">set</span>()
 </pre>
 
 <p>
@@ -844,26 +844,26 @@ block=False,写入是非阻塞的，队列满后即抛出exception Queue.Full异
 
 
 
-<pre class="src src-python"><span class="org-keyword">import</span> threading
-<span class="org-keyword">import</span> Queue
-<span class="org-keyword">def</span> <span class="org-function-name">worker</span>():
-    <span class="org-keyword">while</span> <span class="org-constant">True</span>:
-        <span class="org-variable-name">item</span> = q.get()
-        <span class="org-keyword">print</span> <span class="org-string">"My name is %s,I got %s and I have done my task"</span> % (threading.currentThread().getName(), item)
+<pre class="src src-python"><span style="color: #1c86ee;">import</span> threading
+<span style="color: #1c86ee;">import</span> Queue
+<span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">worker</span>():
+    <span style="color: #1c86ee;">while</span> <span style="color: #6e8b3d;">True</span>:
+        <span style="color: #2e8b57;">item</span> = q.get()
+        <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"My name is %s,I got %s and I have done my task"</span> % (threading.currentThread().getName(), item)
         q.task_done()
 
-<span class="org-variable-name">q</span> = Queue.Queue()
-<span class="org-keyword">for</span> i <span class="org-keyword">in</span> <span class="org-builtin">range</span>(0, 5):
-     <span class="org-variable-name">t</span> = threading.Thread(target=worker)
-     <span class="org-variable-name">t.daemon</span> = <span class="org-constant">True</span>
+<span style="color: #2e8b57;">q</span> = Queue.Queue()
+<span style="color: #1c86ee;">for</span> i <span style="color: #1c86ee;">in</span> <span style="color: #cd6600;">range</span>(0, 5):
+     <span style="color: #2e8b57;">t</span> = threading.Thread(target=worker)
+     <span style="color: #2e8b57;">t.daemon</span> = <span style="color: #6e8b3d;">True</span>
      t.start()
 
-<span class="org-keyword">for</span> item <span class="org-keyword">in</span> <span class="org-builtin">range</span>(0, 5):
+<span style="color: #1c86ee;">for</span> item <span style="color: #1c86ee;">in</span> <span style="color: #cd6600;">range</span>(0, 5):
     q.put(item)
 
-<span class="org-keyword">print</span> <span class="org-string">"main thread block until all tasks are done"</span>
+<span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"main thread block until all tasks are done"</span>
 q.join()
-<span class="org-keyword">print</span> <span class="org-string">"all task are done,I will go on"</span>
+<span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"all task are done,I will go on"</span>
 </pre>
 
 <p>

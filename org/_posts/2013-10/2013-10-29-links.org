@@ -1,0 +1,33 @@
+#+BEGIN_HTML
+---
+layout: post
+keywords: 
+description: 
+title: 三人行 
+categories: [Links] 
+tags: [Links]
+group: archive
+icon: globe
+featured: false
+---
+#+END_HTML
+* openstack
+[[https://wiki.openstack.org/wiki/Main_Page][wiki]]
+
+[[http://www.mirantis.com/blog/][mirantis]]
+
+孔令贤 [[http://lynnkong.iteye.com/][活到老，学到老]]    [[http://blog.csdn.net/lynn_kong][代码改变世界]]
+* 博客
+[[http://coolshell.cn/][酷壳]]
+
+[[http://smilejay.com/]]
+
+[[http://kodango.com/][团子的小窝]]
+
+[[http://jerrypeng.me/][Jerry's Blog]]
+
+[[http://ciniao.me/][刺鸟]]
+
+* 资源
+[[http://www.tutorialspoint.com/][手册大全]]
+
