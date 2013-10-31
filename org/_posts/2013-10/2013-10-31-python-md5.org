@@ -1,0 +1,113 @@
+#+BEGIN_HTML
+---
+layout: post
+keywords: 
+description: 
+title: Python获取md5 
+categories: [python]
+tags: [python,md5]
+group: archive
+icon: code
+featured: false
+---
+#+END_HTML
+* md5简介
+** md5是什么
+MD5是message-digest algorithm 5（信息-摘要算法）的缩写，被广泛用于加密和解密技术上，它可以说是文件的“数字指纹”。任何一个文件，无论是可执行程序、图像文件、临时文件或者其他任何类型的文件，也不管它体积多大，都有且只有一个独一无二的MD5信息值，并且如果这个文件被修改过，它的MD5值也将随之改变。因此，我们可以通过对比同一文件的MD5值，来校验这个文件是否被“篡改”过。
+** md5的作用
+当我们下载了某个文件后，如果想知道下载的这个文件和网站的原始文件是否一模一样，就可以给自己下载的文件做个MD5校验。如果得到的MD5值和网站公布的相同，可确认所下载的文件是完整的。如有不同，说明你下载的文件是不完整的：要么就是在网络下载的过程中出现错误，要么就是此文件已被别人修改。为防止他人更改该文件时放入病毒，最好不要使用。
+
+当我们用E-mail给好友发送文件时，可以将要发送文件的MD5值告诉对方，这样好友收到该文件以后即可对其进行校验，来确定文件是否安全。
+
+再比如：在刚安装好系统后可以给系统文件做个MD5校验，过了一段时间后如果你怀疑某些文件被人换掉，那么就可以给那些被怀疑的文件做个MD5校验，若和从前得到的MD5校验码不一样，那么就可以肯定是有问题的。
+
+另：计算MD5值和SHA1值的算法不同，作用一样
+* shell获取md5
+** 获取字符串md5
+#+BEGIN_SRC sh
+echo -n 'hello'|md5sum|cut -d ' ' -f1
+5d41402abc4b2a76b9719d911017c592
+#+END_SRC
+*** 命令解释
++ md5sum :: 显示或检查 MD5(128-bit) 校验和,若没有文件选项，或者文件处为”-”，则从标准输入读取。
++ echo -n :: 不打印换行符。
++ cut :: cut用来从标准输入或文本文件中剪切列或域。剪切文本可以将之粘贴到一个文本文件。
++ -d :: 指定与空格和tab键不同的域分隔符。-f1 表示第一个域。
+** 获取文件的md5值
+#+BEGIN_SRC sh
+md5sum REST.docx |cut -d ' ' -f1
+5682f30f1c8338279e5c7ff084467709
+#+END_SRC
+** 使用md5校验文件
+#+BEGIN_SRC sh
+#生成md5文件
+md5sum REST.docx > REST.md5
+#将需要校验的文件REST.docx与md5文件放在同一目录
+md5sum -c REST.md5
+REST.docx: OK
+#命令解释：md5 -c: 从文件中读取MD5 的校验值并予以检查
+#+END_SRC
+* python获取md5，sha1值
+hashlib是个专门提供hash算法的库，现在里面包括md5, sha1, sha224, sha256, sha384, sha512，使用非常简单、方便。 md5经常用来做用户密码的存储。而sha1则经常用作数字签名
+** 获取字符串的md5,sha1
+#+BEGIN_SRC python
+import hashlib
+m = hashlib.md5()
+m.update('hello')
+#二进制结果
+m.digest()
+']A@*\xbcK*v\xb9q\x9d\x91\x10\x17\xc5\x92'
+#十六进制结果
+m.hexdigest()
+'5d41402abc4b2a76b9719d911017c592'
+#一条语句实现
+hashlib.md5('hello').hexdigest()
+'5d41402abc4b2a76b9719d911017c592'
+#+END_SRC
+计算sha1只需把代码中的md5换成sha1即可。
+** 获取文件的md5,sha1
+#+BEGIN_SRC python
+import hashlib
+import os,sys
+ 
+def CalcSha1(filepath):
+#文件打开方式一定要是二进制方式，既打开文件时使用b模式，否则Hash计算是基于文本的那将得到错误的文件Hash
+    f = open(filepath,'rb')
+    sha1obj = hashlib.sha1()
+    sha1obj.update(f.read())
+    hash = sha1obj.hexdigest()
+    return hash
+ 
+def CalcMD5(filepath):
+    f = open(filepath,'rb')
+    md5obj = hashlib.md5()
+    md5obj.update(f.read())
+    hash = md5obj.hexdigest()
+    return hash
+ 
+if __name__ == "__main__":
+    if len(sys.argv)==2 :
+        hashfile = sys.argv[1]
+        if not os.path.exists(hashfile):
+            hashfile = os.path.join(os.path.dirname(__file__),hashfile)
+            if not os.path.exists(hashfile):
+                print("cannot found file")
+            else:
+                print "MD5: %s" % CalcMD5(hashfile)
+                print "Sha1: %s" %CalcSha1(hashfile)
+        else:
+                print "MD5: %s" % CalcMD5(hashfile)
+                print "Sha1 %s" % CalcSha1(hashfile)
+            #raw_input("pause")
+    else:
+        print("no filename")
+
+#输出结果
+python get_md5.py REST.docx
+MD5: 5682f30f1c8338279e5c7ff084467709
+Sha1 17b0a7b828dcedda1b8cdf383926651e75bfdba3
+#+END_SRC
+* 参考资料
+[[http://blog.csdn.net/tys1986blueboy/article/details/7229199][Python hashlib模块]]
+
+[[http://www.cnblogs.com/thinkingfor/archive/2010/09/13/1824766.html][Python 文件Hash(MD5,SHA1)]]

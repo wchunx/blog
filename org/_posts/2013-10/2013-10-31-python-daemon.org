@@ -1,0 +1,71 @@
+#+BEGIN_HTML
+---
+layout: post
+keywords: 
+description: 
+title: python编写守护进程 
+categories: [python]
+tags: [python,daemon]
+group: archive
+icon: code
+featured: false
+---
+#+END_HTML
+* 守护进程的编写步骤：
+1. fork子进程，而后父进程退出，此时子进程会被init进程接管。
+2. 修改子进程的工作目录、创建新进程组和新会话、修改umask。
+3. 子进程再次fork一个进程，这个进程可以称为孙子进程，而后子进程退出。
+4. 重定向孙子进程的标准输入流、标准输出流、标准错误流到/dev/null。
+完成上面的4个步骤，那么最终的孙子进程就称为守护进程。先看下代码，后面再分析下每个步骤的原因。
+#+BEGIN_SRC python
+#!/usr/bin/env python
+#coding=utf8
+ 
+import os, sys, time
+ 
+#产生子进程，而后父进程退出
+pid = os.fork()
+if pid > 0:
+    sys.exit(0)
+ 
+#修改子进程工作目录
+os.chdir("/")
+#创建新的会话，子进程成为会话的首进程
+os.setsid()
+#修改工作目录的umask
+os.umask(0)
+ 
+#创建孙子进程，而后子进程退出
+pid = os.fork()
+if pid > 0:
+    sys.exit(0)
+ 
+#重定向标准输入流、标准输出流、标准错误
+sys.stdout.flush()
+sys.stderr.flush()
+si = file("/dev/null", 'r')
+so = file("/dev/null", 'a+')
+se = file("/dev/null", 'a+', 0)
+os.dup2(si.fileno(), sys.stdin.fileno())
+os.dup2(so.fileno(), sys.stdout.fileno())
+os.dup2(se.fileno(), sys.stderr.fileno())
+ 
+#孙子进程的程序内容
+while True:
+    time.sleep(10)
+    f = open('/home/test.txt', 'a')
+    f.write('hello')
+#+END_SRC
+* 过程分析
+** 1.fork子进程，父进程退出
+通常，我们执行服务端程序的时候都会通过终端连接到服务器，成功连接后会加载shell环境，终端和shell都是进程，shell进程是终端进程的子进程，通过ps命令可以很容易的查看到。在这个shell环境下一开始执行的程序都是shell进程的子进程，自然会受到shell进程的影响。在程序里fork子进程后，父进程退出，对了shell进程来说，这个父进程就算执行完了，而产生的子进程会被init进程接管，从而也就脱离了终端的控制。
+** 2.修改子进程的工作目录
+子进程在创建的时候会继承父进程的工作目录，如果执行的程序是在u盘里的，就会导致u盘不能卸载。
+** 3.创建新会话
+使用setsid后，子进程就会成为新会话的首进程（session leader）；子进程会成为新进程组的组长进程；子进程没有控制终端。
+** 4.修改umask
+由于umask会屏蔽权限，所以设定为0，这样可以避免读写文件时碰到权限问题。
+** 5.fork孙子进程，子进程退出
+经过上面几个步骤后，子进程会成为新的进程组老大，可以重新申请打开终端，为了避免这个问题，fork孙子进程出来。
+** 6.重定向孙子进程的标准输入流、标准输出流、标准错误流到/dev/null
+因为是守护进程，本身已经脱离了终端，那么标准输入流、标准输出流、标准错误流就没有什么意义了。所以都转向到/dev/null，就是都丢弃的意思。

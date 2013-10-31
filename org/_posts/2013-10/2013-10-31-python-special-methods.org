@@ -1,0 +1,159 @@
+#+BEGIN_HTML
+---
+layout: post
+keywords: 
+description: 
+title: python类的专用方法 
+categories: [python]
+tags: [python,class,专用方法]
+group: archive
+icon: code
+featured: false
+---
+#+END_HTML
+#+OPTIONS: ^:{}
+Python类可以定义专用方法,专用方法是在特殊情况下或当使用特别语法时由Python替你调用的，而不是在代码中直接调用（象普通的方法那样）。
+* 1.__init__
+类似于构造函数
+#+BEGIN_SRC python
+#!/usr/bin/python
+class Study:
+	def __init__(self,name=None):
+		self.name = name
+		def say(self):
+			print self.name
+study = Study("Badboy")
+study.say()
+#+END_SRC
+* 2.__del__
+类似于析构函数
+#+BEGIN_SRC python
+#!/usr/bin/python
+class Study:
+	def __init__(self,name=None):
+		self.name = name
+	def __del__(self):
+	    print "Iamaway,baby!"
+	def say(self):
+		print self.name
+study = Study("zhuzhengjun")
+study.say()
+#+END_SRC
+* 3.__repr__
+使用repr(obj)的时候，会自动调用__repr__函数，该函数返回对象字符串表达式，
+用于重建对象，如果eval(repr(obj))会得到一个对象的拷贝。
+#+BEGIN_SRC python
+#!/usr/bin/python
+class Study:
+	def __init__(self,name=None):
+		self.name = name
+	def __del__(self):
+		print "Iamaway,baby!"
+	def say(self):
+		print self.name
+	def __repr__(self):
+		return "Study(‘jacky’)"
+study = Study(“zhuzhengjun”)
+study.say()
+print type(repr(Study(“zhuzhengjun”))) # str
+print type(eval(repr(Study(“zhuzhengjun”)))) # instance
+study = eval(repr(Study(“zhuzhengjun”)))
+study.say()
+#+END_SRC
+* 4.__str__
+Python能用print语句输出内建数据类型。有时，程序员希望定义一个类，要求它的对象也能用print语句输出。Python类可定义特殊方法__str__，为类的对象提供一个不正式的字符串表示。如果类的客户程序包含以下语句：
+
+print objectOfClass \\
+那么Python会调用对象的__str__方法，并输出那个方法所返回的字符串。
+#+BEGIN_SRC python
+class PhoneNumber:
+	def __init__(self,number):
+	    self.areaCode=number[1:4]
+        self.exchange=number[6:9]
+        self.line=number[10:14]
+
+    def __str__(self):
+	    return "(%s) %s-%s"%(self.areaCode,self.exchange,self.line)
+
+	def test():
+        newNumber=raw_input("Enter phone number in the form. (123) 456-7890: \n")
+        phone=PhoneNumber(newNumber)
+        print "The phone number is:"
+        print phone
+
+if__name__=="__main__":
+         test()
+#+END_SRC
+方法__init__接收一个形如"(xxx) xxx-xxxx"的字符串。字符串中的每个x都是电话号码的一个位数。方法对字符串进行分解，并将电话号码的不同部分作为属性存储。
+
+方法__str__是一个特殊方法，它构造并返回PhoneNumber类的一个对象的字符串表示。解析器一旦遇到如下语句：
+print phone
+
+就会执行以下语句：
+
+print phone.__str__()
+
+程序如果将PhoneNumber对象传给内建函数str(如str(phone)),或者为PhoneNumber对象使用字符串格式化运算符%(例如"%s"%phone),Python也会调用__str__方法。
+* 5.__cmp__
+比较运算符，0：等于 1：大于 -1：小于
+#+BEGIN_SRC python
+class Study: 
+	def __cmp__(self, other): 
+		if other > 0 : 
+			return 1 
+        elif other < 0: 
+            return - 1 
+        else: 
+            return 0 
+  
+study = Study() 
+if study > -10:print 'ok1' 
+if study < -10:print 'ok2' 
+if study == 0:print 'ok3'
+#+END_SRC
+打印：ok2 ok3
+
+说明:在对类进行比较时，python自动调用__cmp__方法，如-10 < 0 返回 -1，也就是说study 应该小与 -10，估打印ok2
+* 6.__getitem__
+__getitem__ 专用方法很简单。象普通的方法 clear，keys 和 values 一样，它只是重定向到字典，返回字典的值。
+#+BEGIN_SRC python
+class Zoo: 
+	def __getitem__(self, key): 
+        if key == 'dog':return 'dog' 
+        elif key == 'pig':return  'pig' 
+        elif key == 'wolf':return 'wolf' 
+        else:return 'unknown' 
+  
+zoo = Zoo() 
+print zoo['dog'] 
+print zoo['pig'] 
+print zoo['wolf']
+#+END_SRC
+打印 dog pig wolf
+* 7.__setitem__
+__setitem__ 简单地重定向到真正的字典 self.data ，让它来进行工作.
+#+BEGIN_SRC python
+class Zoo: 
+	def __setitem__(self, key, value): 
+		print 'key=%s,value=%s' % (key, value) 
+  
+zoo = Zoo() 
+zoo['a'] = 'a' 
+zoo['b'] = 'b' 
+zoo['c'] = 'c'
+#+END_SRC
+打印：
+
+key=a,value=a \\
+key=b,value=b \\
+key=c,value=c \\
+* 8.__delitem__
+__delitem__ 在调用 del instance[key] 时调用 ，你可能记得它作为从字典中删除单个元素的方法。当你在类实例中使用 del 时，Python 替你调用 __delitem__ 专用方法。
+#+BEGIN_SRC python
+class A: 
+    def __delitem__(self, key): 
+	    print 'delete item:%s' %key 
+  
+a = A() 
+del a['key'] 
+#+END_SRC

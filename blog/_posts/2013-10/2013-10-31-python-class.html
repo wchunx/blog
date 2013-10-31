@@ -1,0 +1,360 @@
+---
+layout: post
+keywords: 
+description: 
+title: python类 
+categories: [python]
+tags: [python,class]
+group: archive
+icon: code
+featured: false
+---
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 类的定义</a>
+<ul>
+<li><a href="#sec-1-1">1.1 最简单的类</a></li>
+<li><a href="#sec-1-2">1.2 init方法</a></li>
+</ul>
+</li>
+<li><a href="#sec-2">2 类的实例化</a>
+<ul>
+<li><a href="#sec-2-1">2.1 创建实例</a></li>
+<li><a href="#sec-2-2">2.2 垃圾回收</a></li>
+<li><a href="#sec-2-3">2.3 访问类和实例的属性</a></li>
+<li><a href="#sec-2-4">2.4 类的私有属性</a></li>
+<li><a href="#sec-2-5">2.5 类的专用方法</a></li>
+<li><a href="#sec-2-6">2.6 类方法，类实例方法和静态方法</a>
+<ul>
+<li><a href="#sec-2-6-1">2.6.1 总结</a></li>
+</ul></li>
+</ul>
+</li>
+<li><a href="#sec-3">3 继承</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">类的定义</h2>
+<div class="outline-text-2" id="text-1">
+
+
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">最简单的类</h3>
+<div class="outline-text-3" id="text-1-1">
+
+
+
+
+<pre class="src src-python"><span style="color: #1c86ee;">class</span> <span style="color: #00688b;">MyClass</span>(<span style="color: #cd6600;">object</span>):
+    <span style="color: #1c86ee;">pass</span>
+</pre>
+
+<ol>
+<li>类名MyClass，习惯首字母大写
+</li>
+<li>该类没有定义任何属性和方法。pass是Python的一个保留字，表示什么都不做。类内部的内容要缩进。
+</li>
+<li>进入类定义部分后,会创建出一个新的命名空间,作为局部作用域.因此,所有的赋值成为这个新命名空间的局部变量。
+</li>
+</ol>
+
+<p>类定义完成时(正常退出),就创建了一个类对象。基本上它是对类定义创建的命名空间进行了一个包装。
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">init方法</h3>
+<div class="outline-text-3" id="text-1-2">
+
+
+
+
+<pre class="src src-pytho">class Myclass:
+    '''A simple example class'''
+    i = 12345
+    def __init__(self, str):
+        print str
+    def func(self):
+        print <span style="color: #8b7355;">"class example"</span>
+</pre>
+
+<ol>
+<li>类也可以(并且应该)有doc strings,就像方法和函数一样,doc string也要缩进。
+</li>
+<li>__init__ 在类的实例创建后被Python自动调用。可以用这个方法为对象做一些你希望的初始化。
+</li>
+</ol>
+
+
+<p>
+当类被调用，实例化的第一步是创建实例对象。一旦对象创建了，Python检查是否实现了__init_<sub>()</sub>方法。默认情况下，如果没有定义（或覆盖）特殊方法__init_<sub>()</sub>，Python不会对实例施加任何特别的操作.如果需要特定的初始化操作，程序员就要自己实现__init_<sub>()</sub>，覆盖它的默认行为。调用类时，传进的任何参数都交给了__init_<sub>()</sub>。它可能会引诱你称之为类的构造函数，但这种说法并不正确。说它引诱，是因为它看上去像 (按照习惯，__init__ 是类中第一个定义的方法)，行为也像 (在一个新创建的类实例中，它是首先被执行的代码)，并且叫起来也像(“init”当然意味着构造的本性)。说它不正确，是因为对象在调用 __init__ 时已经被构造出来了，你已经有了一个对类的新实例的有效引用。但__init__是在Python中你可以得到的最接近构造函数的东西，并且它也扮演着非常相似的角色。*__init__方法无返回值*。
+</p><ol>
+<li>每个类方法的第一个参数，包括__init__，都是指向类的当前实例的引用。按照习惯这个参数总是被称为self,扮演C++或JAVA中保留字this的作用，但self不是Python的保留字，只是一个命名习惯。在__init__方法中，self指向新创建的对象；在其它的类方法中，它指向方法被调用的类实例。尽管当定义方法时你需要明确指定self，但在调用方法时，你不用指定它，Python会替你自动加上的。
+</li>
+<li>定义类方法时，必须将self作为第一个参数；从类的外部调用类方法时，不必对self参数指定任何值，Python会自动增加实例的引用
+</li>
+</ol>
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">类的实例化</h2>
+<div class="outline-text-2" id="text-2">
+
+
+</div>
+
+<div id="outline-container-2-1" class="outline-3">
+<h3 id="sec-2-1">创建实例</h3>
+<div class="outline-text-3" id="text-2-1">
+
+<p>要对类进行实例化，只要调用类(就好像它是一个函数)，传入定义在__init__方法中的参数。返回值将是新创建的对象。
+</p>
+
+
+<pre class="src src-python"><span style="color: #2e8b57;">x</span> = MyClass()
+hello word
+x.<span style="color: #cd6600;">__doc__</span>
+<span style="color: #8b7355;">'A simple example class'</span>
+</pre>
+
+<ol>
+<li>以上创建了Myclass类的实例，并将其赋值给x。类的实例化操作会自动为创建的实例调用__init_<sub>()</sub>函数。
+</li>
+<li>类的所有实例共享相同的doc string
+</li>
+</ol>
+
+</div>
+
+</div>
+
+<div id="outline-container-2-2" class="outline-3">
+<h3 id="sec-2-2">垃圾回收</h3>
+<div class="outline-text-3" id="text-2-2">
+
+<p>如果说创建一个新的实例是容易的，那么销毁它们甚至更容易。通常，不需要明确地释放实例，因为当指派给它们的变量超出作用域时，它们会被自动地释放。内存泄漏在 Python中很少见。
+</p></div>
+
+</div>
+
+<div id="outline-container-2-3" class="outline-3">
+<h3 id="sec-2-3">访问类和实例的属性</h3>
+<div class="outline-text-3" id="text-2-3">
+
+<p>一切皆对象，类对象可以进行的操作是属性引用和实例化；实例对象可以进行的操作是属性引用
+</p>
+<p>
+类实例化后，可以访问其属性，实际上，创建一个类之后，可以通过类名访问类的属性。如果直接使用类名修改其属性，那么将直接影响到已经实例化的对象
+</p>
+
+
+<pre class="src src-python">MyClass.i
+12345
+x.i
+12345
+<span style="color: #2e8b57;">MyClass.i</span> = 54321
+MyClass.i
+54321
+x.i
+54321
+Myclass.func
+&lt;unbound method Myclass.func&gt;
+</pre>
+
+<p>
+这里可以直接用类名访问类的方法对象，但要调用func()必须用实例调用。Myclass.func()是会报错的TypeError: unbound method func() must be called with MyClass instance as first argument (got nothing instead)。
+</p></div>
+
+</div>
+
+<div id="outline-container-2-4" class="outline-3">
+<h3 id="sec-2-4">类的私有属性</h3>
+<div class="outline-text-3" id="text-2-4">
+
+<p>两个下划线开头，声明该属性为私有，不能在类外部被使用或直接访问
+</p>
+<p>
+私有变量__private_var,类内部访问时用self.__private_var
+</p>
+<p>
+私有方法__private_method,类内部访问时用self.__private_method
+</p></div>
+
+</div>
+
+<div id="outline-container-2-5" class="outline-3">
+<h3 id="sec-2-5">类的专用方法</h3>
+<div class="outline-text-3" id="text-2-5">
+
+<p>Python 类可以定义专用方法,专用方法是在特殊情况下或当使用特别语法时由Python替你调用的，而不是在代码中直接调用（象普通的方法那样），__init__就是专用方法。
+具体见<a href="http://localhost:4000/python/2013/10/31/python-special-methods/">python类的专用方法</a>
+</p></div>
+
+</div>
+
+<div id="outline-container-2-6" class="outline-3">
+<h3 id="sec-2-6">类方法，类实例方法和静态方法</h3>
+<div class="outline-text-3" id="text-2-6">
+
+<p>类实例方法就是前面例子中定义的方法，第一个参数为self需要用实例调用。
+</p>
+
+
+<pre class="src src-python"><span style="color: #1c86ee;">class</span> <span style="color: #00688b;">Foo</span>(<span style="color: #cd6600;">object</span>):
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#23450;&#20041;&#23454;&#20363;&#26041;&#27861;</span>
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">test1</span>(<span style="color: #1c86ee;">self</span>): 
+        <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"object"</span>
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#23450;&#20041;&#31867;&#26041;&#27861;</span>
+    <span style="color: #00688b;">@classmethod</span> 
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">test2</span>(clss): 
+        <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"class"</span>
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#23450;&#20041;&#38745;&#24577;&#26041;&#27861; </span>
+    <span style="color: #00688b;">@staticmethod</span> 
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">test3</span>():
+        <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"static"</span>
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#21019;&#24314;&#23545;&#35937;</span>
+<span style="color: #2e8b57;">f</span> = Foo()
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#23454;&#20363;&#26041;&#27861;&#20256;&#36882;&#30340;&#21442;&#25968;&#26159;&#23454;&#20363;&#23545;&#35937;(self)&#29992;&#23454;&#20363;&#35843;&#29992;&#65292;&#20063;&#21487;&#20197;&#29992;&#31867;&#30340;&#26041;&#24335;&#35843;&#29992;&#65292;&#20294;&#38656;&#35201;&#23558;&#23454;&#20363;&#24341;&#29992;&#20570;&#20026;&#21442;&#25968;&#20256;&#36882;&#12290;</span>
+f.test1()
+<span style="color: #cd6600;">object</span>
+Foo.test1(f)
+<span style="color: #cd6600;">object</span>
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#31867;&#26041;&#27861;&#20256;&#36882;&#30340;&#21442;&#25968;&#26159;&#31867;&#23545;&#35937;(clss)&#20351;&#29992;&#31867;&#21644;&#23454;&#20363;&#22343;&#21487;&#35843;&#29992;&#12290;</span>
+Foo.test2()
+<span style="color: #1c86ee;">class</span>
+f.test2()
+<span style="color: #1c86ee;">class</span>
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#38745;&#24577;&#26041;&#27861;&#20351;&#29992;&#31867;&#21644;&#23454;&#20363;&#37117;&#21487;&#20197;&#35843;&#29992;</span>
+f.test3()
+static
+Foo.test3()
+static
+</pre>
+
+
+</div>
+
+<div id="outline-container-2-6-1" class="outline-4">
+<h4 id="sec-2-6-1">总结</h4>
+<div class="outline-text-4" id="text-2-6-1">
+
+<ul>
+<li>类方法,实例方法和静态方法都可以被类和类实例调用，不过实例方法通过类调用时需要传递实例的引用
+</li>
+<li>类方法的隐含调用参数是类，而类实例方法的隐含调用参数是类的实例，静态方法没有隐含调用参数
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3">继承</h2>
+<div class="outline-text-2" id="text-3">
+
+<p>面向对象的编程带来的主要好处之一是代码的重用，实现这种重用的方法之一是通过继承机制。
+</p><dl>
+<dt>继承语法</dt><dd>class 派生类名（基类名):
+</dd>
+<dt>何时使用继承</dt><dd>假如我需要定义几个类，而类与类之间有一些公共的属性和方法，这时我就可以把相同的属性和方法作为基类的成员，而特殊的方法及属性则在派生类中定义，这样只需要继承基类这个动作，就可以访问到基类的属性和方法了，它提高了代码的可扩展性。
+</dd>
+<dt>继承的一个缺点</dt><dd>就是，可能特殊的派生类又有其他特殊的地方，又会定义一个类，其下也可能再定义类，这样就会造成继承的那条线越来越长，使用继承的话,任何一点小的变化也需要重新定义一个类,很容易引起类的爆炸式增长,产生一大堆有着细微不同的子类. 所以有个“多用组合少用继承”的原则
+</dd>
+<dt>继承的特点</dt><dd>
+</dd>
+<dt>???</dt><dd>类的私有变量和私有方法不能被继承，子类的变量和方法会覆盖父类的同名变量和方法
+</dd>
+<dt>???</dt><dd>如果其基类也具有__init_<sub>()</sub>, 必须显式地在子类的__init_<sub>()</sub>中调用它, 以保证能够适当地初始化它的基类部分。子类定义了__init_<sub>()</sub>方法时，若未显示调用基类的__init_<sub>()</sub>方法，Python不会自动为你调用，解释运行也不会报错；子类未定义__init_<sub>()</sub>方法时，Python会自动帮你调用首个基类的__init_<sub>()</sub>方法。如果子类继承自多个基类时，只有第一个基类的__init__方法会被调用到；基类未定义__init__方法时，若此时子类显示调用基类__init__方法时，python向上查找基类的基类的__init__方法并调用。
+</dd>
+<dt>???</dt><dd>在调用基类的方法时，需要加上基类的类名前缀，且需要带上self参数变量。区别于在类中调用普通函数时并不需要带上self参数.具体见<a href="http://localhost:4000/python/2013/10/31/python-subclass/">Python子类中调用父类方法</a>
+</dd>
+<dt>???</dt><dd>如果在派生类中找不到请求调用的属性,就搜索基类。如果基类是由别的类派生而来,这个规则会递归的应用上去。
+</dd>
+<dt>???</dt><dd>多继承多个基类写成元组的形式。class 派生类名（基类1，基类2，基类3): 当在派生类中找不到请求的属性时，按照深度优先原则到基类中查找。
+</dd>
+</dl>
+
+<p>例子
+</p>
+
+
+<pre class="src src-python"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">!/usr/bin/python</span>
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">Filename:Basemodel.py</span>
+<span style="color: #1c86ee;">class</span> <span style="color: #00688b;">Baseclass</span>:
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">__init__</span>(<span style="color: #1c86ee;">self</span>, name, age):
+        <span style="color: #1c86ee;">self</span>.name = name
+        <span style="color: #1c86ee;">self</span>.age = age
+        <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"baseclass is inited,name:%s,age:%s"</span> % (<span style="color: #1c86ee;">self</span>.name, <span style="color: #1c86ee;">self</span>.age)
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">speak</span>(<span style="color: #1c86ee;">self</span>, name):
+        <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"baseclass can speak : %s"</span> % name
+<span style="color: #1c86ee;">if</span>(<span style="color: #cd6600;">__name__</span> == <span style="color: #8b7355;">"__main__"</span>):
+    <span style="color: #2e8b57;">b</span> = Baseclass(<span style="color: #8b7355;">"jack"</span>, 20)
+    b.speak(<span style="color: #8b7355;">"jack"</span>&#65289;
+</pre>
+
+
+<pre class="src src-python"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">!/usr/bin/python</span>
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">Filename:Subclass.py</span>
+<span style="color: #1c86ee;">import</span> Basemodel
+<span style="color: #1c86ee;">class</span> <span style="color: #00688b;">Subclass</span>(Basemodel.Baseclass):
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">__init__</span>(<span style="color: #1c86ee;">self</span>, name, age, salary):
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#26174;&#31034;&#35843;&#29992;&#22522;&#31867;__init__()&#26041;&#27861;,&#27880;&#24847;&#21152;self&#21442;&#25968;</span>
+        Basemodel.Baseclass.__init__(<span style="color: #1c86ee;">self</span>, name, age)
+        <span style="color: #1c86ee;">self</span>.salary = salary
+        <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"Subclass is inited and the salary is : %s"</span> % <span style="color: #1c86ee;">self</span>.salary
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">talk</span>(<span style="color: #1c86ee;">self</span>, sth):
+        <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"%s is talking %s"</span> % (<span style="color: #1c86ee;">self</span>.name, sth)
+        Basemodel.Baseclass.speak(<span style="color: #1c86ee;">self</span>, sth)
+<span style="color: #1c86ee;">if</span>(<span style="color: #cd6600;">__name__</span> == <span style="color: #8b7355;">"__main__"</span>):
+    <span style="color: #2e8b57;">s</span> = Subclass(<span style="color: #8b7355;">"Joan"</span>, 20, 800)
+    s.talk(<span style="color: #8b7355;">"a story"</span>)
+</pre>
+
+
+<pre class="src src-sh">wchunx@wchunx:~$ python Subclass.py
+baseclass is inited,name:Joan,age:20
+Subclass is inited and the salary is : 800
+Joan is talking a story
+baseclass can speak : a story
+</pre>
+
+
+<pre class="src src-python"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">!/usr/bin/python</span>
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">Filename:Subclass2.py</span>
+<span style="color: #1c86ee;">import</span> Basemodel
+<span style="color: #1c86ee;">class</span> <span style="color: #00688b;">Subclass</span>(Basemodel.Baseclass):
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">talk</span>(<span style="color: #1c86ee;">self</span>, sth):
+        <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"%s is talking %s,his age is %d"</span> % (<span style="color: #1c86ee;">self</span>.name, sth, <span style="color: #1c86ee;">self</span>.age)
+        Basemodel.Baseclass.speak(<span style="color: #1c86ee;">self</span>, sth)
+<span style="color: #1c86ee;">if</span>(<span style="color: #cd6600;">__name__</span> == <span style="color: #8b7355;">"__main__"</span>):
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#23376;&#31867;&#27809;&#26377;&#23450;&#20041;__init__&#26041;&#27861;&#65292;Python&#33258;&#21160;&#35843;&#29992;&#29238;&#31867;&#30340;__init__&#65292;&#27880;&#24847;&#20256;</span>
+    <span style="color: #2e8b57;">s</span> = Subclass(<span style="color: #8b7355;">"Joan"</span>, 20)
+    s.talk(<span style="color: #8b7355;">"a story"</span>)
+    s.speak(<span style="color: #8b7355;">"find baseclass function"</span>)
+</pre>
+
+
+<pre class="src src-sh">wchunx@wchunx:~$ python Subprocess2.py
+baseclass is inited,name:Joan,age:20
+Joan is talking a story,his age is 20
+baseclass can speak : a story
+baseclass can speak : find baseclass <span style="color: #1c86ee;">function</span>
+</pre>
+
+</div>
+</div>

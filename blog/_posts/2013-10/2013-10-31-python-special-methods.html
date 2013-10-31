@@ -1,0 +1,263 @@
+---
+layout: post
+keywords: 
+description: 
+title: python类的专用方法 
+categories: [python]
+tags: [python,class,专用方法]
+group: archive
+icon: code
+featured: false
+---
+<p>
+Python类可以定义专用方法,专用方法是在特殊情况下或当使用特别语法时由Python替你调用的，而不是在代码中直接调用（象普通的方法那样）。
+</p>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 1.__init__</a></li>
+<li><a href="#sec-2">2 2.__del__</a></li>
+<li><a href="#sec-3">3 3.__repr__</a></li>
+<li><a href="#sec-4">4 4.__str__</a></li>
+<li><a href="#sec-5">5 5.__cmp__</a></li>
+<li><a href="#sec-6">6 6.__getitem__</a></li>
+<li><a href="#sec-7">7 7.__setitem__</a></li>
+<li><a href="#sec-8">8 8.__delitem__</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">1.__init__</h2>
+<div class="outline-text-2" id="text-1">
+
+<p>类似于构造函数
+</p>
+
+
+<pre class="src src-python"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">!/usr/bin/python</span>
+<span style="color: #1c86ee;">class</span> <span style="color: #00688b;">Study</span>:
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">__init__</span>(<span style="color: #1c86ee;">self</span>,name=<span style="color: #6e8b3d;">None</span>):
+        <span style="color: #1c86ee;">self</span>.name = name
+        <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">say</span>(<span style="color: #1c86ee;">self</span>):
+            <span style="color: #1c86ee;">print</span> <span style="color: #1c86ee;">self</span>.name
+<span style="color: #2e8b57;">study</span> = Study(<span style="color: #8b7355;">"Badboy"</span>)
+study.say()
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">2.__del__</h2>
+<div class="outline-text-2" id="text-2">
+
+<p>类似于析构函数
+</p>
+
+
+<pre class="src src-python"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">!/usr/bin/python</span>
+<span style="color: #1c86ee;">class</span> <span style="color: #00688b;">Study</span>:
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">__init__</span>(<span style="color: #1c86ee;">self</span>,name=<span style="color: #6e8b3d;">None</span>):
+        <span style="color: #1c86ee;">self</span>.name = name
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">__del__</span>(<span style="color: #1c86ee;">self</span>):
+        <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"Iamaway,baby!"</span>
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">say</span>(<span style="color: #1c86ee;">self</span>):
+        <span style="color: #1c86ee;">print</span> <span style="color: #1c86ee;">self</span>.name
+<span style="color: #2e8b57;">study</span> = Study(<span style="color: #8b7355;">"zhuzhengjun"</span>)
+study.say()
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3">3.__repr__</h2>
+<div class="outline-text-2" id="text-3">
+
+<p>使用repr(obj)的时候，会自动调用__repr__函数，该函数返回对象字符串表达式，
+用于重建对象，如果eval(repr(obj))会得到一个对象的拷贝。
+</p>
+
+
+<pre class="src src-python"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">!/usr/bin/python</span>
+<span style="color: #1c86ee;">class</span> <span style="color: #00688b;">Study</span>:
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">__init__</span>(<span style="color: #1c86ee;">self</span>,name=<span style="color: #6e8b3d;">None</span>):
+        <span style="color: #1c86ee;">self</span>.name = name
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">__del__</span>(<span style="color: #1c86ee;">self</span>):
+        <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"Iamaway,baby!"</span>
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">say</span>(<span style="color: #1c86ee;">self</span>):
+        <span style="color: #1c86ee;">print</span> <span style="color: #1c86ee;">self</span>.name
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">__repr__</span>(<span style="color: #1c86ee;">self</span>):
+        <span style="color: #1c86ee;">return</span> <span style="color: #8b7355;">"Study(&#8216;jacky&#8217;)"</span>
+<span style="color: #2e8b57;">study</span> = Study(&#8220;zhuzhengjun&#8221;)
+study.say()
+<span style="color: #1c86ee;">print</span> <span style="color: #cd6600;">type</span>(<span style="color: #cd6600;">repr</span>(Study(&#8220;zhuzhengjun&#8221;))) <span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">str</span>
+<span style="color: #1c86ee;">print</span> <span style="color: #cd6600;">type</span>(<span style="color: #cd6600;">eval</span>(<span style="color: #cd6600;">repr</span>(Study(&#8220;zhuzhengjun&#8221;)))) <span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">instance</span>
+<span style="color: #2e8b57;">study</span> = <span style="color: #cd6600;">eval</span>(<span style="color: #cd6600;">repr</span>(Study(&#8220;zhuzhengjun&#8221;)))
+study.say()
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4">4.__str__</h2>
+<div class="outline-text-2" id="text-4">
+
+<p>Python能用print语句输出内建数据类型。有时，程序员希望定义一个类，要求它的对象也能用print语句输出。Python类可定义特殊方法__str__，为类的对象提供一个不正式的字符串表示。如果类的客户程序包含以下语句：
+</p>
+<p>
+print objectOfClass <br/>
+那么Python会调用对象的__str__方法，并输出那个方法所返回的字符串。
+</p>
+
+
+<pre class="src src-python"><span style="color: #1c86ee;">class</span> <span style="color: #00688b;">PhoneNumber</span>:
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">__init__</span>(<span style="color: #1c86ee;">self</span>,number):
+        <span style="color: #1c86ee;">self</span>.areaCode=number[1:4]
+        <span style="color: #1c86ee;">self</span>.exchange=number[6:9]
+        <span style="color: #1c86ee;">self</span>.line=number[10:14]
+
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">__str__</span>(<span style="color: #1c86ee;">self</span>):
+        <span style="color: #1c86ee;">return</span> <span style="color: #8b7355;">"(%s) %s-%s"</span>%(<span style="color: #1c86ee;">self</span>.areaCode,<span style="color: #1c86ee;">self</span>.exchange,<span style="color: #1c86ee;">self</span>.line)
+
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">test</span>():
+        <span style="color: #2e8b57;">newNumber</span>=<span style="color: #cd6600;">raw_input</span>(<span style="color: #8b7355;">"Enter phone number in the form. (123) 456-7890: \n"</span>)
+        <span style="color: #2e8b57;">phone</span>=PhoneNumber(newNumber)
+        <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"The phone number is:"</span>
+        <span style="color: #1c86ee;">print</span> phone
+
+if__name__==<span style="color: #8b7355;">"__main__"</span>:
+         test()
+</pre>
+
+<p>
+方法__init__接收一个形如"(xxx) xxx-xxxx"的字符串。字符串中的每个x都是电话号码的一个位数。方法对字符串进行分解，并将电话号码的不同部分作为属性存储。
+</p>
+<p>
+方法__str__是一个特殊方法，它构造并返回PhoneNumber类的一个对象的字符串表示。解析器一旦遇到如下语句：
+print phone
+</p>
+<p>
+就会执行以下语句：
+</p>
+<p>
+print phone.__str_<sub>()</sub>
+</p>
+<p>
+程序如果将PhoneNumber对象传给内建函数str(如str(phone)),或者为PhoneNumber对象使用字符串格式化运算符%(例如"%s"%phone),Python也会调用__str__方法。
+</p></div>
+
+</div>
+
+<div id="outline-container-5" class="outline-2">
+<h2 id="sec-5">5.__cmp__</h2>
+<div class="outline-text-2" id="text-5">
+
+<p>比较运算符，0：等于 1：大于 -1：小于
+</p>
+
+
+<pre class="src src-python"><span style="color: #1c86ee;">class</span> <span style="color: #00688b;">Study</span>: 
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">__cmp__</span>(<span style="color: #1c86ee;">self</span>, other): 
+        <span style="color: #1c86ee;">if</span> other &gt; 0 : 
+            <span style="color: #1c86ee;">return</span> 1 
+        <span style="color: #1c86ee;">elif</span> other &lt; 0: 
+            <span style="color: #1c86ee;">return</span> - 1 
+        <span style="color: #1c86ee;">else</span>: 
+            <span style="color: #1c86ee;">return</span> 0 
+
+<span style="color: #2e8b57;">study</span> = Study() 
+<span style="color: #1c86ee;">if</span> study &gt; -10:<span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">'ok1'</span> 
+<span style="color: #1c86ee;">if</span> study &lt; -10:<span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">'ok2'</span> 
+<span style="color: #1c86ee;">if</span> study == 0:<span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">'ok3'</span>
+</pre>
+
+<p>
+打印：ok2 ok3
+</p>
+<p>
+说明:在对类进行比较时，python自动调用__cmp__方法，如-10 &lt; 0 返回 -1，也就是说study 应该小与 -10，估打印ok2
+</p></div>
+
+</div>
+
+<div id="outline-container-6" class="outline-2">
+<h2 id="sec-6">6.__getitem__</h2>
+<div class="outline-text-2" id="text-6">
+
+<p>__getitem__ 专用方法很简单。象普通的方法 clear，keys 和 values 一样，它只是重定向到字典，返回字典的值。
+</p>
+
+
+<pre class="src src-python"><span style="color: #1c86ee;">class</span> <span style="color: #00688b;">Zoo</span>: 
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">__getitem__</span>(<span style="color: #1c86ee;">self</span>, key): 
+        <span style="color: #1c86ee;">if</span> key == <span style="color: #8b7355;">'dog'</span>:<span style="color: #1c86ee;">return</span> <span style="color: #8b7355;">'dog'</span> 
+        <span style="color: #1c86ee;">elif</span> key == <span style="color: #8b7355;">'pig'</span>:<span style="color: #1c86ee;">return</span>  <span style="color: #8b7355;">'pig'</span> 
+        <span style="color: #1c86ee;">elif</span> key == <span style="color: #8b7355;">'wolf'</span>:<span style="color: #1c86ee;">return</span> <span style="color: #8b7355;">'wolf'</span> 
+        <span style="color: #1c86ee;">else</span>:<span style="color: #1c86ee;">return</span> <span style="color: #8b7355;">'unknown'</span> 
+
+zoo = Zoo() 
+<span style="color: #1c86ee;">print</span> zoo[<span style="color: #8b7355;">'dog'</span>] 
+<span style="color: #1c86ee;">print</span> zoo[<span style="color: #8b7355;">'pig'</span>] 
+<span style="color: #1c86ee;">print</span> zoo[<span style="color: #8b7355;">'wolf'</span>]
+</pre>
+
+<p>
+打印 dog pig wolf
+</p></div>
+
+</div>
+
+<div id="outline-container-7" class="outline-2">
+<h2 id="sec-7">7.__setitem__</h2>
+<div class="outline-text-2" id="text-7">
+
+<p>__setitem__ 简单地重定向到真正的字典 self.data ，让它来进行工作.
+</p>
+
+
+<pre class="src src-python"><span style="color: #1c86ee;">class</span> <span style="color: #00688b;">Zoo</span>: 
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">__setitem__</span>(<span style="color: #1c86ee;">self</span>, key, value): 
+        <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">'key=%s,value=%s'</span> % (key, value) 
+
+<span style="color: #2e8b57;">zoo</span> = Zoo() 
+<span style="color: #2e8b57;">zoo</span>[<span style="color: #8b7355;">'a'</span>] = <span style="color: #8b7355;">'a'</span> 
+<span style="color: #2e8b57;">zoo</span>[<span style="color: #8b7355;">'b'</span>] = <span style="color: #8b7355;">'b'</span> 
+<span style="color: #2e8b57;">zoo</span>[<span style="color: #8b7355;">'c'</span>] = <span style="color: #8b7355;">'c'</span>
+</pre>
+
+<p>
+打印：
+</p>
+<p>
+key=a,value=a <br/>
+key=b,value=b <br/>
+key=c,value=c <br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-8" class="outline-2">
+<h2 id="sec-8">8.__delitem__</h2>
+<div class="outline-text-2" id="text-8">
+
+<p>__delitem__ 在调用 del instance[key] 时调用 ，你可能记得它作为从字典中删除单个元素的方法。当你在类实例中使用 del 时，Python 替你调用 __delitem__ 专用方法。
+</p>
+
+
+<pre class="src src-python"><span style="color: #1c86ee;">class</span> <span style="color: #00688b;">A</span>: 
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">__delitem__</span>(<span style="color: #1c86ee;">self</span>, key): 
+        <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">'delete item:%s'</span> %key 
+
+<span style="color: #2e8b57;">a</span> = A() 
+<span style="color: #1c86ee;">del</span> a[<span style="color: #8b7355;">'key'</span>] 
+</pre>
+
+</div>
+</div>

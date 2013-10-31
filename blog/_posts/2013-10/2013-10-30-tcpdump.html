@@ -1,0 +1,269 @@
+---
+layout: post
+keywords: 
+description: 
+title: tcpdump用法 
+categories: [network]
+tags: [tcpdump]
+group: archive
+icon: compass
+featured: false
+---
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 命令格式</a></li>
+<li><a href="#sec-2">2 常用参数</a></li>
+<li><a href="#sec-3">3 条件表达式expression用法</a>
+<ul>
+<li><a href="#sec-3-1">3.1 qualitifer分三种：type,dir及proto</a>
+<ul>
+<li><a href="#sec-3-1-1">3.1.1 type</a></li>
+<li><a href="#sec-3-1-2">3.1.2 dir</a></li>
+<li><a href="#sec-3-1-3">3.1.3 proto</a></li>
+</ul></li>
+</ul>
+</li>
+<li><a href="#sec-4">4 实例</a>
+<ul>
+<li><a href="#sec-4-1">4.1 匹配ehter包</a></li>
+<li><a href="#sec-4-2">4.2 匹配arp包</a></li>
+<li><a href="#sec-4-3">4.3 匹配IP包</a></li>
+<li><a href="#sec-4-4">4.4 匹配TCP包</a></li>
+<li><a href="#sec-4-5">4.5 匹配UDP包</a></li>
+<li><a href="#sec-4-6">4.6 匹配ICMP包</a></li>
+</ul>
+</li>
+<li><a href="#sec-5">5 参考资料</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">命令格式</h2>
+<div class="outline-text-2" id="text-1">
+
+
+
+
+<pre class="src src-sh">tcpdump [ -AdDeflLnNOpqRStuUvxX ] [ -c count ]
+           [ -C file_size ] [ -F file ]
+           [ -i interface ] [ -m module ] [ -M secret ]
+           [ -r file ] [ -s snaplen ] [ -T type ] [ -w file ]
+           [ -W filecount ]
+           [ -E spi@ipaddr algo:secret,...  ]
+           [ -y datalinktype ] [ -Z user ]
+           [ expression ]
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">常用参数</h2>
+<div class="outline-text-2" id="text-2">
+
+<dl>
+<dt>-i interface</dt><dd>指定监听的接口
+</dd>
+<dt>-c count</dt><dd>采集的数据包数量
+</dd>
+<dt>-e</dt><dd>输出包含数据链路层头部信息
+</dd>
+<dt>-n</dt><dd>不对地址(比如, 主机地址, 端口号)进行数字表示到名字表示的转换.
+</dd>
+<dt>-v</dt><dd>详细输出
+
+</dd>
+<dt>-w</dt><dd>把包数据直接写入文件而不进行分析和打印输出. 这些包数据可在随后通过-r 选项来重新读入并进行分析和打印.
+</dd>
+<dt>-C file-size</dt><dd>配合-w file使用，文件超过size，关闭文件，另创一个继续。单位是1000000字节，1048576字节是1M(1024x1024).
+</dd>
+<dt>-r file</dt><dd>从文件file 中读取包数据. 如果file 字段为 '-' 符号, 则tcpdump 会从标准输入中读取包数据.
+</dd>
+<dt>-l</dt><dd>对标准输出进行行缓冲(使标准输出设备遇到一个换行符就马上把这行的内容打印出来).在需要同时观察抓包打印以及保存抓包记录的时候很有用.
+</dd>
+</dl>
+
+<p>tcpdump -l &gt; dat &amp;&amp; tail -f dat通过重定向操作'&gt;', 把tcpdump的输出放到dat文件中, 同时通过tail把dat文件中的内容放到标准输出中
+</p></div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3">条件表达式expression用法</h2>
+<div class="outline-text-2" id="text-3">
+
+<p>expression是tcpdump最为有用的高级语法，只有满足expression的数据包才会被输出。
+expression由若干'表达元'(primitive)组成，表达元由若干 '修饰符'(qualifiers)+id(名字或数字)组成。
+</p>
+</div>
+
+<div id="outline-container-3-1" class="outline-3">
+<h3 id="sec-3-1">qualitifer分三种：type,dir及proto</h3>
+<div class="outline-text-3" id="text-3-1">
+
+
+</div>
+
+<div id="outline-container-3-1-1" class="outline-4">
+<h4 id="sec-3-1-1">type</h4>
+<div class="outline-text-4" id="text-3-1-1">
+
+<p>type指定id的类型，可选的对象类型有:host,net,port以及portrange(host表明id表示主机,net表明id是网络,port表明id是端口,而portrange表明id是一个端口范围)
+</p>
+<p>
+如，host foo,net 128.3,port 20,portrange 6000-6008分别表示主机foo,网络128.3,端口20,端口范围6000-6008.
+</p>
+<p>
+如果不指定type,id默认的修饰符为host.
+</p></div>
+
+</div>
+
+<div id="outline-container-3-1-2" class="outline-4">
+<h4 id="sec-3-1-2">dir</h4>
+<div class="outline-text-4" id="text-3-1-2">
+
+<p>指定数据传输的方向，可选有src,dst,src or dst,src and dst
+</p>
+<p>
+例如src or dst port ftp-data,src or dst表示源或目标，ftp-data为id，表示ftp协议中数据传输端口，故整体表示源或目标端口ftp-data的数据包即匹配
+</p>
+<p>
+如果不指定dir,默认为src or dst
+</p></div>
+
+</div>
+
+<div id="outline-container-3-1-3" class="outline-4">
+<h4 id="sec-3-1-3">proto</h4>
+<div class="outline-text-4" id="text-3-1-3">
+
+<p>匹配特定协议，可选有ether, fddi, tr, wlan, ip, ip6, arp, rarp, decnet,tcp和udp。
+</p></div>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4">实例</h2>
+<div class="outline-text-2" id="text-4">
+
+<p>表达元之间还可以通过关键字and,or以及not(或&amp;&amp;,||,!)进行连接, 并可以通过()组成比较复杂的条件表达式.
+</p>
+</div>
+
+<div id="outline-container-4-1" class="outline-3">
+<h3 id="sec-4-1">匹配ehter包</h3>
+<div class="outline-text-3" id="text-4-1">
+
+
+
+
+<pre class="src src-sh"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#21305;&#37197;&#25351;&#23450;mac&#22320;&#22336;</span>
+tcpdump -i eth0 -c 10 -e -n <span style="color: #8b7355;">'ether src 00:19:21:1D:75:E6'</span>
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#21305;&#37197;&#24191;&#25773;&#21253;</span>
+tcpdump <span style="color: #8b7355;">'ether dst ff:ff:ff:ff:ff:ff'</span>
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-4-2" class="outline-3">
+<h3 id="sec-4-2">匹配arp包</h3>
+<div class="outline-text-3" id="text-4-2">
+
+<p>arp包用于IP到Mac址转换的一种协议，包括arp请求和arp应答两种报文，arp请求报文是ether广播方式发送出去的，也即arp请求报文的mac地址是全1，因此用ether dst FF;FF;FF;FF;FF;FF可以匹配arp请求报文，但不能匹配应答报文。因此要匹配arp的通信过程，则只有使用arp来指定协议。
+</p>
+
+
+<pre class="src src-sh">arping -c 4 192.168.240.1&gt;/dev/null&amp; sudo tcpdump -p <span style="color: #8b7355;">'arp'</span>
+</pre>
+
+<p>
+本例中使用arping -c 4 192.168.240.1产生arp请求和接收应答报文，而tcpdump -p 'arp'匹配出来了。此处-p选项是使网络工作于正常模式（非混杂模式），这样是方便查看匹配结果。 
+</p></div>
+
+</div>
+
+<div id="outline-container-4-3" class="outline-3">
+<h3 id="sec-4-3">匹配IP包</h3>
+<div class="outline-text-3" id="text-4-3">
+
+<p>IP协议是TCP/IP协议中最重要的协议之一,下面是匹配IP包的表达式.
+</p>
+
+
+<pre class="src src-sh">tcpdump <span style="color: #8b7355;">'ip src 192.168.240.69'</span> 
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-4-4" class="outline-3">
+<h3 id="sec-4-4">匹配TCP包</h3>
+<div class="outline-text-3" id="text-4-4">
+
+<p>TCP同样是TCP/IP协议栈里面最为重要的协议之一，它提供了端到端的可靠数据流，同时很多应用层协议都是把TCP作为底层的通信协议，因为TCP的匹配是非常重要的。
+</p>
+<p>
+如果想匹配HTTP的通信数据，那只需指定匹配端口为80的条件即可 
+</p>
+
+
+<pre class="src src-sh">tcpdump <span style="color: #8b7355;">'tcp dst port 80'</span> 
+wget http://www.baidu.com 2&gt;1 &gt;/dev/null &amp; sudo tcpdump -c 5 <span style="color: #8b7355;">'tcp port 80'</span> 
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-4-5" class="outline-3">
+<h3 id="sec-4-5">匹配UDP包</h3>
+<div class="outline-text-3" id="text-4-5">
+
+<p>udp是一种无连接的非可靠的用户数据报，因此udp的主要特征同样是端口，用如下方法可以匹配某一端口
+</p>
+
+
+<pre class="src src-sh"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#26597;&#30475;DNS&#25968;&#25454;&#21253;</span>
+tcpdump <span style="color: #8b7355;">'upd port 53'</span>
+ping -c 1 www.baidu.com &gt; /dev/null&amp; sudo tcpdump -p udp port 53 
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-4-6" class="outline-3">
+<h3 id="sec-4-6">匹配ICMP包</h3>
+<div class="outline-text-3" id="text-4-6">
+
+<p>icmptype指ICMP协议头中type域)，icmpcode指ICMP协议头code域
+</p>
+<p>
+tcpdump -i eth0 -c 3 'icmp[icmptype]=8'
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-5" class="outline-2">
+<h2 id="sec-5">参考资料</h2>
+<div class="outline-text-2" id="text-5">
+
+<p><a href="http://blog.csdn.net/linyt/article/details/1936073">tcpdump高级用法</a>
+</p>
+<p>
+<a href="http://sanyk.is-programmer.com/posts/14645.html">tcpdump man 手册页的详细中文翻译</a>
+</p>
+</div>
+</div>

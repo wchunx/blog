@@ -11,23 +11,38 @@ icon: globe
 featured: false
 ---
 #+END_HTML
+* HTML
+[[http://www.w3school.com.cn/html/][html基础教程]]
+
+[[http://www.kindsoft.net/demo.php][在线HTML编辑器]]
 * openstack
 [[https://wiki.openstack.org/wiki/Main_Page][wiki]]
 
 [[http://www.mirantis.com/blog/][mirantis]]
 
 孔令贤 [[http://lynnkong.iteye.com/][活到老，学到老]]    [[http://blog.csdn.net/lynn_kong][代码改变世界]]
+
+[[http://my.oschina.net/chape/blog?catalog=321697][chape]]
+
+[[http://www.ibm.com/developerworks/cn/cloud/library/cl-openstack-network/][openstack网络]]
+
+[[http://www.ibm.com/developerworks/cn/cloud/library/cl-openstack-network/][openstack中的防火墙]]
+
+[[http://networkstatic.net/openstack-essex-installation-and-configuration-screencast-from-scratch/][NetworkStatic|Brent Salisbury's Blog]]
 * 博客
 [[http://coolshell.cn/][酷壳]]
 
-[[http://smilejay.com/]]
+[[http://smilejay.com/][笑遍世界]]
 
 [[http://kodango.com/][团子的小窝]]
+
+[[http://sanyk.is-programmer.com/][sanyk's Blog(有很多man翻译)]]
 
 [[http://jerrypeng.me/][Jerry's Blog]]
 
 [[http://ciniao.me/][刺鸟]]
 
+[[http://www.cnblogs.com/vamei/][Vamei]] python进阶 java进阶 Linux
 * 资源
 [[http://www.tutorialspoint.com/][手册大全]]
 

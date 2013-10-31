@@ -1,0 +1,56 @@
+#+BEGIN_HTML
+---
+layout: post
+keywords: 
+description: 
+title: ubuntu12.04源码安装qemu和libvirt 
+categories: [虚拟化]
+tags: [虚拟化,qemu,libvirt]
+group: archive
+icon: globe
+featured: false
+---
+#+END_HTML
+qemu和libvirt都可以源安装的apt-get就行了，这里要说的是编译安装。主要的问题就是依赖。
+* qemu
+版本是1.4.0
+#+BEGIN_SRC sh
+#解压
+tar xvjf qemu-1.4.0.tar.bz2
+#安装依赖
+apt-get -y install gcc libsdl1.2-dev zlib1g-dev libasound2-dev  pkg-config libgnutls-dev libpci-dev autoconf libtool make linux-headers-<code>uname -r</code>
+cd qemu-1.4.0/
+./configure
+make
+make install
+#+END_SRC
+* libvirt
+版本是1.0.1
+#+BEGIN_SRC sh
+#解压
+tar xvzf libvirt-1.0.1.tar.gz
+#安装依赖
+apt-get  -y install gcc  make  pkg-config libxml2-dev  libgnutls-dev  libdevmapper-dev  libcurl4-gnutls-dev python-dev  libyajl-dev libnl-dev pm-utils libpciaccess-dev
+cp /usr/local/lib/libvirt.* /usr/local/lib/libvirt-qemu.* /usr/lib/
+libvirtd -d 
+#+END_SRC
+这样安装每次开机都需要运行libvirtd -d重新启动libvirt
+* libvirt的覆盖安装
+就是在apt-get libvirt-bin后，源码安装libvirt，覆盖之前的.
+
+先源安装libvirt-bin
+#+BEGIN_SRC sh
+apt-get install libvirt-bin
+#+END_SRC
+一看版本才0.9.6,有点低了，官网说0.9.11开始才支持ovs。
+#+BEGIN_SRC sh
+#解压
+tar xvzf libvirt-1.0.1.tar.gz
+安装依赖
+apt-get install gcc  make  pkg-config libxml2-dev  libgnutls-dev  libdevmapper-dev  libcurl4-gnutls-dev python-dev  libyajl-dev libnl-dev pm-utils libpciaccess-dev
+覆盖安装。./configure调整了安装位置以覆盖版本
+./configure --prefix=/usr --localstatedir=/var --sysconfdir=/etc
+make
+make install
+#+END_SRC
+这时候执行initctl start libvirt-bin就可以启动libvirt了

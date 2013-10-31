@@ -1,0 +1,352 @@
+---
+layout: post
+keywords: 
+description: 
+title: python异常处理 
+categories: [python]
+tags: [python, exception]
+group: archive
+icon: code
+featured: false
+---
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 异常处理</a></li>
+<li><a href="#sec-2">2 异常的捕获</a>
+<ul>
+<li><a href="#sec-2-1">2.1 try…except…</a></li>
+<li><a href="#sec-2-2">2.2 try…except…else…</a></li>
+<li><a href="#sec-2-3">2.3 使用finally</a></li>
+</ul>
+</li>
+<li><a href="#sec-3">3 手动引发异常</a>
+<ul>
+<li><a href="#sec-3-1">3.1 raise</a></li>
+<li><a href="#sec-3-2">3.2 自定义异常</a></li>
+</ul>
+</li>
+<li><a href="#sec-4">4 进阶</a>
+<ul>
+<li><a href="#sec-4-1">4.1 1.捕获所有异常</a></li>
+<li><a href="#sec-4-2">4.2 2.使用traceback模块跟踪异常返回信息</a></li>
+<li><a href="#sec-4-3">4.3 3.采用sys模块回溯最后的异常</a></li>
+</ul>
+</li>
+<li><a href="#sec-5">5 参考资料</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">异常处理</h2>
+<div class="outline-text-2" id="text-1">
+
+<p>python中异常处理可以向用户准确反馈出错信息。在Python中，异常也是对象，可对它进行操作。所有异常的类都从基类Exception继承，而且都在exceptions模块中定义，Python自动将所有异常名称放在内建命名空间中，所以程序不必导入exceptions模块即可使用异常。
+</p>
+<p>
+一旦引发而且没有捕捉SystemExit异常，程序执行就会终止。如果交互式会话遇到一个未被捕捉的SystemExit异常，会话就会终止。
+</p>
+<p>
+成功的捕捉异常不会中断程序的运行，并及时反馈出错信息。
+</p></div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">异常的捕获</h2>
+<div class="outline-text-2" id="text-2">
+
+
+</div>
+
+<div id="outline-container-2-1" class="outline-3">
+<h3 id="sec-2-1">try…except…</h3>
+<div class="outline-text-3" id="text-2-1">
+
+
+
+
+<pre class="src src-python"><span style="color: #1c86ee;">try</span>:
+    block
+<span style="color: #1c86ee;">except</span> [exception,[data&#8230;]]:
+    block
+</pre>
+
+<p>
+异常处理规则:
+</p>
+<ol>
+<li>执行try内的代码块，如果无异常产生，except代码被忽略。
+</li>
+<li>如果try代码块内引发异常，try代码块其余部分被忽略，程序跳到except语句，从第一个except语句开始搜索，如果某个except语句中定义的异常与实际引发的异常
+</li>
+</ol>
+
+<p>匹配，则执行该except下的语句。然后继续执行try语句之后的代码(程序继续执行)。
+</p><ol>
+<li>如果发生了一个异常,在except子句中没有与之匹配的分支,它就会传递到上一级try语句中。如果在上一层try…except…中捕获了该异常，程序继续执行上层try语句后的代码。但如果最终仍找不到对应的excetp处理语句,它就成为一个未处理异常,终止程序运行,显示提示信息。
+</li>
+</ol>
+
+</div>
+
+</div>
+
+<div id="outline-container-2-2" class="outline-3">
+<h3 id="sec-2-2">try…except…else…</h3>
+<div class="outline-text-3" id="text-2-2">
+
+<p>try…except语句可以带有一个else子句,该子句只能出现在所有except子句之后,在try语句没有抛出异常的时候执行
+</p>
+
+
+<pre class="src src-python"><span style="color: #1c86ee;">try</span>:
+    block
+<span style="color: #1c86ee;">except</span> [exception,[data...]]:
+    block
+<span style="color: #1c86ee;">else</span>:
+    block
+
+<span style="color: #1c86ee;">try</span>:
+    <span style="color: #2e8b57;">f</span> = <span style="color: #cd6600;">open</span>(<span style="color: #8b7355;">'file.txt'</span>,<span style="color: #8b7355;">'r'</span>)
+<span style="color: #1c86ee;">except</span> <span style="color: #00688b;">IOError</span>, e:
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#20063;&#21487;&#20197;&#20889;&#20316;except IOError as e:</span>
+    <span style="color: #1c86ee;">print</span> e
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#32467;&#26524;</span>
+[Errno 2] No such <span style="color: #cd6600;">file</span> <span style="color: #1c86ee;">or</span> directory: <span style="color: #8b7355;">'file.txt'</span>
+</pre>
+
+<p>
+捕获到的IOError错误的详细原因会被放置在对象e中，然后运行该异常的except代码块
+</p></div>
+
+</div>
+
+<div id="outline-container-2-3" class="outline-3">
+<h3 id="sec-2-3">使用finally</h3>
+<div class="outline-text-3" id="text-2-3">
+
+<p>无论try块是否抛出异常，永远执行的代码。通常用来执行关闭文件，断开服务器连接的功能等等。
+</p>
+
+
+<pre class="src src-python"><span style="color: #1c86ee;">try</span>:
+    block
+<span style="color: #1c86ee;">except</span> [exception,[data...]]:
+    block
+<span style="color: #1c86ee;">finally</span>:
+    block
+</pre>
+
+<p>
+执行规则:
+</p>
+<ol>
+<li>执行try下的代码。
+</li>
+<li>若发生异常，如果except捕获异常，执行except语句后执行finally语句。如果except未捕获异常，在该异常传递到上一级try时，执行finally中的代码。
+</li>
+<li>如果没有发生异常，则执行finally中的代码。
+</li>
+</ol>
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3">手动引发异常</h2>
+<div class="outline-text-2" id="text-3">
+
+
+</div>
+
+<div id="outline-container-3-1" class="outline-3">
+<h3 id="sec-3-1">raise</h3>
+<div class="outline-text-3" id="text-3-1">
+
+<p>在Python中，要想引发异常，最简单的形式就是输入关键字raise，后跟要引发的异常的名称。异常名称标识出具体的类：执行raise语句时，Python会创建指定的异常类的一个对象，raise语句还可指定对异常对象进行初始化的参数，为此，请在异常类的名称后添加一个逗号以及指定的参数（或者由参数构成的一个元组）。
+</p>
+
+
+<pre class="src src-python"><span style="color: #1c86ee;">class</span> <span style="color: #00688b;">MyError</span>(<span style="color: #00688b;">Exception</span>):
+    <span style="color: #1c86ee;">pass</span>
+<span style="color: #1c86ee;">try</span>:
+    <span style="color: #1c86ee;">raise</span> MyError, <span style="color: #8b7355;">"some error happend"</span>
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#20063;&#21487;&#20889;&#20316;raise MyError("some error happend")</span>
+<span style="color: #1c86ee;">except</span> MyError,data:
+    <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"MyError encoutered"</span>
+    <span style="color: #1c86ee;">print</span> data
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#32467;&#26524;</span>
+MyError encoutered
+some error happend
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-3-2" class="outline-3">
+<h3 id="sec-3-2">自定义异常</h3>
+<div class="outline-text-3" id="text-3-2">
+
+<p>上一段代码中MyError就是自定义的异常类，继承自Python内置的Exception类
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4">进阶</h2>
+<div class="outline-text-2" id="text-4">
+
+<p>如下程序
+</p>
+
+
+<pre class="src src-python"><span style="color: #1c86ee;">try</span>:
+    block1
+<span style="color: #1c86ee;">except</span>...:
+    block2
+<span style="color: #1c86ee;">finally</span>:
+    block3
+</pre>
+
+<p>
+并不知道block1里会发生什么异常，但还要做异常处理，不中断程序的运行。
+至少有三个方法:
+</p>
+</div>
+
+<div id="outline-container-4-1" class="outline-3">
+<h3 id="sec-4-1">1.捕获所有异常</h3>
+<div class="outline-text-3" id="text-4-1">
+
+
+
+
+<pre class="src src-python"><span style="color: #1c86ee;">try</span>:
+    block1
+<span style="color: #1c86ee;">except</span> <span style="color: #00688b;">Exception</span>, ex:
+    <span style="color: #1c86ee;">print</span> <span style="color: #00688b;">Exception</span>,<span style="color: #8b7355;">':'</span>,ex
+<span style="color: #1c86ee;">finally</span>:
+    block3
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-4-2" class="outline-3">
+<h3 id="sec-4-2">2.使用traceback模块跟踪异常返回信息</h3>
+<div class="outline-text-3" id="text-4-2">
+
+
+
+
+<pre class="src src-python"><span style="color: #1c86ee;">import</span> traceback
+<span style="color: #1c86ee;">try</span>:
+    <span style="color: #1c86ee;">raise</span> <span style="color: #00688b;">SyntaxError</span>, <span style="color: #8b7355;">"traceback test"</span>
+<span style="color: #1c86ee;">except</span>:
+    traceback.print_exc()
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#36755;&#20986;</span>
+Traceback (most recent call last):
+  File <span style="color: #8b7355;">"&lt;stdin&gt;"</span>, line 2, <span style="color: #1c86ee;">in</span> &lt;module&gt;
+<span style="color: #00688b;">SyntaxError</span>: traceback test
+</pre>
+
+<p>
+类似在没有捕获异常时候, 解释器所返回的结果.
+</p>
+<p>
+还可以把异常保存到日志文件中
+</p>
+
+
+<pre class="src src-python"><span style="color: #1c86ee;">import</span> traceback
+<span style="color: #1c86ee;">try</span>:
+    <span style="color: #1c86ee;">raise</span> <span style="color: #00688b;">SyntaxError</span>, <span style="color: #8b7355;">"traceback test"</span>
+<span style="color: #1c86ee;">except</span>:
+    <span style="color: #2e8b57;">f</span>=<span style="color: #cd6600;">open</span>(<span style="color: #8b7355;">"/home/wchunx/log.txt"</span>,<span style="color: #8b7355;">'a'</span>)
+    traceback.print_exc(<span style="color: #cd6600;">file</span> = f)
+    f.close()
+</pre>
+
+<p>
+traceback模块还提供了extract<sub>tb函数来格式化跟踪返回信息</sub>, 得到包含错误信息的列表, 如下:
+</p>
+
+
+<pre class="src src-python"><span style="color: #1c86ee;">import</span> traceback
+<span style="color: #1c86ee;">import</span> sys
+
+<span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">tracebacktest</span>():
+    <span style="color: #1c86ee;">raise</span> <span style="color: #00688b;">SyntaxError</span>, <span style="color: #8b7355;">"traceback test"</span>
+<span style="color: #1c86ee;">try</span>:
+    tracebacktest()
+<span style="color: #1c86ee;">except</span>:
+    <span style="color: #2e8b57;">info</span> = sys.exc_info()
+    <span style="color: #1c86ee;">print</span> info
+    <span style="color: #1c86ee;">for</span> <span style="color: #cd6600;">file</span>, lineno, function, text <span style="color: #1c86ee;">in</span> traceback.extract_tb(info[1]):
+        <span style="color: #1c86ee;">print</span> <span style="color: #cd6600;">file</span>, <span style="color: #8b7355;">"line:"</span>, lineno, <span style="color: #8b7355;">"in"</span>, function
+        <span style="color: #1c86ee;">print</span> text
+    <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"** %s: %s"</span> % info[:2]
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#36755;&#20986;</span>
+(&lt;<span style="color: #cd6600;">type</span> <span style="color: #8b7355;">'exceptions.SyntaxError'</span>&gt;, <span style="color: #00688b;">SyntaxError</span>(<span style="color: #8b7355;">'traceback test'</span>,), &lt;traceback <span style="color: #cd6600;">object</span> at 0xb72c39b4&gt;)
+trace.py line: 7 <span style="color: #1c86ee;">in</span> &lt;module&gt;
+tracebacktest()
+trace.py line: 5 <span style="color: #1c86ee;">in</span> tracebacktest
+<span style="color: #1c86ee;">raise</span> <span style="color: #00688b;">SyntaxError</span>, <span style="color: #8b7355;">"traceback test"</span>
+** &lt;<span style="color: #cd6600;">type</span> <span style="color: #8b7355;">'exceptions.SyntaxError'</span>&gt;: traceback test
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-4-3" class="outline-3">
+<h3 id="sec-4-3">3.采用sys模块回溯最后的异常</h3>
+<div class="outline-text-3" id="text-4-3">
+
+
+
+
+<pre class="src src-python"><span style="color: #1c86ee;">import</span> sys
+<span style="color: #1c86ee;">try</span>:
+    <span style="color: #1c86ee;">raise</span> <span style="color: #00688b;">TypeError</span>, <span style="color: #8b7355;">"Type Error happened"</span>
+<span style="color: #1c86ee;">except</span>:
+    <span style="color: #2e8b57;">info</span> = sys.exc_info()
+    <span style="color: #1c86ee;">print</span> info
+    <span style="color: #1c86ee;">print</span> info[0],<span style="color: #8b7355;">':'</span>,info[1]
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#32467;&#26524;</span>
+(&lt;<span style="color: #cd6600;">type</span> <span style="color: #8b7355;">'exceptions.TypeError'</span>&gt;, <span style="color: #00688b;">TypeError</span>(<span style="color: #8b7355;">'Type Error happened'</span>,), &lt;traceback <span style="color: #cd6600;">object</span> at 0xb6b33eb4&gt;)
+&lt;<span style="color: #cd6600;">type</span> <span style="color: #8b7355;">'exceptions.TypeError'</span>&gt; : Type Error happened
+</pre>
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-5" class="outline-2">
+<h2 id="sec-5">参考资料</h2>
+<div class="outline-text-2" id="text-5">
+
+<p><a href="http://ciniao.me/article.php?id=23">python中的异常处理</a>
+</p>
+<p>
+<a href="http://www.cnblogs.com/dkblog/archive/2011/06/24/2089026.html">python异常处理</a>
+</p>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+<p class="footnote"><sup><a class="footnum" name="fn-.1" href="#fnr-.1">1</a></sup> DEFINITION NOT FOUND: 2
+</p></div>
+</div>
+
+</div>
+</div>

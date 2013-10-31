@@ -1,0 +1,53 @@
+#+BEGIN_HTML
+---
+layout: post
+keywords: 
+description: 
+title: python好操作 
+categories: [python]
+tags: [python,module]
+group: archive
+icon: code
+featured: false
+---
+#+END_HTML
+* 获取脚本路径
+** os.path.dirname
+1. 当"print os.path.dirname(__file__)"所在脚本是以完整路径被运行的，那么将输出该脚本所在的完整路径，比如：
+#+BEGIN_SRC python
+python d:/pythonSrc/test/test.py
+#+END_SRC
+那么将输出 d:/pythonSrc/test
+2. 当"print os.path.dirname(__file__)"所在脚本是以相对路径被运行的， 那么将输出空目录，比如：
+#+BEGIN_SRC python
+python test.py
+#+END_SRC
+那么将输出空字符串
+
+注意直接在解析器里运行是会报错的
+#+BEGIN_SRC python
+#获取脚本绝对路径
+os.path.abspath(os.path.dirname(__file__))
+#+END_SRC
+
+* 读取配置文件
+用到的模块*ConfigParser*
+** 配置文件node.conf
+#+BEGIN_SRC sh
+global]
+ip = 192.168.1.100
+#+END_SRC
+** 读取配置文件中的IP信息
+#+BEGIN_SRC python
+import ConfigParser
+import os
+ 
+#获取脚本所在绝对路径
+localDir = os.path.abspath(os.path.dirname(__file__))
+ 
+config = ConfigParser.ConfigParser()
+conf = localDir + "/node.conf"
+config.readfp(open(conf),"rb")
+ 
+print config.get("global","ip")
+#+END_SRC

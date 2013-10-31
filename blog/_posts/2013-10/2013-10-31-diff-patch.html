@@ -1,0 +1,286 @@
+---
+layout: post
+keywords: 
+description: 
+title: diff和patch的用法 
+categories: [linux]
+tags: [linux,diff,patch]
+group: archive
+icon: code
+featured: false
+---
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 概括介绍</a></li>
+<li><a href="#sec-2">2 具体用法</a>
+<ul>
+<li><a href="#sec-2-1">2.1 diff</a>
+<ul>
+<li><a href="#sec-2-1-1">2.1.1 命令格式</a>
+<ul>
+<li><a href="#sec-2-1-1-1">2.1.1.1 diff [命令行选项] 原始文件 新文件</a></li>
+<li><a href="#sec-2-1-1-2">2.1.1.2 常用选项</a></li>
+</ul></li>
+</ul>
+</li>
+<li><a href="#sec-2-2">2.2 patch</a>
+<ul>
+<li><a href="#sec-2-2-1">2.2.1 命令格式</a>
+<ul>
+<li><a href="#sec-2-2-1-1">2.2.1.1 patch [options] [originalfile] [patchfile]</a></li>
+</ul>
+</li>
+<li><a href="#sec-2-2-2">2.2.2 路径问题</a></li>
+</ul></li>
+</ul>
+</li>
+<li><a href="#sec-3">3 patch文件结构</a>
+<ul>
+<li><a href="#sec-3-1">3.1 补丁头</a></li>
+<li><a href="#sec-3-2">3.2 块</a></li>
+</ul>
+</li>
+<li><a href="#sec-4">4 参考资料</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">概括介绍</h2>
+<div class="outline-text-2" id="text-1">
+
+<p>diff和patch是一对工具，在数学上来说，diff是对两个集合的差运算，patch是对两个集合的和运算。
+</p>
+<p>
+diff比较两个文件或文件集合的差异，并记录下来，生成一个diff文件，这也是我们常说的patch文件，即补丁文件。
+</p>
+<p>
+patch能将diff文件运用于原来的两个集合之一，从而得到另一个集合。举个例子来说文件A和文件B,经过diff之后生成了补丁文件C,那么着个过程相当于A-B=C,那么patch的过程就是B+C=A或A-C=B。因此我们只要能得到A, B, C三个文件中的任何两个，就能用diff和patch这对工具生成另外一个文件。
+</p></div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">具体用法</h2>
+<div class="outline-text-2" id="text-2">
+
+
+</div>
+
+<div id="outline-container-2-1" class="outline-3">
+<h3 id="sec-2-1">diff</h3>
+<div class="outline-text-3" id="text-2-1">
+
+<p>diff后面可以接两个文件也可以是两个目录。如果是一个目录名加一个文件名，那么只作用在那么个目录下的同名文件。如果是两个目录的话，作用于该目录下的所有文件，不递归。如果我们希望递归执行，需要使用-r参数。
+</p>
+</div>
+
+<div id="outline-container-2-1-1" class="outline-4">
+<h4 id="sec-2-1-1">命令格式</h4>
+<div class="outline-text-4" id="text-2-1-1">
+
+
+</div>
+
+<div id="outline-container-2-1-1-1" class="outline-5">
+<h5 id="sec-2-1-1-1">diff [命令行选项] 原始文件 新文件</h5>
+<div class="outline-text-5" id="text-2-1-1-1">
+
+</div>
+
+</div>
+
+<div id="outline-container-2-1-1-2" class="outline-5">
+<h5 id="sec-2-1-1-2">常用选项</h5>
+<div class="outline-text-5" id="text-2-1-1-2">
+
+<dl>
+<dt>-N</dt><dd>patch里包含新文件，表示如果某个文件仅在一个目录中出现，则假定其在另一个目录中为空文件
+</dd>
+<dt>-u</dt><dd>输出统一格式(unified format)　　　
+</dd>
+<dt>-a</dt><dd>patch里可以包含二进制文件
+</dd>
+<dt>-r</dt><dd>递归处理目录 　　　　
+</dd>
+</dl>
+
+<p>命令diff A B &gt; C ,一般A是原始文件，B是修改后的文件，C称为A的补丁文件。
+</p></div>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-2-2" class="outline-3">
+<h3 id="sec-2-2">patch</h3>
+<div class="outline-text-3" id="text-2-2">
+
+<p>patch用于根据原文件和补丁文件生成目标文件。尽管并没有指定patch和diff的关系，但通常patch都使用diff的结果来完成打补丁的工作
+</p>
+</div>
+
+<div id="outline-container-2-2-1" class="outline-4">
+<h4 id="sec-2-2-1">命令格式</h4>
+<div class="outline-text-4" id="text-2-2-1">
+
+
+</div>
+
+<div id="outline-container-2-2-1-1" class="outline-5">
+<h5 id="sec-2-2-1-1">patch [options] [originalfile] [patchfile]</h5>
+<div class="outline-text-5" id="text-2-2-1-1">
+
+<p>如果patchfile为空则从标准输入读取patchfile内容；如果originalfile也为空，则从patchfile（肯定来自标准输入）中读取需要打补丁的文件名
+</p>
+<p>
+以上面的例子 diff -Nuar A B &gt; C
+</p>
+<p>
+patch A C A的内容变成了B(打补丁)
+</p>
+<p>
+patch -R A C A还原成原来的内容.过程中文件名不发生变化，文件内容变化
+</p>
+<p>
+其实patch文件中记录了原文件的路径和名称，所以打补丁时可以省略源文件。 注意如果要简写patch命令，diff时必须加-u才行。
+</p>
+<p>
+打补丁：patch &lt; C
+</p>
+<p>
+还原：patch -R &lt; C
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-2-2-2" class="outline-4">
+<h4 id="sec-2-2-2">路径问题</h4>
+<div class="outline-text-4" id="text-2-2-2">
+
+<p><i>home/wchunx</i> <br/>
+-dir1/genernal/hello.txt <br/>
+-dir2/gernel/hello.txt <br/>
+-dir.patch 
+在/home/wchunx下执行diff -Nuar dir1 dir2 &gt; dir.patch
+</p>
+<p>
+源文件与目标文件不在同一目录，这时候就需要用patch -p[num]
+</p>
+<p>
+-p参数决定了是否使用读出的源文件名的前缀目录信息，不提供-p参数，则忽略所有目录信息，-p0（或者-p 0）表示使用全部的路径信息，-p1将忽略第一个"/"以前的目录，依此类推。
+</p>
+
+
+<pre class="src src-sh"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">patch&#25991;&#20214;&#35760;&#24405;&#30340;&#20449;&#24687;</span>
+wchunx@wchunx:~$ cat dir.patch
+diff -Nuar dir1/gernel/hello.txt dir2/gernel/hello.txt
+&#8212; dir1/gernel/hello.txt 2013-09-29 10:38:00.042518181 +0800
++++ dir2/gernel/hello.txt   2013-09-29 10:38:09.362517972 +0800
+@@ -1 +1 @@
+-aaa
++bbb
+
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#20351;&#29992;&#20840;&#36335;&#24452;&#25171;&#34917;&#19969;</span>
+patch -p0 &lt; dir.patch
+patching file dir1/gernel/hello.txt
+
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#27492;&#26102;&#22914;&#26524;&#20877;&#27425;&#20351;&#29992;&#35813;&#21629;&#20196;&#65292;&#31995;&#32479;&#35810;&#38382;&#26159;&#21542;&#36824;&#21407;</span>
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">patch -p0 &lt; dir.patch</span>
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">patching file dir1/gernel/hello.txt</span>
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">Reversed (or previously applied) patch detected!  Assume -R? [n] y</span>
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#36824;&#21407;&#65292;&#21516;&#19978;&#27493;&#20013;&#27880;&#37322;&#30340;&#25805;&#20316;</span>
+
+patch -R -p0 &lt; dir.patch
+patching file dir1/gernel/hello.txt
+
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#25913;&#21464;&#19968;&#19979;&#24403;&#21069;&#36335;&#24452;</span>
+<span style="color: #cd6600;">cd</span> dir1
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#36825;&#20010;&#26102;&#20505;&#23601;&#19981;&#33021;&#20351;&#29992;dir.patch&#35760;&#24405;&#30340;&#28304;&#25991;&#20214;&#20840;&#36335;&#24452;dir1/gernel/hello.txt&#20102;&#65292;&#24212;&#35813;&#24573;&#30053;&#31532;&#19968;&#20010;/&#21069;&#30340;dir1&#65292;&#36825;&#20063;&#23601;&#26159;&#19979;&#38754;&#21629;&#20196;&#20013;p1&#30340;&#21547;&#20041;</span>
+patch -p1 &lt; ../dir.patch
+patching file gernel/hello.txt
+</pre>
+
+<p>
+实际使用diff和patch时，用diff -Nuar &hellip; &hellip; 的习惯打法，打补丁时先看一下补丁中的大致内容，简写patch命令的话，结合当前路径确定需要跳过几级目录。
+</p></div>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3">patch文件结构</h2>
+<div class="outline-text-2" id="text-3">
+
+
+
+
+<pre class="src src-sh">cat test1
+11111
+11111
+11111
+cat test2
+22222
+22222
+22222
+diff -Nuar test1 test2 &gt; test.patch
+cat test.patch 
+--- test1   2013-10-31 11:14:22.005509793 +0800
++++ test2   2013-10-31 11:16:49.889506303 +0800
+@@ -1,3 +1,3 @@
++22222
+ 11111
+-11111
+-11111
++22222
+</pre>
+
+
+</div>
+
+<div id="outline-container-3-1" class="outline-3">
+<h3 id="sec-3-1">补丁头</h3>
+<div class="outline-text-3" id="text-3-1">
+
+<p>补丁头是分别由&mdash;/+++开头的两行，用来表示要打补丁的文件。&mdash;开头表示旧文件，+++开头表示新文件。并记录了这两个文件的首次创建时间。
+</p>
+<p>
+一个补丁文件中可能包含以&mdash;/+++开头的很多节，每一节用来打一个补丁。所以在一个补丁文件中可以包含好多个补丁。
+</p></div>
+
+</div>
+
+<div id="outline-container-3-2" class="outline-3">
+<h3 id="sec-3-2">块</h3>
+<div class="outline-text-3" id="text-3-2">
+
+<p>块是补丁中要修改的地方。以@@开始，结束于另一个块的开始。块内通常由一部分不用修改的东西开始和结束。他们只是用来表示要修改的位置。
+块会缩进一列,而这一列是用来表示这一行是要增加还是要删除的。
+</p>
+<p>
++号表示这一行是要加上的。<br/>
+-号表示这一行是要删除的。<br/>
+没有加号也没有减号表示这里只是引用的而不需要修改。
+</p>
+<p>
+@@ -1,3 +1,3 @@ -1，3表示从原文件的第1行开始，共3行，+1，3表示从新文件的第一行开始，共3行。<br/>
++22222表示原文件里无这一行，新文件中要加上。<br/>
+-11111表示原文件中有这一行，新文件中要删除。
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4">参考资料</h2>
+<div class="outline-text-2" id="text-4">
+
+<p><a href="http://www.ibm.com/developerworks/cn/linux/l-diffp/">用Diff和Patch工具维护源码</a>
+</p>
+</div>
+</div>

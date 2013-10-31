@@ -1,0 +1,102 @@
+---
+layout: post
+keywords: 
+description: 
+title: ubuntu12.04源码安装qemu和libvirt 
+categories: [虚拟化]
+tags: [虚拟化,qemu,libvirt]
+group: archive
+icon: globe
+featured: false
+---
+<p>
+qemu和libvirt都可以源安装的apt-get就行了，这里要说的是编译安装。主要的问题就是依赖。
+</p>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 qemu</a></li>
+<li><a href="#sec-2">2 libvirt</a></li>
+<li><a href="#sec-3">3 libvirt的覆盖安装</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">qemu</h2>
+<div class="outline-text-2" id="text-1">
+
+<p>版本是1.4.0
+</p>
+
+
+<pre class="src src-sh"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#35299;&#21387;</span>
+tar xvjf qemu-1.4.0.tar.bz2
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#23433;&#35013;&#20381;&#36182;</span>
+apt-get -y install gcc libsdl1.2-dev zlib1g-dev libasound2-dev  pkg-config libgnutls-dev libpci-dev autoconf libtool make linux-headers-&lt;code&gt;uname -r&lt;/code&gt;
+<span style="color: #cd6600;">cd</span> qemu-1.4.0/
+./configure
+make
+make install
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">libvirt</h2>
+<div class="outline-text-2" id="text-2">
+
+<p>版本是1.0.1
+</p>
+
+
+<pre class="src src-sh"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#35299;&#21387;</span>
+tar xvzf libvirt-1.0.1.tar.gz
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#23433;&#35013;&#20381;&#36182;</span>
+apt-get  -y install gcc  make  pkg-config libxml2-dev  libgnutls-dev  libdevmapper-dev  libcurl4-gnutls-dev python-dev  libyajl-dev libnl-dev pm-utils libpciaccess-dev
+cp /usr/local/lib/libvirt.* /usr/local/lib/libvirt-qemu.* /usr/lib/
+libvirtd -d 
+</pre>
+
+<p>
+这样安装每次开机都需要运行libvirtd -d重新启动libvirt
+</p></div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3">libvirt的覆盖安装</h2>
+<div class="outline-text-2" id="text-3">
+
+<p>就是在apt-get libvirt-bin后，源码安装libvirt，覆盖之前的.
+</p>
+<p>
+先源安装libvirt-bin
+</p>
+
+
+<pre class="src src-sh">apt-get install libvirt-bin
+</pre>
+
+<p>
+一看版本才0.9.6,有点低了，官网说0.9.11开始才支持ovs。
+</p>
+
+
+<pre class="src src-sh"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#35299;&#21387;</span>
+tar xvzf libvirt-1.0.1.tar.gz
+&#23433;&#35013;&#20381;&#36182;
+apt-get install gcc  make  pkg-config libxml2-dev  libgnutls-dev  libdevmapper-dev  libcurl4-gnutls-dev python-dev  libyajl-dev libnl-dev pm-utils libpciaccess-dev
+&#35206;&#30422;&#23433;&#35013;&#12290;./configure&#35843;&#25972;&#20102;&#23433;&#35013;&#20301;&#32622;&#20197;&#35206;&#30422;&#29256;&#26412;
+./configure --prefix=/usr --localstatedir=/var --sysconfdir=/etc
+make
+make install
+</pre>
+
+<p>
+这时候执行initctl start libvirt-bin就可以启动libvirt了
+</p></div>
+</div>

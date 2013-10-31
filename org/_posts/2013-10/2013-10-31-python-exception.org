@@ -1,0 +1,171 @@
+#+BEGIN_HTML
+---
+layout: post
+keywords: 
+description: 
+title: python异常处理 
+categories: [python]
+tags: [python, exception]
+group: archive
+icon: code
+featured: false
+---
+#+END_HTML
+* 异常处理
+python中异常处理可以向用户准确反馈出错信息。在Python中，异常也是对象，可对它进行操作。所有异常的类都从基类Exception继承，而且都在exceptions模块中定义，Python自动将所有异常名称放在内建命名空间中，所以程序不必导入exceptions模块即可使用异常。
+
+一旦引发而且没有捕捉SystemExit异常，程序执行就会终止。如果交互式会话遇到一个未被捕捉的SystemExit异常，会话就会终止。
+
+成功的捕捉异常不会中断程序的运行，并及时反馈出错信息。
+* 异常的捕获
+** try…except…
+#+BEGIN_SRC python
+try:
+    block
+except [exception,[data…]]:
+    block
+#+END_SRC
+异常处理规则:
+
+1. 执行try内的代码块，如果无异常产生，except代码被忽略。
+2. 如果try代码块内引发异常，try代码块其余部分被忽略，程序跳到except语句，从第一个except语句开始搜索，如果某个except语句中定义的异常与实际引发的异常
+匹配，则执行该except下的语句。然后继续执行try语句之后的代码(程序继续执行)。
+3. 如果发生了一个异常,在except子句中没有与之匹配的分支,它就会传递到上一级try语句中。如果在上一层try…except…中捕获了该异常，程序继续执行上层try语句后的代码。但如果最终仍找不到对应的excetp处理语句,它就成为一个未处理异常,终止程序运行,显示提示信息。
+** try…except…else…
+try…except语句可以带有一个else子句,该子句只能出现在所有except子句之后,在try语句没有抛出异常的时候执行
+#+BEGIN_SRC python
+try:
+    block
+except [exception,[data...]]:
+    block
+else:
+    block
+
+try:
+    f = open('file.txt','r')
+except IOError, e:
+#也可以写作except IOError as e:
+    print e
+#结果
+[Errno 2] No such file or directory: 'file.txt'
+#+END_SRC
+捕获到的IOError错误的详细原因会被放置在对象e中，然后运行该异常的except代码块
+** 使用finally
+无论try块是否抛出异常，永远执行的代码。通常用来执行关闭文件，断开服务器连接的功能等等。
+#+BEGIN_SRC python
+try:
+    block
+except [exception,[data...]]:
+    block
+finally:
+    block
+#+END_SRC
+执行规则:
+
+1. 执行try下的代码。
+2. 若发生异常，如果except捕获异常，执行except语句后执行finally语句。如果except未捕获异常，在该异常传递到上一级try时，执行finally中的代码。
+3. 如果没有发生异常，则执行finally中的代码。
+* 手动引发异常
+** raise
+在Python中，要想引发异常，最简单的形式就是输入关键字raise，后跟要引发的异常的名称。异常名称标识出具体的类：执行raise语句时，Python会创建指定的异常类的一个对象，raise语句还可指定对异常对象进行初始化的参数，为此，请在异常类的名称后添加一个逗号以及指定的参数（或者由参数构成的一个元组）。
+#+BEGIN_SRC python
+class MyError(Exception):
+    pass
+try:
+    raise MyError, "some error happend"
+#也可写作raise MyError("some error happend")
+except MyError,data:
+    print "MyError encoutered"
+    print data
+#结果
+MyError encoutered
+some error happend
+#+END_SRC
+** 自定义异常
+上一段代码中MyError就是自定义的异常类，继承自Python内置的Exception类
+* 进阶
+如下程序
+#+BEGIN_SRC python
+try:
+    block1
+except...:
+    block2
+finally:
+    block3
+#+END_SRC
+并不知道block1里会发生什么异常，但还要做异常处理，不中断程序的运行。
+至少有三个方法:
+** 1.捕获所有异常
+#+BEGIN_SRC python
+try:
+    block1
+except Exception, ex:
+    print Exception,':',ex
+finally:
+    block3
+#+END_SRC
+** 2.使用traceback模块跟踪异常返回信息
+#+BEGIN_SRC python
+import traceback
+try:
+    raise SyntaxError, "traceback test"
+except:
+    traceback.print_exc()
+#输出
+Traceback (most recent call last):
+  File "<stdin>", line 2, in <module>
+SyntaxError: traceback test
+#+END_SRC
+类似在没有捕获异常时候, 解释器所返回的结果.
+
+还可以把异常保存到日志文件中
+#+BEGIN_SRC python
+import traceback
+try:
+    raise SyntaxError, "traceback test"
+except:
+    f=open("/home/wchunx/log.txt",'a')
+    traceback.print_exc(file = f)
+    f.close()
+#+END_SRC
+traceback模块还提供了extract_tb函数来格式化跟踪返回信息, 得到包含错误信息的列表, 如下:
+#+BEGIN_SRC python
+import traceback
+import sys
+ 
+def tracebacktest():
+    raise SyntaxError, "traceback test"
+try:
+    tracebacktest()
+except:
+    info = sys.exc_info()
+    print info
+    for file, lineno, function, text in traceback.extract_tb(info[2]):
+        print file, "line:", lineno, "in", function
+        print text
+    print "** %s: %s" % info[:2]
+#输出
+(<type 'exceptions.SyntaxError'>, SyntaxError('traceback test',), <traceback object at 0xb72c39b4>)
+trace.py line: 7 in <module>
+tracebacktest()
+trace.py line: 5 in tracebacktest
+raise SyntaxError, "traceback test"
+** <type 'exceptions.SyntaxError'>: traceback test
+#+END_SRC
+** 3.采用sys模块回溯最后的异常
+#+BEGIN_SRC python
+import sys
+try:
+    raise TypeError, "Type Error happened"
+except:
+    info = sys.exc_info()
+    print info
+    print info[0],':',info[1]
+#结果
+(<type 'exceptions.TypeError'>, TypeError('Type Error happened',), <traceback object at 0xb6b33eb4>)
+<type 'exceptions.TypeError'> : Type Error happened
+#+END_SRC
+* 参考资料
+[[http://ciniao.me/article.php?id=23][python中的异常处理]]
+
+[[http://www.cnblogs.com/dkblog/archive/2011/06/24/2089026.html][python异常处理]]

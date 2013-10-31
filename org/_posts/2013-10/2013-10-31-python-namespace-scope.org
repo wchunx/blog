@@ -1,0 +1,145 @@
+#+BEGIN_HTML
+---
+layout: post
+keywords: 
+description: 
+title: python命名空间和作用域 
+categories: [python]
+tags: [python,命名空间,作用域]
+group: archive
+icon: code
+featured: false
+---
+#+END_HTML
+* 命名空间(namespace)
+A namespace is a mapping from names to objects
+
+命名空间是名字和对象的映射。也就是可以把一个namespace理解为一个字典，实际上很多当前的Python实现namespace就是用的字典。各个命名空间是独立的，没有任何关系的，所以一个命名空间中不能有重名，但不同的命名空间是可以重名而没有任何影响。
+
+那么哪些可以是一个namespace呢，比如Python的built-in names（包括内置函数，内置常量，内置类型）；一个模块的global names（这个模块定义的函数，类，变量）；一个函数的所有local names；还有一个类对象的所有属性（数据成员，成员函数）都组成一个命名空间。
+
+命名空间都是有创建时间和生存期的。对于Python built-in names组成的命名空间，它在Python解释器启动的时候被创建，在解释器退出的时候才被删除；对于一个Python模块的global namespace，它在这个module被import的时候创建，在解释器退出的时候退出；对于一个函数的local namespace，它在函数每次被调用的时候创建 ，函数返回的时候被删除。
++ 总结 :: 一个模块的引入，函数的调用，类的定义都会引入命名空间，函数中的再定义函数，类中的成员函数定义会在局部namespace中再次引入局部namespace。
+* 赋值(assignment)
+Assignments do not copy data — they just bind names to objects.
+
+赋值操作不会拷贝，只是把名字和对象做一个绑定。也就是赋值语句是起一个绑定或重绑定的作用（bind or rebind）。函数调用的参数传递是赋值，不是拷贝。
+* 作用域(scope)
+A scope is a textual region of a Python program where a namespace is directly accessible.
+
+作用域是Python程序（文本）的某一段或某些段，在这些地方，某个命名空间中的名字可以被直接引用(不用前缀)。这个作用域就是这个命名空间的作用域。
+
+简而言之，就是Python在解析一个名称可以查找的文字范围。
+
+一个Python程序的几个作用域(也就是后文中的LEGB)：
++ 最里面的局部作用域
++ 外层函数的局部作用域
++ 模块的全局作用域
++ 包含Python内置对象的最外层作用域
+在代码中变量名被赋值（Python 中变量声明即赋值，global 声明的只是变量的使用域）的位置决定了该变量能被访问的范围。函数定义了本地作用域，而模块定义的是全局作用域。这两个作用域之前有如下关系：
++ 每一个模块都是全局作用域 :: 也就是说，创建于模块文件顶层的变量具有全局作用域，对于外部访问就成了一个模块对象的属性。
++ 全局作用域的作用范围仅限于单个文件 :: “全局”指的是在一个文件的顶层变量名对于这个文件而言是全局的。
++ 每次对函数的调用都创建了一个新的本地作用域。 :: Python 中也有递归，即可以调用自身，每次调用都会创建五个新的本地命名空间。
++ 赋值的变量名除非声明为全局变量，否则均为本地变量。 :: 如果需要在函数内部对模块文件顶层的变量名赋值，需要在函数内部通过 global 语句声明该变量。
++ 所有的变量可归纳为本地、全局或者内置三种。 :: 范围分别为 def 内部，在一个模块的命名空间内部和预定义的 __builtin__ 模块提供的变量。
+* 变量名解析：LEGB 原则
+Python 的变量名解析机制也称为 LEGB 法则.当一个变量被访问的时候，Python会按LEGB的顺序来搜索变量： \\
+要说明的是，这里的访问规则只对普通变量有效，对象属性的规则与这无关（简单地说，访问一个对象的属性与此无关）.
++ L. Local. 局部作用域，即函数中定义的变量（没有用global声明）
++ E. Enclosing. 嵌套的父级函数的局部作用域，即包含此函数的上级函数的局部作用域，通常也叫non-local作用域。
++ G. Global(module). 在模块级别定义的全局变量（如果需要在函数内修改它，需要用global声明）
++ B. Built-in. built-in模块里面的变量，比如int, Exception等等
+按这个查找原则，在第一处找到的地方停止。如果没有找到，Python 会报错的。
+
+下面以计数器的例子作说明
+#+BEGIN_SRC python
+value = 1
+def fun():
+    value = value + 1
+    print value
+fun()
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "<stdin>", line 2, in fun
+UnboundLocalError: local variable 'value' referenced before assignment
+#+END_SRC
+首先通过赋值在全局命名空间中创建了变量value。也许你会认为，当函数fun()内部value加1是会先在局部的命名空间中查找变量，无法找到时在全局命名空间中找到该名字。事实并非如此。
+
+python提出如下假设，如果在函数体内的任何地方对变量赋值，则python将名称添加到局部命名空间中。语句value=value+1对对象value进行赋值。python假设无论在何处发生赋值，value都是函数fun局部命名空间的一部分。当python尝试把1跟value相加时，该value名称在局部命名空间中，但它没有关联值，所以python报错。
+
+问题在于python何时决定使value出现在局部命名空间中。实际value出现在局部命名空间中发生在代码运行前，即，在python运行到函数定义之前。由于创建命名空间时，python会检查代码并填充局部命名空间。在python运行那行代码之前，就发现了对value的赋值，并把它添加到局部命名空间中，当函数执行时，python解释器认为value在局部命名空间中但没有值，所以会产生错误。
+
+有一个方法可以解决上面的问题。如果在函数体内，使用global语句将变量声明为全局变量，那么python不会为该变量在命名空间中创建局部名称。
+#+BEGIN_SRC python
+value = 1
+def fun():
+    global value
+    value = value + 1
+    print value
+fun()
+2
+#+END_SRC
+** 计数器例子
+#+BEGIN_SRC python
+def create_counter(initval):
+    val = initval
+    def _inner_counter():
+        val = val + 1
+        return val
+    return _inner_counter
+ 
+counter = create_counter(0)
+print "First invocation: ", counter()
+#+END_SRC
+用Python 2.7运行发现不行,有如下报错:
+#+BEGIN_SRC sh
+First invocation:
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "<stdin>", line 4, in _inner_counter
+UnboundLocalError: local variable 'val' referenced before assignment
+#+END_SRC
+先看下面的例子
+#+BEGIN_SRC python
+def outer_func():
+    x = 3
+    def inner_func1():
+        print "inner func 1:", x
+    def inner_func2():
+        x = "hello"
+        print "inner func 2:", x
+    inner_func1()
+    inner_func2()
+    print "outer func", x
+outer_func()
+inner func 1: 3
+inner func 2: hello
+outer func 3
+#+END_SRC
+按照LEGB原则，执行inner_func1()时，Python在函数内局部作用域找不到x，会在父级作用域中搜寻x，结果在outer_func的局部作用域中发现了它， 所以inner_func1会打印3。inner_func2中试图对x绑定新的值，Python解释器认为这是在创建一个新的局部变量x，其值为’hello’， 于是inner_func2会打印出’hello’， 但这对outer_func中的x无影响（因为在不同的作用域里），所以最后outer_func中打印的还是3。
+
+这也解释了为什么计数器的例子无法在Python上运行了：_inner_counter里的var = var + 1让Python认为var是一个局部变量， 而非外层函数中的var，而这条赋值语句还试图读取var的旧值，所以会报‘赋值之前引用’的错误
+
+如果确实要在一个函数里修改全局变量，Python提供了global关键字来声明一个变量是全局变量，声明以后就可以修改其值了。 然而global只能用来修改全局作用域里的变量，对于嵌套函数的情况无能为力，所以计数器的例子在Python 2.x中是无法实现的。 然而在Python 3中，一个新的关键字nonlocal的产生解决了这个问题。我们可以用Python 3来改写第一个例子：
+#+BEGIN_SRC python
+def create_counter(initval):
+    val = initval
+    def _inner_counter():
+        nonlocal val
+        val = val + 1
+        return val
+    return _inner_counter
+  
+if __name__ == '__main__':
+    counter = create_counter(10)
+    print("First invocation: ", counter())
+    print("Second invocation: ", counter())
+    print("Third invocation: ", counter())
+#+END_SRC
+运行结果
+#+BEGIN_SRC sh
+python3.2 counter.py                                                                                                                [git:master]
+First invocation:  11
+Second invocation:  12
+Third invocation:  13
+#+END_SRC

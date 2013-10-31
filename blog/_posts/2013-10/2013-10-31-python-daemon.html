@@ -1,0 +1,153 @@
+---
+layout: post
+keywords: 
+description: 
+title: python编写守护进程 
+categories: [python]
+tags: [python,daemon]
+group: archive
+icon: code
+featured: false
+---
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 守护进程的编写步骤：</a></li>
+<li><a href="#sec-2">2 过程分析</a>
+<ul>
+<li><a href="#sec-2-1">2.1 1.fork子进程，父进程退出</a></li>
+<li><a href="#sec-2-2">2.2 2.修改子进程的工作目录</a></li>
+<li><a href="#sec-2-3">2.3 3.创建新会话</a></li>
+<li><a href="#sec-2-4">2.4 4.修改umask</a></li>
+<li><a href="#sec-2-5">2.5 5.fork孙子进程，子进程退出</a></li>
+<li><a href="#sec-2-6">2.6 6.重定向孙子进程的标准输入流、标准输出流、标准错误流到/dev/null</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">守护进程的编写步骤：</h2>
+<div class="outline-text-2" id="text-1">
+
+<ol>
+<li>fork子进程，而后父进程退出，此时子进程会被init进程接管。
+</li>
+<li>修改子进程的工作目录、创建新进程组和新会话、修改umask。
+</li>
+<li>子进程再次fork一个进程，这个进程可以称为孙子进程，而后子进程退出。
+</li>
+<li>重定向孙子进程的标准输入流、标准输出流、标准错误流到/dev/null。
+</li>
+</ol>
+
+<p>完成上面的4个步骤，那么最终的孙子进程就称为守护进程。先看下代码，后面再分析下每个步骤的原因。
+</p>
+
+
+<pre class="src src-python"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">!/usr/bin/env python</span>
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">coding=utf8</span>
+
+<span style="color: #1c86ee;">import</span> os, sys, time
+
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#20135;&#29983;&#23376;&#36827;&#31243;&#65292;&#32780;&#21518;&#29238;&#36827;&#31243;&#36864;&#20986;</span>
+<span style="color: #2e8b57;">pid</span> = os.fork()
+<span style="color: #1c86ee;">if</span> pid &gt; 0:
+    sys.<span style="color: #6e8b3d;">exit</span>(0)
+
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#20462;&#25913;&#23376;&#36827;&#31243;&#24037;&#20316;&#30446;&#24405;</span>
+os.chdir(<span style="color: #8b7355;">"/"</span>)
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#21019;&#24314;&#26032;&#30340;&#20250;&#35805;&#65292;&#23376;&#36827;&#31243;&#25104;&#20026;&#20250;&#35805;&#30340;&#39318;&#36827;&#31243;</span>
+os.setsid()
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#20462;&#25913;&#24037;&#20316;&#30446;&#24405;&#30340;umask</span>
+os.umask(0)
+
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#21019;&#24314;&#23385;&#23376;&#36827;&#31243;&#65292;&#32780;&#21518;&#23376;&#36827;&#31243;&#36864;&#20986;</span>
+<span style="color: #2e8b57;">pid</span> = os.fork()
+<span style="color: #1c86ee;">if</span> pid &gt; 0:
+    sys.<span style="color: #6e8b3d;">exit</span>(0)
+
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#37325;&#23450;&#21521;&#26631;&#20934;&#36755;&#20837;&#27969;&#12289;&#26631;&#20934;&#36755;&#20986;&#27969;&#12289;&#26631;&#20934;&#38169;&#35823;</span>
+sys.stdout.flush()
+sys.stderr.flush()
+<span style="color: #2e8b57;">si</span> = <span style="color: #cd6600;">file</span>(<span style="color: #8b7355;">"/dev/null"</span>, <span style="color: #8b7355;">'r'</span>)
+<span style="color: #2e8b57;">so</span> = <span style="color: #cd6600;">file</span>(<span style="color: #8b7355;">"/dev/null"</span>, <span style="color: #8b7355;">'a+'</span>)
+<span style="color: #2e8b57;">se</span> = <span style="color: #cd6600;">file</span>(<span style="color: #8b7355;">"/dev/null"</span>, <span style="color: #8b7355;">'a+'</span>, 0)
+os.dup2(si.fileno(), sys.stdin.fileno())
+os.dup2(so.fileno(), sys.stdout.fileno())
+os.dup2(se.fileno(), sys.stderr.fileno())
+
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#23385;&#23376;&#36827;&#31243;&#30340;&#31243;&#24207;&#20869;&#23481;</span>
+<span style="color: #1c86ee;">while</span> <span style="color: #6e8b3d;">True</span>:
+    time.sleep(10)
+    <span style="color: #2e8b57;">f</span> = <span style="color: #cd6600;">open</span>(<span style="color: #8b7355;">'/home/test.txt'</span>, <span style="color: #8b7355;">'a'</span>)
+    f.write(<span style="color: #8b7355;">'hello'</span>)
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">过程分析</h2>
+<div class="outline-text-2" id="text-2">
+
+
+</div>
+
+<div id="outline-container-2-1" class="outline-3">
+<h3 id="sec-2-1">1.fork子进程，父进程退出</h3>
+<div class="outline-text-3" id="text-2-1">
+
+<p>通常，我们执行服务端程序的时候都会通过终端连接到服务器，成功连接后会加载shell环境，终端和shell都是进程，shell进程是终端进程的子进程，通过ps命令可以很容易的查看到。在这个shell环境下一开始执行的程序都是shell进程的子进程，自然会受到shell进程的影响。在程序里fork子进程后，父进程退出，对了shell进程来说，这个父进程就算执行完了，而产生的子进程会被init进程接管，从而也就脱离了终端的控制。
+</p></div>
+
+</div>
+
+<div id="outline-container-2-2" class="outline-3">
+<h3 id="sec-2-2">2.修改子进程的工作目录</h3>
+<div class="outline-text-3" id="text-2-2">
+
+<p>子进程在创建的时候会继承父进程的工作目录，如果执行的程序是在u盘里的，就会导致u盘不能卸载。
+</p></div>
+
+</div>
+
+<div id="outline-container-2-3" class="outline-3">
+<h3 id="sec-2-3">3.创建新会话</h3>
+<div class="outline-text-3" id="text-2-3">
+
+<p>使用setsid后，子进程就会成为新会话的首进程（session leader）；子进程会成为新进程组的组长进程；子进程没有控制终端。
+</p></div>
+
+</div>
+
+<div id="outline-container-2-4" class="outline-3">
+<h3 id="sec-2-4">4.修改umask</h3>
+<div class="outline-text-3" id="text-2-4">
+
+<p>由于umask会屏蔽权限，所以设定为0，这样可以避免读写文件时碰到权限问题。
+</p></div>
+
+</div>
+
+<div id="outline-container-2-5" class="outline-3">
+<h3 id="sec-2-5">5.fork孙子进程，子进程退出</h3>
+<div class="outline-text-3" id="text-2-5">
+
+<p>经过上面几个步骤后，子进程会成为新的进程组老大，可以重新申请打开终端，为了避免这个问题，fork孙子进程出来。
+</p></div>
+
+</div>
+
+<div id="outline-container-2-6" class="outline-3">
+<h3 id="sec-2-6">6.重定向孙子进程的标准输入流、标准输出流、标准错误流到/dev/null</h3>
+<div class="outline-text-3" id="text-2-6">
+
+<p>因为是守护进程，本身已经脱离了终端，那么标准输入流、标准输出流、标准错误流就没有什么意义了。所以都转向到/dev/null，就是都丢弃的意思。
+</p></div>
+</div>
+</div>
