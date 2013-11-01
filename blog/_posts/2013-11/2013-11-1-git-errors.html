@@ -1,0 +1,86 @@
+---
+layout: post
+keywords: 
+description: 
+title: git常见错误 
+categories: [git]
+tags: [git,errors]
+group: archive
+icon: github
+featured: false
+---
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 error: RPC failed; result=55, HTTP code = 0</a>
+<ul>
+<li><a href="#sec-1-1">1.1 解决办法</a>
+<ul>
+<li><a href="#sec-1-1-1">1.1.1 windows</a></li>
+<li><a href="#sec-1-1-2">1.1.2 linux:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">error: RPC failed; result=55, HTTP code = 0</h2>
+<div class="outline-text-2" id="text-1">
+
+<p>git push 提交的时候出现错误
+</p>
+
+
+<pre class="src src-sh">error: RPC failed; <span style="color: #2e8b57;">result</span>=55, HTTP code = 0
+fatal: The remote end hung up unexpectedly
+fatal: The remote end hung up unexpectedly
+</pre>
+
+<p>
+用http或者https方式提交git里大批量的数据更改时，可能会遇到这样的错误,这是因为Git默认设置最大的HTTP传输量为1MB。
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">解决办法</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>修改可传输最大值
+</p>
+</div>
+
+<div id="outline-container-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1">windows</h4>
+<div class="outline-text-4" id="text-1-1-1">
+
+<p>在 .git/config 文件中加入
+</p>
+
+
+<pre class="src src-sh">[http]
+postBuffer = 524288000
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-1-1-2" class="outline-4">
+<h4 id="sec-1-1-2">linux:</h4>
+<div class="outline-text-4" id="text-1-1-2">
+
+
+
+
+<pre class="src src-sh">git config http.postBuffer 524288000 
+</pre>
+
+</div>
+</div>
+</div>
+</div>

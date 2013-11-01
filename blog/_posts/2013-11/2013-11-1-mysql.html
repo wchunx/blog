@@ -1,0 +1,157 @@
+---
+layout: post
+keywords: 
+description: 
+title: Mysql初始化root密码和允许远程访问 
+categories: [数据库]
+tags: [数据库,mysql]
+group: archive
+icon: globe
+featured: false
+---
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 初始化root密码</a>
+<ul>
+<li><a href="#sec-1-1">1.1 使用mysqladmin命令</a></li>
+<li><a href="#sec-1-2">1.2 mysql默认root用户没有密码，输入mysql –u root 进入mysql</a></li>
+</ul>
+</li>
+<li><a href="#sec-2">2 允许mysql远程访问,可以使用以下三种方式:</a>
+<ul>
+<li><a href="#sec-2-1">2.1 改表</a></li>
+<li><a href="#sec-2-2">2.2 授权</a></li>
+<li><a href="#sec-2-3">2.3 在安装mysql的机器上运行：</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">初始化root密码</h2>
+<div class="outline-text-2" id="text-1">
+
+<p>可以使用以下两种方法
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">使用mysqladmin命令</h3>
+<div class="outline-text-3" id="text-1-1">
+
+
+
+
+<pre class="src src-sh">mysqladmin -u root password <span style="color: #8b7355;">"123456"</span>
+</pre>
+
+<dl>
+<dt>masqladmin修改密码的命令</dt><dd>
+</dd>
+</dl>
+
+
+
+
+<pre class="src src-sh">mysqladmin -u root -p oldpassword newpasswd
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">mysql默认root用户没有密码，输入mysql –u root 进入mysql</h3>
+<div class="outline-text-3" id="text-1-2">
+
+
+
+
+<pre class="src src-sh">mysql&gt;update user set <span style="color: #2e8b57;">password</span>=PASSWORD(&#8216;123456&#8217;) where <span style="color: #2e8b57;">User</span>=<span style="color: #8b7355;">'root'</span>;
+</pre>
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">允许mysql远程访问,可以使用以下三种方式:</h2>
+<div class="outline-text-2" id="text-2">
+
+
+</div>
+
+<div id="outline-container-2-1" class="outline-3">
+<h3 id="sec-2-1">改表</h3>
+<div class="outline-text-3" id="text-2-1">
+
+
+
+
+<pre class="src src-sh">mysql -u root &#8211;p
+mysql&gt;use mysql;
+mysql&gt;update user set host = <span style="color: #8b7355;">'%'</span> where user = <span style="color: #8b7355;">'root'</span>;
+mysql&gt;select host, user from user;
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-2-2" class="outline-3">
+<h3 id="sec-2-2">授权</h3>
+<div class="outline-text-3" id="text-2-2">
+
+<p>例如，你想root使用123456从任何主机连接到mysql服务器
+</p>
+
+
+<pre class="src src-sh">mysql&gt;GRANT ALL PRIVILEGES ON *.* TO <span style="color: #8b7355;">'root'</span>@<span style="color: #8b7355;">'%'</span> IDENTIFIED BY <span style="color: #8b7355;">'123456'</span> WITH GRANT OPTION;
+</pre>
+
+<p>
+也可以不进入mysql，直接在命令行执行:
+</p>
+
+
+<pre class="src src-sh">mysql -uroot -p123456 -e <span style="color: #8b7355;">"GRANT ALL PRIVILEGES ON *.* TO root@'%' IDENTIFIED BY '123456' WITH GRANT OPTION"</span>
+</pre>
+
+<p>
+如果你想允许用户jack从ip为10.10.50.127的主机连接到mysql服务器，并使用654321作为密码
+</p>
+
+
+<pre class="src src-sh">mysql&gt;GRANT ALL PRIVILEGES ON *.* TO <span style="color: #8b7355;">'jack'</span>@&#8217;10.10.50.127&#8217; IDENTIFIED BY <span style="color: #8b7355;">'654321'</span> WITH GRANT OPTION;
+mysql&gt;FLUSH RIVILEGES
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-2-3" class="outline-3">
+<h3 id="sec-2-3">在安装mysql的机器上运行：</h3>
+<div class="outline-text-3" id="text-2-3">
+
+
+
+
+<pre class="src src-sh"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#36827;&#20837;MySQL&#26381;&#21153;&#22120;</span>
+mysql -h localhost -u root
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#36171;&#20104;&#20219;&#20309;&#20027;&#26426;&#35775;&#38382;&#25968;&#25454;&#30340;&#26435;&#38480;</span>
+mysql&gt;GRANT ALL PRIVILEGES ON *.* TO <span style="color: #8b7355;">'root'</span>@<span style="color: #8b7355;">'%'</span> WITH GRANT OPTION;
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#20351;&#20462;&#25913;&#29983;&#25928;</span>
+mysql&gt;FLUSH PRIVILEGES;
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#36864;&#20986;MySQL&#26381;&#21153;&#22120;</span>
+mysql&gt;EXIT;
+</pre>
+
+</div>
+</div>
+</div>

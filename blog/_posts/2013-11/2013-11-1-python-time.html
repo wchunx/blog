@@ -1,0 +1,195 @@
+---
+layout: post
+keywords: 
+description: 
+title: Python获取当前时间 
+categories: [python]
+tags: [python,time]
+group: archive
+icon: code
+featured: false
+---
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 简单获取当前时间</a></li>
+<li><a href="#sec-2">2 获取时间戳</a>
+<ul>
+<li><a href="#sec-2-1">2.1 获取时间戳time.time()</a></li>
+<li><a href="#sec-2-2">2.2 格式化时间戳</a></li>
+<li><a href="#sec-2-3">2.3 strftime(format[,tuple])</a></li>
+<li><a href="#sec-2-4">2.4 strftime常用日期格式</a></li>
+</ul>
+</li>
+<li><a href="#sec-3">3 参考资料</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">简单获取当前时间</h2>
+<div class="outline-text-2" id="text-1">
+
+<p>使用下面的命令即可获取当前时间
+</p>
+
+
+<pre class="src src-python"><span style="color: #1c86ee;">import</span> time
+time.strftime(<span style="color: #8b7355;">'%c'</span>)
+<span style="color: #8b7355;">'Fri Nov  1 10:06:20 2013'</span>
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">获取时间戳</h2>
+<div class="outline-text-2" id="text-2">
+
+<p>Python获取时间的相关信息使用time模块。要获取当前时间，需先取得当前时间的时间戳，
+</p>
+<p>
+*时间戳*是自1970年1月1日（00:00:00 GMT）至当前时间的总秒数。它也被称为Unix时间戳（Unix Timestamp）。
+</p>
+
+</div>
+
+<div id="outline-container-2-1" class="outline-3">
+<h3 id="sec-2-1">获取时间戳time.time()</h3>
+<div class="outline-text-3" id="text-2-1">
+
+
+
+
+<pre class="src src-sh">import time
+print time.time()
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#36755;&#20986;&#30340;&#32467;&#26524;&#26159;&#65306;</span>
+1383271867.539839
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-2-2" class="outline-3">
+<h3 id="sec-2-2">格式化时间戳</h3>
+<div class="outline-text-3" id="text-2-2">
+
+<p>但是这样是一连串的数字不是我们想要的结果，我们可以利用time模块的格式化时间的方法来处理:
+</p>
+
+
+<pre class="src src-python">time.localtime(time.time())
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#29992;time.localtime()&#26041;&#27861;&#65292;&#20316;&#29992;&#26159;&#26684;&#24335;&#21270;&#26102;&#38388;&#25139;&#20026;&#26412;&#22320;&#30340;&#26102;&#38388;&#12290;</span>
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#36755;&#20986;&#30340;&#32467;&#26524;&#26159;&#65306;</span>
+time.struct_time(tm_year=2013, tm_mon=11, tm_mday=1, tm_hour=10, tm_min=11, tm_sec=15, tm_wday=4, tm_yday=305, tm_isdst=0)
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#26368;&#21518;&#29992;time.strftime()&#26041;&#27861;&#65292;&#25226;&#21018;&#25165;&#30340;&#19968;&#22823;&#20018;&#20449;&#24687;&#26684;&#24335;&#21270;&#25104;&#25105;&#20204;&#24819;&#35201;&#30340;&#19996;&#35199;&#65292;</span>
+time.strftime(<span style="color: #8b7355;">'%Y-%m-%d'</span>,time.localtime(time.time()))
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#29616;&#22312;&#30340;&#32467;&#26524;&#26159;&#65306;</span>
+<span style="color: #8b7355;">'2013-11-01'</span>
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-2-3" class="outline-3">
+<h3 id="sec-2-3">strftime(format[,tuple])</h3>
+<div class="outline-text-3" id="text-2-3">
+
+<p>将指定的struct<sub>time</sub>(默认为当前时间)，根据指定的格式化字符串输出
+</p>
+<p>
+由于strftime()默认转换当前时间，所以可以不用写时间参数,只指定输出格式，即可获取当前时间。(本文开头简单获取时间即是如此)
+</p>
+<p>
+所以前面的代码可以简写为
+</p>
+
+
+<pre class="src src-sh">import time
+<span style="color: #cd9b1d;">time.strftime</span>()
+<span style="color: #cd9b1d;">time.strftime</span>(<span style="color: #8b7355;">'%Y-%m-%d'</span>)
+<span style="color: #8b7355;">'2013-11-01'</span>
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-2-4" class="outline-3">
+<h3 id="sec-2-4">strftime常用日期格式</h3>
+<div class="outline-text-3" id="text-2-4">
+
+<ul>
+<li>%y 两位数的年份表示，不带世纪（00-99）
+</li>
+<li>%Y 四位数的年份表示（000-9999）
+</li>
+<li>%m 月份（01-12）
+</li>
+<li>%d 月内中的一天（0-31）
+</li>
+<li>%H 24小时制小时数（0-23）
+</li>
+<li>%I 12小时制小时数（01-12）
+</li>
+<li>%M 分钟数（00=59）
+</li>
+<li>%S 秒（00-59）
+</li>
+<li>%F 年-月-日（2013-06-27）
+</li>
+<li>%D 月/天/年（06/27/13）
+
+</li>
+<li>%a 星期简写名称(Thu)
+</li>
+<li>%A 星期完整名称(Thursday）
+</li>
+<li>%b 月份简写名称(Jun)
+</li>
+<li>%B 月份完整名称(June)
+</li>
+<li>%c 标准的日期时间字符串(Thu Jun 27 10:12:07 2013)
+</li>
+<li>%e 在两字符域中，十进制表示的每月的第几天
+</li>
+<li>%j 十进制表示一年第几天（001-366）
+</li>
+<li>%p 本地A.M.或P.M.的等价表示
+</li>
+<li>%U 一年的第几周（00-53）星期天为星期的开始
+</li>
+<li>%w 星期（0-6），星期天为星期的开始
+</li>
+<li>%W 一年的第几周（00-53）星期一为星期的开始
+</li>
+<li>%x 标准时期字符串（06/27/13）
+</li>
+<li>%X 标准时间字符串（10:16:35）
+</li>
+<li>%z,%Z 当前时区的名称(+0800,CST)
+</li>
+<li>%% %号本身 
+</li>
+</ul>
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3">参考资料</h2>
+<div class="outline-text-2" id="text-3">
+
+<p><a href="http://www.cnblogs.com/wanpython/archive/2010/08/07/1794598.html">python 获取当前时间</a>
+</p>
+<p>
+<a href="http://blog.chinaunix.net/uid-16539-id-2741508.html">Python 常用函数time.strftime()简介</a>
+</p></div>
+</div>

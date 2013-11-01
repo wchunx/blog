@@ -1,0 +1,15 @@
+#+BEGIN_HTML
+---
+layout: post
+keywords: 
+description: 
+title: vmware学习 
+categories: [vmware]
+tags: [vmware,study]
+group: archive
+icon: [globe]
+featured: false
+---
+#+END_HTML
+* 图解vmware内存机制
+http://delxu.blog.51cto.com/975660/288682/

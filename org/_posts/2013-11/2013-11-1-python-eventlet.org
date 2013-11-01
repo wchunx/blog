@@ -1,0 +1,16 @@
+#+BEGIN_HTML
+---
+layout: post
+keywords: 
+description: 
+title: python eventlet 
+categories: [python]
+tags: [python,eventlet]
+group: archive
+icon: code
+featured: false
+---
+#+END_HTML
+http://blog.sina.com.cn/s/blog_3fb83bd801016qtu.html
+
+http://blog.csdn.net/hackerain/article/details/7836993

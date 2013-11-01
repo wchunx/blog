@@ -3,17 +3,26 @@
 layout: post
 keywords: 
 description: 
-title: python子类调用父类方法 
+title: python调用父类方法 
 categories: [python]
-tags: [python,class,subclass]
+tags: [python,class]
 group: archive
-icon: code
+icon: [code]
 featured: false
 ---
 #+END_HTML
-#+OPTIONS: ^:{}
-Python子类调用父类的方法
-* 1.Python子类调用父类的方法
+* 类中方法定义
+python类中的方法定义第一个参数一般都命名为self，用于传递对象本身，而调用方法时不用显示传递，系统会自动传递。
+#+BEGIN_SRC python
+>>> class Base(object):
+... def func(self,message):
+... print message
+...
+>>> Base().func('hello world')
+hello world
+#+END_SRC
+* python在子类中调用父类的访问有一下两种方式
+** 通过类名调用，self显式传递
 #+BEGIN_SRC python
 class Base():
     def meth(self):
@@ -28,8 +37,10 @@ i'm base
 this is derived
 None
 #+END_SRC
-+ 注 :: 这里的None是因为无return的函数默认返回None。也就是meth()默认返回None。缺点是如果子类多处调用父类方法，父类发生变化时需要多处修改。
-* 2.使用supper
+注：这里的None是因为无return的函数默认返回None。也就是meth()默认返回None。
+
+缺点是当父类名发生变化是，子类中涉及的地方都需要更改，代码量庞大的时候，是非常不便的。
+** 通过super机制
 #+BEGIN_SRC python
 class Base(object):
     def meth(self):
@@ -46,8 +57,14 @@ None
 #+END_SRC
 可以这样理解,对于super(Derived, self).meth()：super(Derived, self)首先找到Derived的父类（就是类Base），然后把类Derived的对象self转换为类Base的对象，然后“被转换”的类Base对象调用自己的meth函数。
 
-此处有一个问题，如果第二段代码第一句写成class Base:会报错TypeError: must be type, not classobj。这是因为super只能用于新式类(new-style class),不能用于经典类(classic class)。从python2.2开始引入新式类。新式类统一了类(class)和类型(type)，并添加了新的属性。
-** 二者的区别
+此处有一个问题，如果第二段代码第一句写成class Base:会报错TypeError: must be type, not classobj。这是因为super只能用于新式类(new-style class),不能用于经典类(classic class)。
+
+*** 新式类和经典类是什么
++ 新类 :: 所有类都必须要有继承的类，如果什么都不想继承，就显示的从object继承。
++ 经典类 :: 什么都不用继承的类，如上面的代码就是经典类。所以报错。
+
+python2.2开始引入新式类。新式类统一了类(class)和类型(type)，并添加了新的属性。
+*** 新式类和经典类的区别
 + 新式类 :: 所有类都必须要有继承的类，如果什么都不想继承，就继承到object类。基类搜索机制是广度优先遍历。
 + 经典类 :: 没有父类。基类搜索机制是深度优先遍历
 #+BEGIN_SRC python
@@ -81,9 +98,8 @@ if __name__ == "__main__":
     print na.__class__
     print type(na)
     print dir(na)
-#+END_SRC
-输出
-#+BEGIN_SRC python
+
+#输出
 a
 c
 __main__.CA
@@ -93,4 +109,6 @@ __main__.CA
 <class '__main__.NA'>
 ['__class__', '__delattr__', '__dict__', '__doc__', '__format__', '__getattribute__', '__hash__', '__init__', '__module__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', '__weakref__', 'var']
 #+END_SRC
-CD.var的值是'a',而ND.var的值是'c'
+看到CD.var的值是'a',而ND.var的值是 'c'
+
+*Google python风格鼓励使用新式类*

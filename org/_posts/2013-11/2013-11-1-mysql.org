@@ -1,0 +1,60 @@
+#+BEGIN_HTML
+---
+layout: post
+keywords: 
+description: 
+title: Mysql初始化root密码和允许远程访问 
+categories: [数据库]
+tags: [数据库,mysql]
+group: archive
+icon: globe
+featured: false
+---
+#+END_HTML
+* 初始化root密码
+可以使用以下两种方法
+** 使用mysqladmin命令
+#+BEGIN_SRC sh
+mysqladmin -u root password "123456"
+#+END_SRC
++ masqladmin修改密码的命令 ::
+#+BEGIN_SRC sh
+mysqladmin -u root -p oldpassword newpasswd
+#+END_SRC
+** mysql默认root用户没有密码，输入mysql –u root 进入mysql
+#+BEGIN_SRC sh
+mysql>update user set password=PASSWORD(‘123456’) where User='root';
+#+END_SRC
+* 允许mysql远程访问,可以使用以下三种方式:
+** 改表
+#+BEGIN_SRC sh
+mysql -u root –p
+mysql>use mysql;
+mysql>update user set host = '%' where user = 'root';
+mysql>select host, user from user;
+#+END_SRC
+** 授权
+例如，你想root使用123456从任何主机连接到mysql服务器
+#+BEGIN_SRC sh
+mysql>GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '123456' WITH GRANT OPTION;
+#+END_SRC
+也可以不进入mysql，直接在命令行执行:
+#+BEGIN_SRC sh
+mysql -uroot -p123456 -e "GRANT ALL PRIVILEGES ON *.* TO root@'%' IDENTIFIED BY '123456' WITH GRANT OPTION"
+#+END_SRC
+如果你想允许用户jack从ip为10.10.50.127的主机连接到mysql服务器，并使用654321作为密码
+#+BEGIN_SRC sh
+mysql>GRANT ALL PRIVILEGES ON *.* TO 'jack'@’10.10.50.127’ IDENTIFIED BY '654321' WITH GRANT OPTION;
+mysql>FLUSH RIVILEGES
+#+END_SRC
+** 在安装mysql的机器上运行：
+#+BEGIN_SRC sh
+#进入MySQL服务器
+mysql -h localhost -u root
+#赋予任何主机访问数据的权限
+mysql>GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
+#使修改生效
+mysql>FLUSH PRIVILEGES;
+#退出MySQL服务器
+mysql>EXIT;
+#+END_SRC

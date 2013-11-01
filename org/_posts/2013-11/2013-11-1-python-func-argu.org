@@ -1,0 +1,41 @@
+#+BEGIN_HTML
+---
+layout: post
+keywords: 
+description: 
+title: python函数传参，变长参数 
+categories: [python]
+tags: [python,]
+group: archive
+icon: code
+featured: false
+---
+#+END_HTML
+* 函数定义形式
++ func(arg1,arg2,…)
++ func(arg1,arg2=value2,arg3=value3)
++ func(arg1,*arg)
++ func(arg1,*arg,**kwargs)
+1. 第一种形式，要求函数调用时参数的个数和顺序与函数定义时一致。
+2. 第二种形式，函数定义时部分形参有默认值，调用时如果没有给这些形参传递实参，那么这些形参就使用默认值。注意的是带默认参数的形参应该在参数列表的最后。
+3. 上述的传参方式函数调用时都不够灵活，比较灵活的方式是关键字赋值，调用时func(arg1=1,arg2=2,arg3=3),为每个形参准确传递参数。如此即使参数顺序不同也不影响传参。
+4. 函数可以接受变长参数。用*,**标识。如函数定义中的*arg，**kwargs.在函数内部，*arg接受的参数存放在以arg为标识符的元组中。**kwargs接受的参数存放在kwargs为标识符的字典中。需要注意的是函数定义时变长参数应放在参数列表最后，同时有*arg,和**kwargs时，**kwargs放在*arg之后。
+* 代码示例
+#+BEGIN_SRC python
+>>> def fun(a,b=2,*arg,**kwargs):
+...     print a
+...     print b
+...     print arg
+...     print kwargs
+...
+>>> fun(1,2,3,4,c=5,d=6)
+1
+2
+(3, 4)
+{'c': 5, 'd': 6}
+>>> 
+#+END_SRC
+* 参考资料
+[[http://lidashuang.is-programmer.com/posts/28252.html][python 可变长参数]]
+
+[[http://www.cnblogs.com/tqsummer/archive/2011/01/25/1944416.html][Python中函数的参数定义和可变参数]]

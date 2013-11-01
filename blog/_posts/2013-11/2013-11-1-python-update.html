@@ -1,0 +1,103 @@
+---
+layout: post
+keywords: 
+description: 
+title: CentOS6.3升级Python到2.7.3版本 
+categories: [python]
+tags: [python,centos,update]
+group: archive
+icon: code
+featured: false
+---
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 安装</a></li>
+<li><a href="#sec-2">2 建立软链接，使系统默认的python指向python2.7</a></li>
+<li><a href="#sec-3">3 解决yum问题</a></li>
+<li><a href="#sec-4">4 参考资料</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">安装</h2>
+<div class="outline-text-2" id="text-1">
+
+
+
+
+<pre class="src src-sh"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#26597;&#30475;python&#30340;&#29256;&#26412;</span>
+python -V
+Python 2.6.6
+
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#19979;&#36733;Python-2.7.3</span>
+wget http://python.org/ftp/python/2.7.3/Python-2.7.3.tar.bz2
+
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#35299;&#21387;</span>
+tar xvjf Python-2.7.3.tar.bz2
+<span style="color: #cd6600;">cd</span> Python-2.7.3
+
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#23433;&#35013;</span>
+./configure
+make all
+make install
+make clean
+make distclean
+
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#26597;&#30475;&#29256;&#26412;&#20449;&#24687;</span>
+/usr/local/bin/python2.7 -V
+python 2.7.3
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">建立软链接，使系统默认的python指向python2.7</h2>
+<div class="outline-text-2" id="text-2">
+
+<p>正常情况下即使python2.7安装成功后，系统默认指向的python仍然是2.6.6版本，考虑到yum是基于python2.6.6才能正常工作，不敢轻易卸载。
+</p>
+
+
+<pre class="src src-sh">mv /usr/bin/python /usr/bin/python2.6.6
+ln -s /usr/local/bin/python2.7 /usr/bin/python
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#26816;&#39564;</span>
+python -V
+python 2.7.3
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3">解决yum问题</h2>
+<div class="outline-text-2" id="text-3">
+
+<p>系统python指向python2.7版本后，yum不能正常工作
+</p>
+
+
+<pre class="src src-sh">vi /usr/bin/yum
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#23558;&#25991;&#20214;&#22836;&#37096;&#30340;</span>
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">!/usr/bin/python</span>
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#25913;&#25104;</span>
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">!/usr/bin/python2.6.6</span>
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4">参考资料</h2>
+<div class="outline-text-2" id="text-4">
+
+<p><a href="http://www.cnblogs.com/balaamwe/p/3296857.html">CentOS6.3升级Python到2.7.3版本</a>
+</p></div>
+</div>
