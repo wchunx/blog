@@ -8,7 +8,7 @@ categories: [Links]
 tags: [Links]
 group: archive
 icon: globe
-featured: false
+featured: true
 ---
 #+END_HTML
 * HTML
@@ -29,6 +29,12 @@ featured: false
 [[http://www.ibm.com/developerworks/cn/cloud/library/cl-openstack-network/][openstack中的防火墙]]
 
 [[http://networkstatic.net/openstack-essex-installation-and-configuration-screencast-from-scratch/][NetworkStatic|Brent Salisbury's Blog]]
+
+[[http://os.51cto.com/art/201205/336386.htm][OpenStack的架构详解(1)]]
+
+[[http://blog.csdn.net/quqi99/article/details/12030851][如何学习OpenStack与精通OpenStack好书推荐]]
+
+[[http://chenpiaoping.blog.51cto.com/5631143/1141728][陈漂评的博客]] openstack ovs
 * 博客
 [[http://coolshell.cn/][酷壳]]
 
@@ -43,6 +49,10 @@ featured: false
 [[http://ciniao.me/][刺鸟]]
 
 [[http://www.cnblogs.com/vamei/][Vamei]] python进阶 java进阶 Linux
+
+[[http://ikimi.net/][KIMI YANG]]openflow switch
+
 * 资源
 [[http://www.tutorialspoint.com/][手册大全]]
 
+[[http://man.cx/][Manpages]] man手册

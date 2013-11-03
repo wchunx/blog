@@ -1,0 +1,580 @@
+#+BEGIN_HTML
+---
+layout: post
+keywords: 
+description: 
+title: 203openstack当前情况
+categories: openstack
+tags: [openstack,虚拟化]
+group: archive
+icon: globe
+featured: false
+---
+#+END_HTML
+* 网络结构
+* 策略
+#+BEGIN_HTML
+<img src ="/images/2013-11/default.png"/>
+#+END_HTML
+* 虚拟机
+#+BEGIN_SRC sh
+virsh list
+Id    Name                           State
+----------------------------------------------------
+ 5     instance-000000a2              running
+ 8     instance-000000b4              running
+ 9     instance-000000b3              running
+ 11    instance-0000008f              running
+ 17    instance-000000b1              running
+ 18    instance-000000fa              running
+#+END_SRC
+* iptables -nvL
+#+BEGIN_SRC sh
+Chain INPUT (policy ACCEPT 1062M packets, 423G bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+  29M 8083M nova-compute-INPUT  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+1060M  423G nova-api-INPUT  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain FORWARD (policy ACCEPT 15M packets, 2499M bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+  30M 8285M nova-filter-top  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+ 504K   35M nova-compute-FORWARD  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+  15M 2435M nova-api-FORWARD  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain OUTPUT (policy ACCEPT 1036M packets, 386G bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+1036M  386G nova-filter-top  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+  29M 8261M nova-compute-OUTPUT  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+1034M  383G nova-api-OUTPUT  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain nova-api-FORWARD (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain nova-api-INPUT (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            192.168.150.203      tcp dpt:8775
+
+Chain nova-api-OUTPUT (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain nova-api-local (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain nova-compute-FORWARD (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+ 2804  864K ACCEPT     udp  --  *      *       0.0.0.0              255.255.255.255      udp spt:68 dpt:67
+
+Chain nova-compute-INPUT (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+ 2804  864K ACCEPT     udp  --  *      *       0.0.0.0              255.255.255.255      udp spt:68 dpt:67
+
+Chain nova-compute-OUTPUT (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain nova-compute-inst-143 (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 DROP       all  --  *      *       0.0.0.0/0            0.0.0.0/0            state INVALID
+ 8184 8061K ACCEPT     all  --  *      *       0.0.0.0/0            0.0.0.0/0            state RELATED,ESTABLISHED
+    1    60 nova-compute-provider  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+    0     0 ACCEPT     udp  --  *      *       192.168.16.101       0.0.0.0/0            udp spt:67 dpt:68
+    0     0 ACCEPT     all  --  *      *       192.168.16.0/24      0.0.0.0/0           
+    1    60 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:22
+    0     0 ACCEPT     icmp --  *      *       0.0.0.0/0            0.0.0.0/0           
+    0     0 nova-compute-sg-fallback  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain nova-compute-inst-162 (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 DROP       all  --  *      *       0.0.0.0/0            0.0.0.0/0            state INVALID
+ 148K   14M ACCEPT     all  --  *      *       0.0.0.0/0            0.0.0.0/0            state RELATED,ESTABLISHED
+    0     0 nova-compute-provider  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+    0     0 ACCEPT     udp  --  *      *       10.10.10.11          0.0.0.0/0            udp spt:67 dpt:68
+    0     0 ACCEPT     all  --  *      *       10.10.10.0/24        0.0.0.0/0           
+    0     0 ACCEPT     icmp --  *      *       0.0.0.0/0            0.0.0.0/0           
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:22
+    0     0 ACCEPT     udp  --  *      *       0.0.0.0/0            0.0.0.0/0            udp dpt:80
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:80
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:5900
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:5901
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:5902
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            multiport dports 1:65535
+    0     0 nova-compute-sg-fallback  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain nova-compute-inst-177 (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 DROP       all  --  *      *       0.0.0.0/0            0.0.0.0/0            state INVALID
+18809   12M ACCEPT     all  --  *      *       0.0.0.0/0            0.0.0.0/0            state RELATED,ESTABLISHED
+    0     0 nova-compute-provider  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+    0     0 ACCEPT     udp  --  *      *       10.10.10.11          0.0.0.0/0            udp spt:67 dpt:68
+    0     0 ACCEPT     all  --  *      *       10.10.10.0/24        0.0.0.0/0           
+    0     0 ACCEPT     icmp --  *      *       0.0.0.0/0            0.0.0.0/0           
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:22
+    0     0 ACCEPT     udp  --  *      *       0.0.0.0/0            0.0.0.0/0            udp dpt:80
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:80
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:5900
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:5901
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:5902
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            multiport dports 1:65535
+    0     0 nova-compute-sg-fallback  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain nova-compute-inst-179 (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 DROP       all  --  *      *       0.0.0.0/0            0.0.0.0/0            state INVALID
+ 8588 8231K ACCEPT     all  --  *      *       0.0.0.0/0            0.0.0.0/0            state RELATED,ESTABLISHED
+    0     0 nova-compute-provider  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+    0     0 ACCEPT     udp  --  *      *       50.0.0.101           0.0.0.0/0            udp spt:67 dpt:68
+    0     0 ACCEPT     all  --  *      *       50.0.0.0/24          0.0.0.0/0           
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:22
+    0     0 ACCEPT     icmp --  *      *       0.0.0.0/0            0.0.0.0/0           
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:443
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            multiport dports 1:65535
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:9443
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:3306
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:6143
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:6443
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:8443
+    0     0 ACCEPT     udp  --  *      *       0.0.0.0/0            0.0.0.0/0            udp dpt:514
+    0     0 nova-compute-sg-fallback  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain nova-compute-inst-180 (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 DROP       all  --  *      *       0.0.0.0/0            0.0.0.0/0            state INVALID
+ 8594 8225K ACCEPT     all  --  *      *       0.0.0.0/0            0.0.0.0/0            state RELATED,ESTABLISHED
+    0     0 nova-compute-provider  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+    0     0 ACCEPT     udp  --  *      *       50.0.0.101           0.0.0.0/0            udp spt:67 dpt:68
+    0     0 ACCEPT     all  --  *      *       50.0.0.0/24          0.0.0.0/0           
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:22
+    0     0 ACCEPT     icmp --  *      *       0.0.0.0/0            0.0.0.0/0           
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:443
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            multiport dports 1:65535
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:9443
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:3306
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:6143
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:6443
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:8443
+    0     0 ACCEPT     udp  --  *      *       0.0.0.0/0            0.0.0.0/0            udp dpt:514
+    0     0 nova-compute-sg-fallback  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain nova-compute-inst-250 (2 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 DROP       all  --  *      *       0.0.0.0/0            0.0.0.0/0            state INVALID
+12216 8454K ACCEPT     all  --  *      *       0.0.0.0/0            0.0.0.0/0            state RELATED,ESTABLISHED
+    0     0 nova-compute-provider  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+    0     0 ACCEPT     udp  --  *      *       40.0.0.101           0.0.0.0/0            udp spt:67 dpt:68
+    0     0 ACCEPT     udp  --  *      *       30.0.0.101           0.0.0.0/0            udp spt:67 dpt:68
+    0     0 ACCEPT     all  --  *      *       40.0.0.0/24          0.0.0.0/0           
+    0     0 ACCEPT     all  --  *      *       30.0.0.0/24          0.0.0.0/0           
+    0     0 nova-compute-sg-fallback  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain nova-compute-local (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+ 8185 8061K nova-compute-inst-143  all  --  *      *       0.0.0.0/0            192.168.16.100      
+ 148K   14M nova-compute-inst-162  all  --  *      *       0.0.0.0/0            10.10.10.14         
+18809   12M nova-compute-inst-177  all  --  *      *       0.0.0.0/0            10.10.10.16         
+ 8594 8225K nova-compute-inst-180  all  --  *      *       0.0.0.0/0            50.0.0.111          
+ 8588 8231K nova-compute-inst-179  all  --  *      *       0.0.0.0/0            50.0.0.110          
+12216 8454K nova-compute-inst-250  all  --  *      *       0.0.0.0/0            40.0.0.100          
+    0     0 nova-compute-inst-250  all  --  *      *       0.0.0.0/0            30.0.0.102          
+
+Chain nova-compute-provider (6 references)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain nova-compute-sg-fallback (6 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 DROP       all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain nova-filter-top (2 references)
+ pkts bytes target     prot opt in     out     source               destination         
+  30M 8356M nova-compute-local  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+1049M  385G nova-api-local  all  --  *      *       0.0.0.0/0            0.0.0.0/0 
+#+END_SRC
+* iptables -t nat -nvL
+#+BEGIN_SRC sh
+Chain PREROUTING (policy ACCEPT 2995K packets, 189M bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+ 189K   13M nova-compute-PREROUTING  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+2986K  188M nova-api-PREROUTING  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain INPUT (policy ACCEPT 729K packets, 45M bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain OUTPUT (policy ACCEPT 2420K packets, 149M bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+68697 4224K nova-compute-OUTPUT  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+2413K  148M nova-api-OUTPUT  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain POSTROUTING (policy ACCEPT 4648K packets, 292M bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+ 238K   16M nova-compute-POSTROUTING  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+4637K  291M nova-api-POSTROUTING  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+4648K  292M nova-postrouting-bottom  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain nova-api-OUTPUT (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain nova-api-POSTROUTING (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain nova-api-PREROUTING (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain nova-api-float-snat (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain nova-api-snat (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+4637K  291M nova-api-float-snat  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain nova-compute-OUTPUT (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain nova-compute-POSTROUTING (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain nova-compute-PREROUTING (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain nova-compute-float-snat (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain nova-compute-snat (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+ 238K   16M nova-compute-float-snat  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain nova-postrouting-bottom (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+ 238K   16M nova-compute-snat  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+4637K  291M nova-api-snat  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+* ovs-vsctl show
+743f25e0-b42b-457b-a818-e9d7bc9288cc
+    Bridge br-tun
+        Port "gre-4"
+            Interface "gre-4"
+                type: gre
+                options: {in_key=flow, out_key=flow, remote_ip="172.16.0.253"}
+        Port "gre-3"
+            Interface "gre-3"
+                type: gre
+                options: {in_key=flow, out_key=flow, remote_ip="172.16.0.204"}
+        Port br-tun
+            Interface br-tun
+                type: internal
+        Port patch-int
+            Interface patch-int
+                type: patch
+                options: {peer=patch-tun}
+    Bridge br-ex
+        Port "qg-219ab828-29"
+            Interface "qg-219ab828-29"
+                type: internal
+        Port br-ex
+            Interface br-ex
+                type: internal
+        Port "qg-d89736d1-fe"
+            Interface "qg-d89736d1-fe"
+                type: internal
+        Port "qg-62d02883-e3"
+            Interface "qg-62d02883-e3"
+                type: internal
+        Port "qg-19244d70-04"
+            Interface "qg-19244d70-04"
+                type: internal
+        Port "qg-d19c3d46-5b"
+            Interface "qg-d19c3d46-5b"
+                type: internal
+        Port "qg-ac26e2f0-6d"
+            Interface "qg-ac26e2f0-6d"
+                type: internal
+        Port "qg-c446e6a9-00"
+            Interface "qg-c446e6a9-00"
+                type: internal
+        Port "qg-883d51d2-a5"
+            Interface "qg-883d51d2-a5"
+                type: internal
+        Port "qg-507f40ca-01"
+            Interface "qg-507f40ca-01"
+                type: internal
+        Port "eth0"
+            Interface "eth0"
+        Port "qg-4cec3d7c-12"
+            Interface "qg-4cec3d7c-12"
+                type: internal
+        Port "qg-6761279b-ad"
+            Interface "qg-6761279b-ad"
+                type: internal
+        Port "qg-763a61e4-0c"
+            Interface "qg-763a61e4-0c"
+                type: internal
+        Port "qg-ee342039-9c"
+            Interface "qg-ee342039-9c"
+                type: internal
+        Port "qg-3b0aa950-66"
+            Interface "qg-3b0aa950-66"
+                type: internal
+        Port "qg-c4e0afc7-c3"
+            Interface "qg-c4e0afc7-c3"
+                type: internal
+    Bridge br-int
+        Port "tap68331f05-42"
+            tag: 15
+            Interface "tap68331f05-42"
+                type: internal
+        Port "tap0f43d18d-c5"
+            tag: 4
+            Interface "tap0f43d18d-c5"
+                type: internal
+        Port "qr-5fbda021-db"
+            tag: 19
+            Interface "qr-5fbda021-db"
+                type: internal
+        Port "qvo8221644f-e2"
+            tag: 19
+            Interface "qvo8221644f-e2"
+        Port "tap6494a4f9-bd"
+            tag: 8
+            Interface "tap6494a4f9-bd"
+                type: internal
+        Port "qvoc80978fa-2b"
+            tag: 6
+            Interface "qvoc80978fa-2b"
+        Port "tap07942277-67"
+            tag: 14
+            Interface "tap07942277-67"
+                type: internal
+        Port "tapa547c476-1e"
+            tag: 1
+            Interface "tapa547c476-1e"
+                type: internal
+        Port "qr-bbd8d7c3-0c"
+            Interface "qr-bbd8d7c3-0c"
+                type: internal
+        Port "qvo71fbf846-4b"
+            tag: 3
+            Interface "qvo71fbf846-4b"
+        Port "qr-e179b8b0-75"
+            tag: 16
+            Interface "qr-e179b8b0-75"
+                type: internal
+        Port "qvo193d43c9-ba"
+            tag: 9
+            Interface "qvo193d43c9-ba"
+        Port "qr-84b4312a-06"
+            tag: 15
+            Interface "qr-84b4312a-06"
+                type: internal
+        Port "qvoedcd8efc-db"
+            tag: 7
+            Interface "qvoedcd8efc-db"
+        Port "qr-1393c933-89"
+            tag: 10
+            Interface "qr-1393c933-89"
+                type: internal
+        Port patch-tun
+            Interface patch-tun
+                type: patch
+                options: {peer=patch-int}
+        Port "qvoc4e583bd-46"
+            tag: 5
+            Interface "qvoc4e583bd-46"
+        Port "qr-9e786b8d-a4"
+            tag: 8
+            Interface "qr-9e786b8d-a4"
+                type: internal
+        Port "qvo8778d9c9-b7"
+            tag: 14
+            Interface "qvo8778d9c9-b7"
+        Port "qvo505ed7fa-15"
+            tag: 1
+            Interface "qvo505ed7fa-15"
+        Port "tapac7d0044-42"
+            tag: 5
+            Interface "tapac7d0044-42"
+                type: internal
+        Port "qvo954aeabb-21"
+            tag: 14
+            Interface "qvo954aeabb-21"
+        Port "tapd51f3d1c-2d"
+            tag: 3
+            Interface "tapd51f3d1c-2d"
+                type: internal
+        Port "qvo0b8ae19b-a0"
+            tag: 8
+            Interface "qvo0b8ae19b-a0"
+        Port "qr-1e6e56c6-88"
+            tag: 7
+            Interface "qr-1e6e56c6-88"
+                type: internal
+        Port "tap81dbd800-15"
+            tag: 9
+            Interface "tap81dbd800-15"
+                type: internal
+        Port "qr-f3686e71-7b"
+            tag: 4
+            Interface "qr-f3686e71-7b"
+                type: internal
+        Port br-int
+            Interface br-int
+                type: internal
+        Port "tap299383b2-94"
+            tag: 2
+            Interface "tap299383b2-94"
+                type: internal
+        Port "qvo6b7731ee-14"
+            tag: 2
+            Interface "qvo6b7731ee-14"
+        Port "qvo0b28c066-2c"
+            tag: 9
+            Interface "qvo0b28c066-2c"
+        Port "tap37bd0190-dc"
+            tag: 20
+            Interface "tap37bd0190-dc"
+                type: internal
+        Port "tap076f8c1d-5b"
+            tag: 16
+            Interface "tap076f8c1d-5b"
+                type: internal
+        Port "qvo5c08df06-91"
+            tag: 5
+            Interface "qvo5c08df06-91"
+        Port "qvo9ffc2731-f9"
+            tag: 1
+            Interface "qvo9ffc2731-f9"
+        Port "qr-f715cfdd-1e"
+            tag: 11
+            Interface "qr-f715cfdd-1e"
+                type: internal
+        Port "qvoa7c202d2-8c"
+            tag: 3
+            Interface "qvoa7c202d2-8c"
+        Port "qvo6c0074a6-49"
+            tag: 11
+            Interface "qvo6c0074a6-49"
+        Port "qr-3f25d06d-9c"
+            tag: 3
+            Interface "qr-3f25d06d-9c"
+                type: internal
+        Port "qr-b0a5a546-46"
+            tag: 1
+            Interface "qr-b0a5a546-46"
+                type: internal
+        Port "tap51885abb-98"
+            tag: 7
+            Interface "tap51885abb-98"
+                type: internal
+        Port "qr-ca3ff9b2-a8"
+            tag: 12
+            Interface "qr-ca3ff9b2-a8"
+                type: internal
+        Port "qvo1f03ce17-5b"
+            tag: 2
+            Interface "qvo1f03ce17-5b"
+        Port "qr-dfb69ba9-80"
+            tag: 9
+            Interface "qr-dfb69ba9-80"
+                type: internal
+        Port "tapc606d8f9-43"
+            tag: 12
+            Interface "tapc606d8f9-43"
+                type: internal
+        Port "tap20b86831-29"
+            tag: 11
+            Interface "tap20b86831-29"
+                type: internal
+        Port "qvo220601fe-58"
+            tag: 3
+            Interface "qvo220601fe-58"
+        Port "tap5be325d2-1d"
+            tag: 18
+            Interface "tap5be325d2-1d"
+                type: internal
+        Port "qvoa748c1d4-e3"
+            tag: 5
+            Interface "qvoa748c1d4-e3"
+        Port "qvo3331198e-12"
+            tag: 8
+            Interface "qvo3331198e-12"
+        Port "qvob79de30d-cb"
+            tag: 5
+            Interface "qvob79de30d-cb"
+        Port "gw11"
+            tag: 10
+            Interface "gw11"
+                type: internal
+        Port "tapd06fab08-ca"
+            tag: 17
+            Interface "tapd06fab08-ca"
+                type: internal
+        Port "tapf8b8f74c-7a"
+            tag: 10
+            Interface "tapf8b8f74c-7a"
+                type: internal
+        Port "qvo0c67c64e-02"
+            tag: 5
+            Interface "qvo0c67c64e-02"
+        Port "qvo366f2eb3-ac"
+            tag: 8
+            Interface "qvo366f2eb3-ac"
+        Port "tape0c2b79f-4a"
+            tag: 6
+            Interface "tape0c2b79f-4a"
+                type: internal
+        Port "qr-210a9e51-71"
+            tag: 14
+            Interface "qr-210a9e51-71"
+                type: internal
+        Port "qvoeae8c9ee-7c"
+            tag: 5
+            Interface "qvoeae8c9ee-7c"
+        Port "qr-4669f3df-75"
+            tag: 13
+            Interface "qr-4669f3df-75"
+                type: internal
+        Port "qvofd994ed9-f5"
+            tag: 5
+            Interface "qvofd994ed9-f5"
+        Port "qr-cbf1ca2d-1e"
+            tag: 5
+            Interface "qr-cbf1ca2d-1e"
+                type: internal
+        Port "qr-3a70cc8d-e7"
+            tag: 18
+            Interface "qr-3a70cc8d-e7"
+                type: internal
+        Port "qr-a784cfe4-d3"
+            tag: 20
+            Interface "qr-a784cfe4-d3"
+                type: internal
+        Port "qvobf70c924-24"
+            tag: 1
+            Interface "qvobf70c924-24"
+        Port "qvo8712bc27-93"
+            tag: 3
+            Interface "qvo8712bc27-93"
+        Port "qr-6833d664-4d"
+            tag: 10
+            Interface "qr-6833d664-4d"
+                type: internal
+        Port "qvob9b1f6b0-4c"
+            tag: 9
+            Interface "qvob9b1f6b0-4c"
+        Port "qvo112a4930-6b"
+            tag: 2
+            Interface "qvo112a4930-6b"
+        Port "tap1059a65b-2a"
+            tag: 13
+            Interface "tap1059a65b-2a"
+                type: internal
+        Port "tap9c9415a6-be"
+            tag: 19
+            Interface "tap9c9415a6-be"
+                type: internal
+        Port "qvocd2a408d-b3"
+            tag: 1
+            Interface "qvocd2a408d-b3"
+        Port "qr-e650222e-c0"
+            tag: 6
+            Interface "qr-e650222e-c0"
+                type: internal
+        Port "qvo6c3f234c-e1"
+            tag: 8
+            Interface "qvo6c3f234c-e1"
+#+END_SRC

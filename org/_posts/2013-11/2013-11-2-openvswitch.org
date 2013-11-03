@@ -1,0 +1,506 @@
+#+BEGIN_HTML
+---
+layout: post
+keywords: 
+description: 
+title: openvswitch学习 
+categories: [ovs]
+tags: [ovs,虚拟化]
+group: archive
+icon: globe
+featured: false
+---
+#+END_HTML
+#+OPTIONS: ^:{}
+* 简介
+#+BEGIN_HTML
+<img src ="/images/2013-11/featured-image.jpg" width="400" height="400"/>
+#+END_HTML
+Open vSwitch的目标，是做一个具有产品级质量的多层虚拟交换机。通过可编程扩展，可以实现大规模网络的自动化（配置、管理、维护）。它支持现有标准管理接口和协议（比如netFlow，sFlow，SPAN，RSPAN，CLI，LACP，802.1ag等，熟悉物理网络维护的管理员可以毫不费力地通过Open vSwitch转向虚拟网络管理）。
+* 网桥原理
+** vswitch，birdge，datapath
+在网络中，交换机和桥是同一个概念。OVS实现了一个虚拟的以太交换机。换句话说，OVS也就是实现了一个以太桥。那么，在OVS中，给一个交换机，或者说一个桥，用了一个专业的名词，叫做DataPath！
+
+网桥也叫做桥接器，连接两个局域网的设备，网桥工作在数据链路层，将两个LAN连接，根据MAC地址来转发帧，可以看成一个“低层的路由器”（路由器工作在网络层，根据IP地质进行转发）。
+** 网桥工作原理
+[[http://www.linuxfoundation.org/collaborate/workgroups/networking/bridge][bridge]]
+
+网桥处理包遵循以下几条规则：
+1. 在一个接口上接收到的包不会再往那个接口上发送此包。
+2. 每个接收到的包都要学习其源MAC地址。
+3. 如果数据包是多播或者广播包（通过2层MAC地址确定）则要向接收端口以外的所有端口转发，如果上层协议感兴趣，则还会递交上层处理。
+4. 如果数据包的地址不能再CAM表中找到，则向接收端口以外的其他端口转发。
+5. 如果CAM表中能找到，则转发给相应端口，如果发送和接收都是统一端口，则不发送。
+
+*注意，网桥是以混杂模式工作的。*
+** OVS中的bridge
+上面说到一个桥就是一个交换机，在OVS中
+#+BEGIN_SRC sh
+ovs-vsctl add-br br0
+wchunx@wchunx-HP:~$ ifconfig
+br0       Link encap:Ethernet  HWaddr 24:be:05:26:bb:96 
+          inet addr:192.168.0.204  Bcast:192.168.0.255  Mask:255.255.255.0
+          inet6 addr: fe80::26be:5ff:fe26:bb96/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:117451 errors:0 dropped:14834 overruns:0 frame:0
+          TX packets:24474 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:31597454 (31.5 MB)  TX bytes:3498393 (3.4 MB)
+#+END_SRC
+当我们创建了一个交换机（网桥br0）以后，此时网络功能不受影响，但是会产生一个虚拟网卡，名字就是br0，之所以会产生一个虚拟网卡，是为了实现接下来的网桥（交换机）功能。有了这个交换机以后，还需要为这个交换机增加端口(port)，一个端口，就是一个物理网卡，当网卡加入到这个交换机之后，其工作方式就和普通交换机的一个端口的工作方式类似了。
+#+BEGIN_SRC sh
+ovs-vsctl add-port br0 port
+#+END_SRC
+这里要特别注意，网卡加入网桥以后，要按照网桥的工作标准工作，那么加入的一个端口就必须是以混杂模式工作，工作在链路层，处理2层的帧，所以这个port就不需要配置IP了。（你没见过哪个交换的端口有IP的吧）
+
+那么接下来你可能会问，通常的交换机不都是有一个管理接口，可以telnet到交换机上进行配置吧，那么在OVS中创建的虚拟交换机有木有这种呢，有的！上面既然创建交换机br0的时候产生了一个虚拟网口br0,那么，你给这个虚拟网卡配置了IP以后，就相当于给交换机的管理接口配置了IP，此时一个正常的虚拟交换机就搞定了。
+#+BEGIN_SRC sh
+ip address add 192.168.1.156/24 dev br0
+#+END_SRC
+最后，我们来看看br0的具体信息：
+#+BEGIN_SRC sh
+wchunx@wchunx-HP:~$ sudo ovs-vsctl show
+[sudo] password for wchunx:
+d13dfcc3-1467-4d22-808f-20c0c1ac02d7
+    Bridge "br0"
+        Port "br0"
+            Interface "br0"
+                type: internal
+        Port "eth1"
+            Interface "eth1"
+    ovs_version: "1.4.0+build0"
+#+END_SRC
+首先，这里显示了一个名为br0的桥（交换机），这个交换机有两个接口,一个是eth0，一个是br0，上面说到，创建桥的时候会创建一个和桥名字一样的接口，并自动作为该桥的一个端口，那么这个虚拟接口的作用，一方面是可以作为交换机的管理端口，另一方面也是基于这个虚拟接口，实现了桥的功能。
+* 安装
+** apt-get安装
+ubuntu的源中是包含Openvswitch的，但版本比较低，目前是1.4.0.
+#+BEGIN_SRC sh
+apt-cache search openvswitch
+openvswitch-brcompat – Open vSwitch bridge compatibility support
+openvswitch-common – Open vSwitch common components
+openvswitch-controller – Open vSwitch controller implementation
+openvswitch-datapath-dkms – Open vSwitch datapath module source – DKMS version
+openvswitch-datapath-source – Open vSwitch datapath module source – module-assistant version
+openvswitch-dbg – Debug symbols for Open vSwitch packages
+openvswitch-ipsec – Open vSwitch GRE-over-IPsec support
+openvswitch-pki – Open vSwitch public key infrastructure dependency package
+openvswitch-switch – Open vSwitch switch implementations
+openvswitch-test – Open vSwitch test package
+python-openvswitch – Python bindings for Open vSwitch
+quantum-plugin-openvswitch – Quantum is a virtual network service for Openstack. (openvswitch plugin)
+quantum-plugin-openvswitch-agent – Quantum is a virtual network service for Openstack. (openvswitch plugin agent)
+#+END_SRC
+#+BEGIN_SRC sh
+apt-get update
+#如果只使用交换机的基本功能，安装下面两个包就够了
+apt-get install  openvswitch-switch openvswitch-datapath-dkms
+#为了说明bridge兼容模块的问题将brcompat也安了(关于brcompat有多大的好处我还不清楚，但它给ovs的使用带来了不少麻烦，在1.10.0版本中ovs把它删了)
+apt-get install openvswitch-brcompat
+#如果装了brcompat的话需要卸载bridge模块并在配置文件中打开兼容功能
+rmmod bridge
+sed -i 's/# BRCOMPAT=no/BRCOMPAT=yes/g' /etc/default/openvswitch-switch
+#+END_SRC
+** 源码安装
+*** 安装过程
+[[http://openvswitch.org/download/][Open vSwitch官网]]下载最新稳定版源码包，这里安装的版本为1.9.0，安装方式详见INSTALL文件。
+#+BEGIN_SRC sh
+cd /openvswitch-1.9.0/
+./configure --with-linux=/lib/modules/<code>uname -r</code>/build
+make
+make install
+#卸载bridge模块，可用lsmod | grep bridge查看bridge是否加载
+rmmod bridge
+insmod datapath/linux/openvswitch.ko
+#创建数据库
+mkdir -p /usr/local/etc/openvswitch
+ovsdb-tool create /usr/local/etc/openvswitch/conf.db vswitch/vswitch.ovsschema
+#启动ovsdb-server
+ovsdb-server --remote=punix:/usr/local/var/run/openvswitch/db.sock \
+                     --remote=db:Open_vSwitch,manager_options \
+                     --private-key=db:SSL,private_key \
+                     --certificate=db:SSL,certificate \
+                     --bootstrap-ca-cert=db:SSL,ca_cert \
+                     --pidfile --detach
+#初始化数据库
+ovs-vsctl --no-wait init
+#启动ovs daemon。这里加入了日志参数
+ovs-vswitchd --pidfile --detach --verbose=file:info --log-file
+#启动ovs-controller，这步是不必要的
+ovs-controller -v --detach ptcp:
+#加载bridge兼容模块并启动
+#不做这一步，其实并不影响openvswitch的使用。但如果需要兼容基于Linux brige的一些功能就需要这一步。
+#例如用virt-manager创建虚拟机并使用ovs创建的网桥就需要brcompat。在openvswitch1.10.0版本，这一模块被去掉了。
+insmod datapath/linux/brcompat.ko
+ovs-brcompatd --pidfile --detach
+#使用。将eth0加到br0上，并将IP配到br0
+ovs-vsctl add-br br0
+ovs-vsctl add-port br0 eth0
+#指定链接的controller，如果之前没启动controller这步不许要
+ovs-vsctl set-controller br0 tcp:127.0.0.1
+ 
+ifconfig eth0 0
+ifconfig br0 192.168.0.156 netmask 255.255.255.0
+route add default gw 192.168.0.1
+echo nameserver 8.8.8.8 &gt; /etc/resolv.conf
+#+END_SRC
+*** 启动脚本
+#+BEGIN_SRC sh
+#添加网桥br0,将主机网卡eth0加入br0，eth0上的IP设置为0，并配置br0的IP，网关。
+ovs-vsctl add-br br0
+ovs-vsctl add-port br0 eth0
+ifconfig eth0 0
+ifconfig br0 192.168.xx.xx netmask 255.255.255.0
+route add default gw 192.168.xx.xx
+echo nameserver 8.8.8.8 > /etc/res0lv.conf
+#+END_SRC
+每次重启机器要重新加载内核模块，启动ovsdb-server和daemon，下面是启动脚本(包含IP配置)
+#+BEGIN_SRC sh
+#!/bin/bash
+#DIR表示OVS源码包的目录
+DIR=/usr/local/share/openvswitch-1.9.0
+ULOCALBIN=/usr/local/bin
+ULOCALSBIN=/usr/local/sbin
+IP='192.168.0.156'
+NETMASK='255.255.255.0'
+GW='192.168.0.1'
+
+lsmod | grep bridge
+if [ $? -eq 0 ]
+then
+rmmod bridge
+fi
+
+/sbin/insmod $DIR/datapath/linux/openvswitch.ko
+
+$ULOCALSBIN/ovsdb-server --remote=punix:/usr/local/var/run/openvswitch/db.sock \
+                     --remote=db:Open_vSwitch,manager_options \
+                     --private-key=db:SSL,private_key \
+                     --certificate=db:SSL,certificate \
+                     --bootstrap-ca-cert=db:SSL,ca_cert \
+                     --pidfile --detach
+$ULOCALBIN/ovs-vsctl --no-wait init
+$ULOCALSBIN/ovs-vswitchd --pidfile --detach
+
+/sbin/insmod $DIR/datapath/linux/brcompat.ko
+$ULOCALSBIN/ovs-brcompatd --pidfile --detach
+
+ 
+ifconfig eth0 0
+ifconfig br0 ${IP} netmask ${NETMASK}
+route add default gw ${GW}
+echo nameserver 8.8.8.8 > /etc/resolv.conf
+
+echo 'Done'
+#+END_SRC
+*** 关闭进程
+#+BEGIN_SRC sh
+kill `cd /var/run/openvswitch && cat ovs-brcompatd.pid  ovsdb-server.pid ovs-vswitchd.pid`
+#+END_SRC
+** 制作deb安装
+openvswitch的源码包中已经包含了制作deb包需要的DEBAIN目录，所以制作deb包还是很方便的,并且不用手动配置开机启动脚本.
+
+[[http://openvswitch.org/download/][Open vSwitch官网]]下载最新稳定版源码包，这里安装的版本为1.9.0。
+*** 安装各种依赖
+#+BEGIN_SRC sh
+sudo apt-get install python-simplejson python-qt4 python-twisted-conch automake autoconf gcc uml-utilities libtool build-essential automake pkg-config libssl-dev iproute tcpdump module-assistant debhelper python-all
+sudo apt-get install linux-headers-`uname -r`
+#+END_SRC
+*** 打包
+#+BEGIN_SRC sh
+#解压
+tar xvzf openvswitch-1.9.0.tar.gz 
+#将压缩包openvswitch-1.9.0.tar.gz 改名为openvswitch_1.9.0.orig.tar.gz
+mv openvswitch-1.9.0.tar.gz openvswitch_1.9.0.orig.tar.gz
+#进入openvswitch-1.9.0目录,编译源码包
+cd openvswitch-1.9.0/
+sudo dpkg-buildpackage
+#+END_SRC
+之后返回上一级目录cd .. ，就会看到各种编译好的deb包 \\
+openvswitch-brcompat_1.9.0-1_amd64.deb \\
+openvswitch-common_1.9.0-1_amd64.deb \\
+openvswitch-controller_1.9.0-1_amd64.deb \\
+openvswitch-datapath-dkms_1.9.0-1_all.deb \\
+openvswitch-datapath-source_1.9.0-1_all.deb \\
+openvswitch-pki_1.9.0-1_all.deb \\
+openvswitch-ipsec_1.9.0-1_amd64.deb \\
+openvswitch-switch_1.9.0-1_amd64.deb \\
+openvswitch-test_1.9.0-1_all.deb \\
+ovsdbmonitor_1.9.0-1_all.deb \\
+python-openvswitch_1.9.0-1_all.deb \\
+其实跟源里的是一样的。下面就用dpkg -i命令来安装需要的包就行了
+*** 安装
+#+BEGIN_SRC sh
+sudo apt-get install dkms
+#根据需要选择安装
+sudo dpkg -i openvswitch-brcompat_1.9.0-1_amd64.deb openvswitch-common_1.9.0-1_amd64.deb  openvswitch-datapath-dkms_1.9.0-1_all.deb  openvswitch-switch_1.9.0-1_amd64.deb python-openvswitch_1.9.0-1_all.deb
+#+END_SRC 
+*** 如果安装了brcompat，跟上面一样卸载bridge，更改配置文件
+#+BEGIN_SRC sh
+mmod bridge
+sed -i 's/# BRCOMPAT=no/BRCOMPAT=yes/g' /etc/default/openvswitch-switch
+#+END_SRC
+*** 重启服务
+#+BEGIN_SRC sh
+sudo service openvswitch-switch restart
+#查看openvswitch运行状态
+service openvswitch-switch status
+
+ovsdb-server is running with pid 1148
+ovs-vswitchd is running with pid 1168
+ovs-brcompatd is running with pid 1174
+#+END_SRC
+添加网桥和配置IP和前面的一样
+*** 网络配置
+上面说的IP配置都是用的ifconfig命令临时配的，重启机器后就失效了。解决办法就是每次开机手动配，写到开机脚本或写到网络配置文件。
+
+如果是Linux bridge的桥网络配置文件/etc/network/interfaces可以写成下面的形式
+#+BEGIN_SRC sh
+auto lo
+iface lo inet loopback
+ 
+auto eth0
+iface eth0 inet static
+address 0.0.0.0
+ 
+auto br0
+bridge_ports eth0
+address 192.168.0.156
+netmask 255.255.255.0
+gateway 192.168.0.1
+dns-nameservers 8.8.8.8
+bridge_ports eth0
+#+END_SRC
+但现在网桥br0是OVS的桥，仍这样配置的话系统会把br0当作bridge的桥并加载bridge模块，那样的话ovs-brcompatd就起不来了。
+
+索性去掉bridge_ports eth0这句话，把br0当作普通的interface,/etc/network/interfaces写成如下形式
+#+BEGIN_SRC sh
+#The loopback network interface
+auto lo
+iface lo inet loopback
+
+#The OVS bridge interface
+auto br0
+iface br0 inet static
+address 192.168.0.202
+netmask 255.255.255.0
+gateway 192.168.0.1
+dns-nameservers 8.8.8.8
+
+#The primary network interface
+auto eth0
+iface eth0 inet manual
+up ifconfig $IFACE 0.0.0.0 up
+down ifconfig $IFACE down
+#+END_SRC
+重启网络服务
+#+BEGIN_SRC sh
+sudo /etc/init.d/networking restart
+#+END_SRC
+这样配置，开机会有将近2分钟waiting for network configuration的时间，因为 /etc/init/failsafe.conf文件中的sleep 40和sleep 59，注释了就行了
+#+BEGIN_SRC sh
+sed -i 's/sleep 40/#sleep 40/g' /etc/init/failsafe.conf
+sed -i 's/sleep 59/#sleep 59/g' /etc/init/failsafe.conf
+#+END_SRC
+*** 参考资料
+[[http://canx.me/2012/11/open-vswitch-libvirt-kvm/][Open vSwitch, libvirt, kvm]]
+* ovs常用命令
++ 查看 :: 
+ovs-vsctl show br0
++ 添加名为br0的网桥 :: 
+ovs-vsctl add-br br0
++ 删除名为br0的网桥 ::
+ovs-vsctldel-br br0
++ 列出所有网桥 ::
+ovs-vsctl list-br
++ 判断网桥br0是否存在 ::
+ovs-vsctl br-exists br0
++ 列出挂接到网桥br0上的所有网络接口 ::
+ovs-vsctl list-ports br0
++ 将网络接口eth0挂接到网桥br0上 ::
+ovs-vsctl add-port br0 eth0
++ 删除网桥br0上挂接的eth0网络接口 ::
+ovs-vsctl del-port br0 eth0
++ 列出已挂接eth0网络接口的网桥 ::
+ovs-vsctl port-to-br eth0 
+* VLAN隔离
+openvswitch划分VLAN使虚拟机实现二层隔离。openvswitch基于端口划分VLAN,实现方式是给端口set tag
+#+BEGIN_SRC sh
+ovs-vsctl set port tap1 tag=1
+#+END_SRC
+即将port tap1下的虚拟机划入VLAN1,port tap1也就成为了access port,只允许带有tag=1标签的数据包通过。而OVS所有的端口默认都是trunk all的。
+
+下面用几个图来说明。
+** access port
+#+BEGIN_HTML
+<img src ="/images/2013-11/access-port.jpg" width="400" height="600"/>
+#+END_HTML
+如图所示：VM1，VM2划入VLAN1，VM3划入VLAN2，那么VM1和VM2可以互相通信，而VM1或VM2都是不能与VM3通信的。并且此时所有VM都不能和主机通信，我的理解是虽然eth0默认是trunk all，允许带tag的数据包通过，但一般的终端设备只能识别普通数据包，带tag的数据包是无法处理的，所以VM与host不能通信。
+** trunk port
+#+BEGIN_HTML
+<img src ="/images/2013-11/trunk-port.jpg"/>
+#+END_HTML
+如图所示: \\
+VM1，VM4属于VLAN1 \\
+VM2，VM5属于VLAN2 \\
+VM3，VM6属于VLAN3 \\
+而eth0设成trunk=1，3也就是说只允许带有tag=3或5的数据包通过，那么VM1与VM4，VM3与VM6可以通信，而VM2与VM5无法通信。
+** internal port
+openvswitch支持给VLAN配置IP，也就是创建internal port,意义相当与三次交换机的VLAN接口。
+#+BEGIN_HTML
+<img src ="/images/2013-11/internal-port.jpg" width="400" height="600"/>
+#+END_HTML
+配置过程：
+#+BEGIN_SRC sh
+ovs-vsctl add-port v1 tag=1 -- set interface v1 type=internal
+ovs-vsctl add-port v1 tag=2 -- set interface v2 type=internal
+ovs-vsctl set port tap1 tag=1
+ovs-vsctl set port tap2 tag=1
+ovs-vscctl set port tap3 tag=2
+#+END_SRC
+那么就可以给v1和v2配置IP,注意不要配网关 \\
+ifconfig v1 192.168.1.1 netmask 255.255.255.0 \\
+ifconfig v2 192.168.2.1 netmask 255.255.255.0 \\
+而port tap1和port tap2下的虚拟机分别以v1,v2的IP作为网关. \\
+eth0会将带有tag=1标签的数据包转发给v1.这个时候VM和主机是可以通信的。
+
+打开主机的IP forward
+#+BEGIN_SRC sh
+echo 1 > /proc/sys/net/ipv4/ip_forward
+#+END_SRC
+那么VLAN间就可以互相通信了，也就是说所有VM都可以互相通信了。这就是VLAN间路由了。这个时候的openvswitch就实现了一台三层交换机的功能。
+
+我们使用物理三层交换机时通过VLAN来划分不同的网段，再用ACL做访问控制，其实OVS也是可以实现的。OVS的ACL就要用到ovs-ofctl命令添加一系列的规则来实现。这就是后话了.
+* 配置GRE tunnel
+** GRE
+OVS连接跨主机的LAN的方法就是GRE通道
+
+HOST1 192.168.0.24上的配置。
+#+BEGIN_SRC sh
+#网桥br1上添加GRE port
+ovs-vsctl add-port br1 gre0 -- set interface gre0 type=gre options:remote_ip=192.168.0.25
+#配置结果
+ovs-vsctl show
+044f6b32-f6c0-4ce7-9d8b-41c9891d4aa7
+    Bridge "br1"
+        Port "br1"
+            Interface "br1"
+                type: internal
+        Port "tap1"
+            tag: 1
+            Interface "tap1"
+        Port "tap2"
+            tag: 2
+            Interface "tap2"
+        Port "gre0"
+            Interface "gre0"
+                type: gre
+                options: {remote_ip="192.168.0.25"}
+    Bridge "br0"
+        Port "br0"
+            Interface "br0"
+                type: internal
+        Port "eth0"
+            Interface "eth1"
+    ovs_version: "1.9.0"
+#+END_SRC
+上面的配置GRE port和两台虚拟机在桥br1上，而主机物理网卡eth0在br0上，之所以用两个桥是因为一个桥会发生环路，导致主机崩溃。
+
+HOST2(192.168.0.25)做相应配置，remote_ip=192.168.0.24,两台主机即建立GRE Tunnel.虽在不同主机，相同tag的虚拟机就可以通信了。
+
+如果抓包可以看到VLAN tag和GRE头。
+** 参数说明
++ options:local_ip :: 指定接收的Packet中的DST_IP
++ options:in_key :: 指定接收的Packet中必须包含的key
++ options:out_key :: 指定发送的Packet中包含的key，如果采用关键字“flow”，则为ovs-ofctl设置的流表actions中set_tunnel对应的内容
++ options:header_cache :: 可以用来提高GRE Tunnel的性能
+其它的options选项内容，参见 ovs-vswitchd.conf.db(5) P20至P21的内容
+** GRE over IPsec
+OVS还支持GRE over IPsec
+#+BEGIN_SRC sh
+ovs-vsctl set interface gre0 type=ipsec_gre options:remote_ip=192.168.0.25 options:certificate=cert.pem options:psk=testpsk
+#+END_SRC
+抓包可以看到ESP封装。
+* 网桥及流规则设置
+** 网桥管理
+ovsdb是一个非常轻量级的数据库，与其说它是一个数据库，不如说它是一个提供增删查改等功能的临时配置缓存，之所以这么说，是因为ovsdb数据库根本就未使用多少数据库技术，如SQL语言查询、存储过程等等。
+
+默认情况下ovsdb中有以下数据表： 
+#+BEGIN_SRC sh
+open_vswitch,bridge,port,interface,flow_table,qos,queue,mirror,controller,manager,netflow,ssl,sflow
+#+END_SRC
+数据库操作的一般格式为： 
+#+BEGIN_SRC sh
+ovs-vsctl list/set/get/find/add/remove/clear/destroy table record column [value]
+#+END_SRC
+table可为数据表中的任一个，record为数据表中name字段的值，column为数据表任一个字段的字段名，value为字段值。
+
+通过筛选数据库中的信息可以查看到OVS的相应配置
+
+显示某一数据表的配置信息。--columns指定需要显示的字段。加入--bare参数，表示结果中只显示字段值。 
+#+BEGIN_SRC sh
+ovs-vsctl [--bare] [-- --columns=column[,column]...] list table [record]...
+#+END_SRC
+查找column[:key]=value的数据表，并按指定规则显示 
+#+BEGIN_SRC sh
+ovs-vsctl [--bare] [-- --columns=column[,column]...] find table [column[:key]=value]...
+#+END_SRC
+** 流规则
+每条流规则由一系列字段组成，分为基本字段、条件字段和动作字段三部分：
+
+基本字段包括生效时间duration、所属表项table_id、优先级priority、处理的数据包数n_packets，空闲超时时间idle_timeout等，空闲超时时间idle_timeout以秒为单位，超过设置的空闲超时时间后该流规则将被自动删除，空闲超时时间设置为0表示该流规则永不过期，idle_timeout将不包含于ovs-ofctl dump-flows brname的输出中。
+
+条件字段包括输入端口号in_port、源目的mac地址dl_src/dl_dst、源目的ip地址nw_src/nw_dst、数据包类型dl_type、网络层协议类型nw_proto等，可以为这些字段的任意组合，但在网络分层结构中底层的字段未给出确定值时上层的字段不允许给确定值，即一条流规则中允许底层协议字段指定为确定值，高层协议字段指定为通配符(不指定即为匹配任何值)，而不允许高层协议字段指定为确定值，而底层协议字段却为通配符(不指定即为匹配任何值)，否则，ovs-vswitchd 中的流规则将全部丢失，网络无法连接。其中dl是datalink的缩写，nw是network的缩写，tp是transport的缩写。
+
+动作字段包括正常转发normal、定向到某交换机端口output：port、丢弃drop、更改源目的mac地址mod_dl_src/mod_dl_dst等，一条流规则可有多个动作，动作执行按指定的先后顺序依次完成。
+
+查看br0信息：ovs-ofctl show
+
+#+BEGIN_HTML
+<img src ="/images/2013-11/ovs-ofctl_show.png" width="600" height="500"/>
+#+END_HTML
+显示的br0信息中网络接口名称前的数字为该网络接口挂接到Open vSwitch上的端口号，如6(tap0):中的6为网络接口tap0对应的端口号，在添加包含in_port字段的流规则时可通过该命令查看网络接口对应的端口号。 
+
+查看br0上各交换机端口的状态：ovs-ofctl dump-ports br0
+#+BEGIN_HTML
+<img src ="/images/2013-11/ovs-ofctl_dump-ports.png" width="600" height="200"/>
+#+END_HTML
+输出的结果中包含了各网络接口上收到的数据包数，字节数，丢包数，错误数据包数等信息。 
+查看br0上的所有流规则：ovs-ofctl dump-flows br0
+#+BEGIN_HTML
+<img src ="/images/2013-11/ovs-ofctl_dump-flows.png" width="600" height="200"/>
+#+END_HTML
+OVS有一条默认规则，即对所有数据包进行正常转发，为普通二层交换机完成的功能，优先级为0，最低，永不超时。就是图中的第二条。
+
+第一条为手动添加的规则。
+流规则中可包含通配符，任何字段都可等于*或ANY，如：丢弃所有收到的数据包 ovs-ofctl add-flow br0 dl_type=*,nw_src=ANY,actions=drop \\
+等于*或ANY的字段相当于流规则中不写该字段。
+
+dl_type及nw_proto确定协议，也可以用协议名。常用的ip,arp,icmp,tcp,udp对应关系。
+dl_type=0x0800 ⇔ ip
+dl_type=0x0806 ⇔ arp
+dl_type=0x0800，nw_proto=1 ⇔ icmp
+dl_type=0x0800，nw_proto=6 ⇔ tcp
+dl_type=0x0800，nw_proto=17 ⇔ udp
+（1.1.0 即以后版本支持）
+dl_type=0x86dd. ⇔ ipv6
+dl_type=0x86dd,nw_proto=6. ⇔ tcp6
+dl_type=0x86dd,nw_proto=17. ⇔ udp6
+dl_type=0x86dd,nw_proto=58. ⇔ icmp6
+
+* 参考资料
+[[http://www.yandong.org/archives/485][Open vSwitch使用笔记]]
+
+你重点看下网络的，还有nova的工作流程，这些都是面试官问我的 
+李世岗 10:27:59 
+nova的流程一定要清楚，因为现在的开发主要是集中在nova上，看E版本的nova就够了 
+gospring416 10:28:25 
+好 
+李世岗 10:29:21 
+http://os.51cto.com/art/201205/336386_2.htm 
+李世岗 10:29:37 
+这个就是E版的nova 
+gospring416 10:30:23 
+恩 
+李世岗 10:30:54 
+nova-api, glance-api,nova-compute, nova-network, nova-schedule，这几个组建的关系，调用顺序
+

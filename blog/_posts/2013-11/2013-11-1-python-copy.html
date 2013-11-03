@@ -1,0 +1,78 @@
+---
+layout: post
+keywords: 
+description: 
+title: python 浅拷贝和深拷贝 
+categories: [python]
+tags: [python,copy]
+group: archive
+icon: code
+featured: false
+---
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 浅拷贝和深拷贝</a></li>
+<li><a href="#sec-2">2 代码示例</a></li>
+<li><a href="#sec-3">3 参考资料</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">浅拷贝和深拷贝</h2>
+<div class="outline-text-2" id="text-1">
+
+<dl>
+<dt>copy.copy</dt><dd>浅拷贝 只拷贝父对象，不会拷贝对象的内部的子对象。浅拷贝产生的对象本身实新的，但内容不是新的。
+</dd>
+<dt>copy.deepcopy</dt><dd>深拷贝 拷贝对象及其子对象
+</dd>
+</dl>
+
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">代码示例</h2>
+<div class="outline-text-2" id="text-2">
+
+
+
+
+<pre class="src src-python"><span style="color: #1c86ee;">import</span> copy
+<span style="color: #2e8b57;">a</span> = [1, 2, 3, 4, [<span style="color: #8b7355;">'a'</span>, <span style="color: #8b7355;">'b'</span>]] <span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#21407;&#22987;&#23545;&#35937;</span>
+
+<span style="color: #2e8b57;">b</span> = a <span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#36171;&#20540;&#65292;&#20256;&#23545;&#35937;&#30340;&#24341;&#29992;</span>
+<span style="color: #2e8b57;">c</span> = copy.copy(a) <span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#23545;&#35937;&#25335;&#36125;&#65292;&#27973;&#25335;&#36125;</span>
+<span style="color: #2e8b57;">d</span> = copy.deepcopy(a) <span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#23545;&#35937;&#25335;&#36125;&#65292;&#28145;&#25335;&#36125;</span>
+
+a.append(5) <span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#20462;&#25913;&#23545;&#35937;a</span>
+a[4].append(<span style="color: #8b7355;">'c'</span>) <span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#20462;&#25913;&#23545;&#35937;a&#20013;&#30340;['a', 'b']&#25968;&#32452;&#23545;&#35937;</span>
+
+<span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">'a = '</span>, a
+<span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">'b = '</span>, b
+<span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">'c = '</span>, c
+<span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">'d = '</span>, d
+
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#32467;&#26524;</span>
+<span style="color: #2e8b57;">a</span> = [1, 2, 3, 4, [<span style="color: #8b7355;">'a'</span>, <span style="color: #8b7355;">'b'</span>, <span style="color: #8b7355;">'c'</span>], 5]
+<span style="color: #2e8b57;">b</span> = [1, 2, 3, 4, [<span style="color: #8b7355;">'a'</span>, <span style="color: #8b7355;">'b'</span>, <span style="color: #8b7355;">'c'</span>], 5]
+<span style="color: #2e8b57;">c</span> = [1, 2, 3, 4, [<span style="color: #8b7355;">'a'</span>, <span style="color: #8b7355;">'b'</span>, <span style="color: #8b7355;">'c'</span>]]
+<span style="color: #2e8b57;">d</span> = [1, 2, 3, 4, [<span style="color: #8b7355;">'a'</span>, <span style="color: #8b7355;">'b'</span>]]
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3">参考资料</h2>
+<div class="outline-text-2" id="text-3">
+
+<p><a href="http://yaotiaochimei.blog.51cto.com/4911337/1155495">python浅拷贝和深拷贝 </a>
+</p></div>
+</div>

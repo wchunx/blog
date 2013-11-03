@@ -1,0 +1,633 @@
+---
+layout: post
+keywords: 
+description: 
+title: 203openstack当前情况
+categories: openstack
+tags: [openstack,虚拟化]
+group: archive
+icon: globe
+featured: false
+---
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 网络结构</a></li>
+<li><a href="#sec-2">2 策略</a></li>
+<li><a href="#sec-3">3 虚拟机</a></li>
+<li><a href="#sec-4">4 iptables -nvL</a></li>
+<li><a href="#sec-5">5 iptables -t nat -nvL</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">网络结构</h2>
+<div class="outline-text-2" id="text-1">
+
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">策略</h2>
+<div class="outline-text-2" id="text-2">
+
+
+<img src ="/images/2013-11/default.png"/>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3">虚拟机</h2>
+<div class="outline-text-2" id="text-3">
+
+
+
+
+<pre class="src src-sh">virsh list
+Id    Name                           State
+----------------------------------------------------
+ 5     instance-000000a2              running
+ 8     instance-000000b4              running
+ 9     instance-000000b3              running
+ 11    instance-0000008f              running
+ 17    instance-000000b1              running
+ 18    instance-000000fa              running
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4">iptables -nvL</h2>
+<div class="outline-text-2" id="text-4">
+
+
+
+
+<pre class="src src-sh">Chain INPUT (policy ACCEPT 1062M packets, 423G bytes)
+ pkts bytes target     prot opt<span style="color: #1c86ee;"> in</span>     out     source               destination         
+  29M 8083M nova-compute-INPUT  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+1060M  423G nova-api-INPUT  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain FORWARD (policy ACCEPT 15M packets, 2499M bytes)
+ pkts bytes target     prot opt<span style="color: #1c86ee;"> in</span>     out     source               destination         
+  30M 8285M nova-filter-top  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+ 504K   35M nova-compute-FORWARD  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+  15M 2435M nova-api-FORWARD  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain OUTPUT (policy ACCEPT 1036M packets, 386G bytes)
+ pkts bytes target     prot opt<span style="color: #1c86ee;"> in</span>     out     source               destination         
+1036M  386G nova-filter-top  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+  29M 8261M nova-compute-OUTPUT  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+1034M  383G nova-api-OUTPUT  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain nova-api-FORWARD (1 references)
+ pkts bytes target     prot opt<span style="color: #1c86ee;"> in</span>     out     source               destination         
+
+Chain nova-api-INPUT (1 references)
+ pkts bytes target     prot opt<span style="color: #1c86ee;"> in</span>     out     source               destination         
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            192.168.150.203      tcp dpt:8775
+
+Chain nova-api-OUTPUT (1 references)
+ pkts bytes target     prot opt<span style="color: #1c86ee;"> in</span>     out     source               destination         
+
+Chain nova-api-local (1 references)
+ pkts bytes target     prot opt<span style="color: #1c86ee;"> in</span>     out     source               destination         
+
+Chain nova-compute-FORWARD (1 references)
+ pkts bytes target     prot opt<span style="color: #1c86ee;"> in</span>     out     source               destination         
+ 2804  864K ACCEPT     udp  --  *      *       0.0.0.0              255.255.255.255      udp spt:68 dpt:67
+
+Chain nova-compute-INPUT (1 references)
+ pkts bytes target     prot opt<span style="color: #1c86ee;"> in</span>     out     source               destination         
+ 2804  864K ACCEPT     udp  --  *      *       0.0.0.0              255.255.255.255      udp spt:68 dpt:67
+
+Chain nova-compute-OUTPUT (1 references)
+ pkts bytes target     prot opt<span style="color: #1c86ee;"> in</span>     out     source               destination         
+
+Chain nova-compute-inst-143 (1 references)
+ pkts bytes target     prot opt<span style="color: #1c86ee;"> in</span>     out     source               destination         
+    0     0 DROP       all  --  *      *       0.0.0.0/0            0.0.0.0/0            state INVALID
+ 8184 8061K ACCEPT     all  --  *      *       0.0.0.0/0            0.0.0.0/0            state RELATED,ESTABLISHED
+    1    60 nova-compute-provider  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+    0     0 ACCEPT     udp  --  *      *       192.168.16.101       0.0.0.0/0            udp spt:67 dpt:68
+    0     0 ACCEPT     all  --  *      *       192.168.16.0/24      0.0.0.0/0           
+    1    60 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:22
+    0     0 ACCEPT     icmp --  *      *       0.0.0.0/0            0.0.0.0/0           
+    0     0 nova-compute-sg-fallback  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain nova-compute-inst-162 (1 references)
+ pkts bytes target     prot opt<span style="color: #1c86ee;"> in</span>     out     source               destination         
+    0     0 DROP       all  --  *      *       0.0.0.0/0            0.0.0.0/0            state INVALID
+ 148K   14M ACCEPT     all  --  *      *       0.0.0.0/0            0.0.0.0/0            state RELATED,ESTABLISHED
+    0     0 nova-compute-provider  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+    0     0 ACCEPT     udp  --  *      *       10.10.10.11          0.0.0.0/0            udp spt:67 dpt:68
+    0     0 ACCEPT     all  --  *      *       10.10.10.0/24        0.0.0.0/0           
+    0     0 ACCEPT     icmp --  *      *       0.0.0.0/0            0.0.0.0/0           
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:22
+    0     0 ACCEPT     udp  --  *      *       0.0.0.0/0            0.0.0.0/0            udp dpt:80
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:80
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:5900
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:5901
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:5902
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            multiport dports 1:65535
+    0     0 nova-compute-sg-fallback  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain nova-compute-inst-177 (1 references)
+ pkts bytes target     prot opt<span style="color: #1c86ee;"> in</span>     out     source               destination         
+    0     0 DROP       all  --  *      *       0.0.0.0/0            0.0.0.0/0            state INVALID
+18809   12M ACCEPT     all  --  *      *       0.0.0.0/0            0.0.0.0/0            state RELATED,ESTABLISHED
+    0     0 nova-compute-provider  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+    0     0 ACCEPT     udp  --  *      *       10.10.10.11          0.0.0.0/0            udp spt:67 dpt:68
+    0     0 ACCEPT     all  --  *      *       10.10.10.0/24        0.0.0.0/0           
+    0     0 ACCEPT     icmp --  *      *       0.0.0.0/0            0.0.0.0/0           
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:22
+    0     0 ACCEPT     udp  --  *      *       0.0.0.0/0            0.0.0.0/0            udp dpt:80
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:80
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:5900
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:5901
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:5902
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            multiport dports 1:65535
+    0     0 nova-compute-sg-fallback  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain nova-compute-inst-179 (1 references)
+ pkts bytes target     prot opt<span style="color: #1c86ee;"> in</span>     out     source               destination         
+    0     0 DROP       all  --  *      *       0.0.0.0/0            0.0.0.0/0            state INVALID
+ 8588 8231K ACCEPT     all  --  *      *       0.0.0.0/0            0.0.0.0/0            state RELATED,ESTABLISHED
+    0     0 nova-compute-provider  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+    0     0 ACCEPT     udp  --  *      *       50.0.0.101           0.0.0.0/0            udp spt:67 dpt:68
+    0     0 ACCEPT     all  --  *      *       50.0.0.0/24          0.0.0.0/0           
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:22
+    0     0 ACCEPT     icmp --  *      *       0.0.0.0/0            0.0.0.0/0           
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:443
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            multiport dports 1:65535
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:9443
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:3306
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:6143
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:6443
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:8443
+    0     0 ACCEPT     udp  --  *      *       0.0.0.0/0            0.0.0.0/0            udp dpt:514
+    0     0 nova-compute-sg-fallback  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain nova-compute-inst-180 (1 references)
+ pkts bytes target     prot opt<span style="color: #1c86ee;"> in</span>     out     source               destination         
+    0     0 DROP       all  --  *      *       0.0.0.0/0            0.0.0.0/0            state INVALID
+ 8594 8225K ACCEPT     all  --  *      *       0.0.0.0/0            0.0.0.0/0            state RELATED,ESTABLISHED
+    0     0 nova-compute-provider  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+    0     0 ACCEPT     udp  --  *      *       50.0.0.101           0.0.0.0/0            udp spt:67 dpt:68
+    0     0 ACCEPT     all  --  *      *       50.0.0.0/24          0.0.0.0/0           
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:22
+    0     0 ACCEPT     icmp --  *      *       0.0.0.0/0            0.0.0.0/0           
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:443
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            multiport dports 1:65535
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:9443
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:3306
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:6143
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:6443
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:8443
+    0     0 ACCEPT     udp  --  *      *       0.0.0.0/0            0.0.0.0/0            udp dpt:514
+    0     0 nova-compute-sg-fallback  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain nova-compute-inst-250 (2 references)
+ pkts bytes target     prot opt<span style="color: #1c86ee;"> in</span>     out     source               destination         
+    0     0 DROP       all  --  *      *       0.0.0.0/0            0.0.0.0/0            state INVALID
+12216 8454K ACCEPT     all  --  *      *       0.0.0.0/0            0.0.0.0/0            state RELATED,ESTABLISHED
+    0     0 nova-compute-provider  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+    0     0 ACCEPT     udp  --  *      *       40.0.0.101           0.0.0.0/0            udp spt:67 dpt:68
+    0     0 ACCEPT     udp  --  *      *       30.0.0.101           0.0.0.0/0            udp spt:67 dpt:68
+    0     0 ACCEPT     all  --  *      *       40.0.0.0/24          0.0.0.0/0           
+    0     0 ACCEPT     all  --  *      *       30.0.0.0/24          0.0.0.0/0           
+    0     0 nova-compute-sg-fallback  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain nova-compute-local (1 references)
+ pkts bytes target     prot opt<span style="color: #1c86ee;"> in</span>     out     source               destination         
+ 8185 8061K nova-compute-inst-143  all  --  *      *       0.0.0.0/0            192.168.16.100      
+ 148K   14M nova-compute-inst-162  all  --  *      *       0.0.0.0/0            10.10.10.14         
+18809   12M nova-compute-inst-177  all  --  *      *       0.0.0.0/0            10.10.10.16         
+ 8594 8225K nova-compute-inst-180  all  --  *      *       0.0.0.0/0            50.0.0.111          
+ 8588 8231K nova-compute-inst-179  all  --  *      *       0.0.0.0/0            50.0.0.110          
+12216 8454K nova-compute-inst-250  all  --  *      *       0.0.0.0/0            40.0.0.100          
+    0     0 nova-compute-inst-250  all  --  *      *       0.0.0.0/0            30.0.0.102          
+
+Chain nova-compute-provider (6 references)
+ pkts bytes target     prot opt<span style="color: #1c86ee;"> in</span>     out     source               destination         
+
+Chain nova-compute-sg-fallback (6 references)
+ pkts bytes target     prot opt<span style="color: #1c86ee;"> in</span>     out     source               destination         
+    0     0 DROP       all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain nova-filter-top (2 references)
+ pkts bytes target     prot opt<span style="color: #1c86ee;"> in</span>     out     source               destination         
+  30M 8356M nova-compute-local  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+1049M  385G nova-api-local  all  --  *      *       0.0.0.0/0            0.0.0.0/0 
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-5" class="outline-2">
+<h2 id="sec-5">iptables -t nat -nvL</h2>
+<div class="outline-text-2" id="text-5">
+
+
+
+
+<pre class="src src-sh">Chain PREROUTING (policy ACCEPT 2995K packets, 189M bytes)
+ pkts bytes target     prot opt<span style="color: #1c86ee;"> in</span>     out     source               destination         
+ 189K   13M nova-compute-PREROUTING  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+2986K  188M nova-api-PREROUTING  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain INPUT (policy ACCEPT 729K packets, 45M bytes)
+ pkts bytes target     prot opt<span style="color: #1c86ee;"> in</span>     out     source               destination         
+
+Chain OUTPUT (policy ACCEPT 2420K packets, 149M bytes)
+ pkts bytes target     prot opt<span style="color: #1c86ee;"> in</span>     out     source               destination         
+68697 4224K nova-compute-OUTPUT  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+2413K  148M nova-api-OUTPUT  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain POSTROUTING (policy ACCEPT 4648K packets, 292M bytes)
+ pkts bytes target     prot opt<span style="color: #1c86ee;"> in</span>     out     source               destination         
+ 238K   16M nova-compute-POSTROUTING  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+4637K  291M nova-api-POSTROUTING  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+4648K  292M nova-postrouting-bottom  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain nova-api-OUTPUT (1 references)
+ pkts bytes target     prot opt<span style="color: #1c86ee;"> in</span>     out     source               destination         
+
+Chain nova-api-POSTROUTING (1 references)
+ pkts bytes target     prot opt<span style="color: #1c86ee;"> in</span>     out     source               destination         
+
+Chain nova-api-PREROUTING (1 references)
+ pkts bytes target     prot opt<span style="color: #1c86ee;"> in</span>     out     source               destination         
+
+Chain nova-api-float-snat (1 references)
+ pkts bytes target     prot opt<span style="color: #1c86ee;"> in</span>     out     source               destination         
+
+Chain nova-api-snat (1 references)
+ pkts bytes target     prot opt<span style="color: #1c86ee;"> in</span>     out     source               destination         
+4637K  291M nova-api-float-snat  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain nova-compute-OUTPUT (1 references)
+ pkts bytes target     prot opt<span style="color: #1c86ee;"> in</span>     out     source               destination         
+
+Chain nova-compute-POSTROUTING (1 references)
+ pkts bytes target     prot opt<span style="color: #1c86ee;"> in</span>     out     source               destination         
+
+Chain nova-compute-PREROUTING (1 references)
+ pkts bytes target     prot opt<span style="color: #1c86ee;"> in</span>     out     source               destination         
+
+Chain nova-compute-float-snat (1 references)
+ pkts bytes target     prot opt<span style="color: #1c86ee;"> in</span>     out     source               destination         
+
+Chain nova-compute-snat (1 references)
+ pkts bytes target     prot opt<span style="color: #1c86ee;"> in</span>     out     source               destination         
+ 238K   16M nova-compute-float-snat  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain nova-postrouting-bottom (1 references)
+ pkts bytes target     prot opt<span style="color: #1c86ee;"> in</span>     out     source               destination         
+ 238K   16M nova-compute-snat  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+4637K  291M nova-api-snat  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+* ovs-vsctl show
+743f25e0-b42b-457b-a818-e9d7bc9288cc
+    Bridge br-tun
+        Port <span style="color: #8b7355;">"gre-4"</span>
+            Interface <span style="color: #8b7355;">"gre-4"</span>
+                <span style="color: #cd6600;">type</span>: gre
+                options: {<span style="color: #2e8b57;">in_key</span>=flow, <span style="color: #2e8b57;">out_key</span>=flow, <span style="color: #2e8b57;">remote_ip</span>=<span style="color: #8b7355;">"172.16.0.253"</span>}
+        Port <span style="color: #8b7355;">"gre-3"</span>
+            Interface <span style="color: #8b7355;">"gre-3"</span>
+                <span style="color: #cd6600;">type</span>: gre
+                options: {<span style="color: #2e8b57;">in_key</span>=flow, <span style="color: #2e8b57;">out_key</span>=flow, <span style="color: #2e8b57;">remote_ip</span>=<span style="color: #8b7355;">"172.16.0.204"</span>}
+        Port br-tun
+            Interface br-tun
+                <span style="color: #cd6600;">type</span>: internal
+        Port patch-int
+            Interface patch-int
+                <span style="color: #cd6600;">type</span>: patch
+                options: {<span style="color: #2e8b57;">peer</span>=patch-tun}
+    Bridge br-ex
+        Port <span style="color: #8b7355;">"qg-219ab828-29"</span>
+            Interface <span style="color: #8b7355;">"qg-219ab828-29"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port br-ex
+            Interface br-ex
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"qg-d89736d1-fe"</span>
+            Interface <span style="color: #8b7355;">"qg-d89736d1-fe"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"qg-62d02883-e3"</span>
+            Interface <span style="color: #8b7355;">"qg-62d02883-e3"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"qg-19244d70-04"</span>
+            Interface <span style="color: #8b7355;">"qg-19244d70-04"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"qg-d19c3d46-5b"</span>
+            Interface <span style="color: #8b7355;">"qg-d19c3d46-5b"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"qg-ac26e2f0-6d"</span>
+            Interface <span style="color: #8b7355;">"qg-ac26e2f0-6d"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"qg-c446e6a9-00"</span>
+            Interface <span style="color: #8b7355;">"qg-c446e6a9-00"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"qg-883d51d2-a5"</span>
+            Interface <span style="color: #8b7355;">"qg-883d51d2-a5"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"qg-507f40ca-01"</span>
+            Interface <span style="color: #8b7355;">"qg-507f40ca-01"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"eth0"</span>
+            Interface <span style="color: #8b7355;">"eth0"</span>
+        Port <span style="color: #8b7355;">"qg-4cec3d7c-12"</span>
+            Interface <span style="color: #8b7355;">"qg-4cec3d7c-12"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"qg-6761279b-ad"</span>
+            Interface <span style="color: #8b7355;">"qg-6761279b-ad"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"qg-763a61e4-0c"</span>
+            Interface <span style="color: #8b7355;">"qg-763a61e4-0c"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"qg-ee342039-9c"</span>
+            Interface <span style="color: #8b7355;">"qg-ee342039-9c"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"qg-3b0aa950-66"</span>
+            Interface <span style="color: #8b7355;">"qg-3b0aa950-66"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"qg-c4e0afc7-c3"</span>
+            Interface <span style="color: #8b7355;">"qg-c4e0afc7-c3"</span>
+                <span style="color: #cd6600;">type</span>: internal
+    Bridge br-int
+        Port <span style="color: #8b7355;">"tap68331f05-42"</span>
+            tag: 15
+            Interface <span style="color: #8b7355;">"tap68331f05-42"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"tap0f43d18d-c5"</span>
+            tag: 4
+            Interface <span style="color: #8b7355;">"tap0f43d18d-c5"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"qr-5fbda021-db"</span>
+            tag: 19
+            Interface <span style="color: #8b7355;">"qr-5fbda021-db"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"qvo8221644f-e2"</span>
+            tag: 19
+            Interface <span style="color: #8b7355;">"qvo8221644f-e2"</span>
+        Port <span style="color: #8b7355;">"tap6494a4f9-bd"</span>
+            tag: 8
+            Interface <span style="color: #8b7355;">"tap6494a4f9-bd"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"qvoc80978fa-2b"</span>
+            tag: 6
+            Interface <span style="color: #8b7355;">"qvoc80978fa-2b"</span>
+        Port <span style="color: #8b7355;">"tap07942277-67"</span>
+            tag: 14
+            Interface <span style="color: #8b7355;">"tap07942277-67"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"tapa547c476-1e"</span>
+            tag: 1
+            Interface <span style="color: #8b7355;">"tapa547c476-1e"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"qr-bbd8d7c3-0c"</span>
+            Interface <span style="color: #8b7355;">"qr-bbd8d7c3-0c"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"qvo71fbf846-4b"</span>
+            tag: 3
+            Interface <span style="color: #8b7355;">"qvo71fbf846-4b"</span>
+        Port <span style="color: #8b7355;">"qr-e179b8b0-75"</span>
+            tag: 16
+            Interface <span style="color: #8b7355;">"qr-e179b8b0-75"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"qvo193d43c9-ba"</span>
+            tag: 9
+            Interface <span style="color: #8b7355;">"qvo193d43c9-ba"</span>
+        Port <span style="color: #8b7355;">"qr-84b4312a-06"</span>
+            tag: 15
+            Interface <span style="color: #8b7355;">"qr-84b4312a-06"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"qvoedcd8efc-db"</span>
+            tag: 7
+            Interface <span style="color: #8b7355;">"qvoedcd8efc-db"</span>
+        Port <span style="color: #8b7355;">"qr-1393c933-89"</span>
+            tag: 10
+            Interface <span style="color: #8b7355;">"qr-1393c933-89"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port patch-tun
+            Interface patch-tun
+                <span style="color: #cd6600;">type</span>: patch
+                options: {<span style="color: #2e8b57;">peer</span>=patch-int}
+        Port <span style="color: #8b7355;">"qvoc4e583bd-46"</span>
+            tag: 5
+            Interface <span style="color: #8b7355;">"qvoc4e583bd-46"</span>
+        Port <span style="color: #8b7355;">"qr-9e786b8d-a4"</span>
+            tag: 8
+            Interface <span style="color: #8b7355;">"qr-9e786b8d-a4"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"qvo8778d9c9-b7"</span>
+            tag: 14
+            Interface <span style="color: #8b7355;">"qvo8778d9c9-b7"</span>
+        Port <span style="color: #8b7355;">"qvo505ed7fa-15"</span>
+            tag: 1
+            Interface <span style="color: #8b7355;">"qvo505ed7fa-15"</span>
+        Port <span style="color: #8b7355;">"tapac7d0044-42"</span>
+            tag: 5
+            Interface <span style="color: #8b7355;">"tapac7d0044-42"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"qvo954aeabb-21"</span>
+            tag: 14
+            Interface <span style="color: #8b7355;">"qvo954aeabb-21"</span>
+        Port <span style="color: #8b7355;">"tapd51f3d1c-2d"</span>
+            tag: 3
+            Interface <span style="color: #8b7355;">"tapd51f3d1c-2d"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"qvo0b8ae19b-a0"</span>
+            tag: 8
+            Interface <span style="color: #8b7355;">"qvo0b8ae19b-a0"</span>
+        Port <span style="color: #8b7355;">"qr-1e6e56c6-88"</span>
+            tag: 7
+            Interface <span style="color: #8b7355;">"qr-1e6e56c6-88"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"tap81dbd800-15"</span>
+            tag: 9
+            Interface <span style="color: #8b7355;">"tap81dbd800-15"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"qr-f3686e71-7b"</span>
+            tag: 4
+            Interface <span style="color: #8b7355;">"qr-f3686e71-7b"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port br-int
+            Interface br-int
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"tap299383b2-94"</span>
+            tag: 2
+            Interface <span style="color: #8b7355;">"tap299383b2-94"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"qvo6b7731ee-14"</span>
+            tag: 2
+            Interface <span style="color: #8b7355;">"qvo6b7731ee-14"</span>
+        Port <span style="color: #8b7355;">"qvo0b28c066-2c"</span>
+            tag: 9
+            Interface <span style="color: #8b7355;">"qvo0b28c066-2c"</span>
+        Port <span style="color: #8b7355;">"tap37bd0190-dc"</span>
+            tag: 20
+            Interface <span style="color: #8b7355;">"tap37bd0190-dc"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"tap076f8c1d-5b"</span>
+            tag: 16
+            Interface <span style="color: #8b7355;">"tap076f8c1d-5b"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"qvo5c08df06-91"</span>
+            tag: 5
+            Interface <span style="color: #8b7355;">"qvo5c08df06-91"</span>
+        Port <span style="color: #8b7355;">"qvo9ffc2731-f9"</span>
+            tag: 1
+            Interface <span style="color: #8b7355;">"qvo9ffc2731-f9"</span>
+        Port <span style="color: #8b7355;">"qr-f715cfdd-1e"</span>
+            tag: 11
+            Interface <span style="color: #8b7355;">"qr-f715cfdd-1e"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"qvoa7c202d2-8c"</span>
+            tag: 3
+            Interface <span style="color: #8b7355;">"qvoa7c202d2-8c"</span>
+        Port <span style="color: #8b7355;">"qvo6c0074a6-49"</span>
+            tag: 11
+            Interface <span style="color: #8b7355;">"qvo6c0074a6-49"</span>
+        Port <span style="color: #8b7355;">"qr-3f25d06d-9c"</span>
+            tag: 3
+            Interface <span style="color: #8b7355;">"qr-3f25d06d-9c"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"qr-b0a5a546-46"</span>
+            tag: 1
+            Interface <span style="color: #8b7355;">"qr-b0a5a546-46"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"tap51885abb-98"</span>
+            tag: 7
+            Interface <span style="color: #8b7355;">"tap51885abb-98"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"qr-ca3ff9b2-a8"</span>
+            tag: 12
+            Interface <span style="color: #8b7355;">"qr-ca3ff9b2-a8"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"qvo1f03ce17-5b"</span>
+            tag: 2
+            Interface <span style="color: #8b7355;">"qvo1f03ce17-5b"</span>
+        Port <span style="color: #8b7355;">"qr-dfb69ba9-80"</span>
+            tag: 9
+            Interface <span style="color: #8b7355;">"qr-dfb69ba9-80"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"tapc606d8f9-43"</span>
+            tag: 12
+            Interface <span style="color: #8b7355;">"tapc606d8f9-43"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"tap20b86831-29"</span>
+            tag: 11
+            Interface <span style="color: #8b7355;">"tap20b86831-29"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"qvo220601fe-58"</span>
+            tag: 3
+            Interface <span style="color: #8b7355;">"qvo220601fe-58"</span>
+        Port <span style="color: #8b7355;">"tap5be325d2-1d"</span>
+            tag: 18
+            Interface <span style="color: #8b7355;">"tap5be325d2-1d"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"qvoa748c1d4-e3"</span>
+            tag: 5
+            Interface <span style="color: #8b7355;">"qvoa748c1d4-e3"</span>
+        Port <span style="color: #8b7355;">"qvo3331198e-12"</span>
+            tag: 8
+            Interface <span style="color: #8b7355;">"qvo3331198e-12"</span>
+        Port <span style="color: #8b7355;">"qvob79de30d-cb"</span>
+            tag: 5
+            Interface <span style="color: #8b7355;">"qvob79de30d-cb"</span>
+        Port <span style="color: #8b7355;">"gw11"</span>
+            tag: 10
+            Interface <span style="color: #8b7355;">"gw11"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"tapd06fab08-ca"</span>
+            tag: 17
+            Interface <span style="color: #8b7355;">"tapd06fab08-ca"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"tapf8b8f74c-7a"</span>
+            tag: 10
+            Interface <span style="color: #8b7355;">"tapf8b8f74c-7a"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"qvo0c67c64e-02"</span>
+            tag: 5
+            Interface <span style="color: #8b7355;">"qvo0c67c64e-02"</span>
+        Port <span style="color: #8b7355;">"qvo366f2eb3-ac"</span>
+            tag: 8
+            Interface <span style="color: #8b7355;">"qvo366f2eb3-ac"</span>
+        Port <span style="color: #8b7355;">"tape0c2b79f-4a"</span>
+            tag: 6
+            Interface <span style="color: #8b7355;">"tape0c2b79f-4a"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"qr-210a9e51-71"</span>
+            tag: 14
+            Interface <span style="color: #8b7355;">"qr-210a9e51-71"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"qvoeae8c9ee-7c"</span>
+            tag: 5
+            Interface <span style="color: #8b7355;">"qvoeae8c9ee-7c"</span>
+        Port <span style="color: #8b7355;">"qr-4669f3df-75"</span>
+            tag: 13
+            Interface <span style="color: #8b7355;">"qr-4669f3df-75"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"qvofd994ed9-f5"</span>
+            tag: 5
+            Interface <span style="color: #8b7355;">"qvofd994ed9-f5"</span>
+        Port <span style="color: #8b7355;">"qr-cbf1ca2d-1e"</span>
+            tag: 5
+            Interface <span style="color: #8b7355;">"qr-cbf1ca2d-1e"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"qr-3a70cc8d-e7"</span>
+            tag: 18
+            Interface <span style="color: #8b7355;">"qr-3a70cc8d-e7"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"qr-a784cfe4-d3"</span>
+            tag: 20
+            Interface <span style="color: #8b7355;">"qr-a784cfe4-d3"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"qvobf70c924-24"</span>
+            tag: 1
+            Interface <span style="color: #8b7355;">"qvobf70c924-24"</span>
+        Port <span style="color: #8b7355;">"qvo8712bc27-93"</span>
+            tag: 3
+            Interface <span style="color: #8b7355;">"qvo8712bc27-93"</span>
+        Port <span style="color: #8b7355;">"qr-6833d664-4d"</span>
+            tag: 10
+            Interface <span style="color: #8b7355;">"qr-6833d664-4d"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"qvob9b1f6b0-4c"</span>
+            tag: 9
+            Interface <span style="color: #8b7355;">"qvob9b1f6b0-4c"</span>
+        Port <span style="color: #8b7355;">"qvo112a4930-6b"</span>
+            tag: 2
+            Interface <span style="color: #8b7355;">"qvo112a4930-6b"</span>
+        Port <span style="color: #8b7355;">"tap1059a65b-2a"</span>
+            tag: 13
+            Interface <span style="color: #8b7355;">"tap1059a65b-2a"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"tap9c9415a6-be"</span>
+            tag: 19
+            Interface <span style="color: #8b7355;">"tap9c9415a6-be"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"qvocd2a408d-b3"</span>
+            tag: 1
+            Interface <span style="color: #8b7355;">"qvocd2a408d-b3"</span>
+        Port <span style="color: #8b7355;">"qr-e650222e-c0"</span>
+            tag: 6
+            Interface <span style="color: #8b7355;">"qr-e650222e-c0"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"qvo6c3f234c-e1"</span>
+            tag: 8
+            Interface <span style="color: #8b7355;">"qvo6c3f234c-e1"</span>
+</pre>
+
+</div>
+</div>
