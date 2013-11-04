@@ -20,7 +20,11 @@ featured: true
 
 [[http://www.mirantis.com/blog/][mirantis]]
 
+[[http://ken.pepple.info/][Ken Pepple]]
+
 孔令贤 [[http://lynnkong.iteye.com/][活到老，学到老]]    [[http://blog.csdn.net/lynn_kong][代码改变世界]]
+
+[[http://www.ustack.com/blog/openstack_hacker/][openstack hacker养成指南]]
 
 [[http://my.oschina.net/chape/blog?catalog=321697][chape]]
 

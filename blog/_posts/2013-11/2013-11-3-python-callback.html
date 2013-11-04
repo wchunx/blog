@@ -1,0 +1,110 @@
+---
+layout: post
+keywords: 
+description: 
+title: 同步调用、回调和异步调用 
+categories: [python]
+tags: [python,callback]
+group: archive
+icon: code
+featured: false
+---
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 同步调用</a></li>
+<li><a href="#sec-2">2 异步调用</a></li>
+<li><a href="#sec-3">3 回调</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">同步调用</h2>
+<div class="outline-text-2" id="text-1">
+
+<p>同步调用是以一种阻塞式调用
+</p>
+<p>
+比如说：古代的长城的烽火传递信息，现在我们假设每个烽火只能看到相邻的烽火状态，每个烽火的状态只有亮和暗。 <br/>
+现在有A、B、C、D四个烽火，A首先点亮，B看到A的烽火亮了，立马去点火，花了2秒点亮。但是这时候负责C烽火的人在睡觉，可是这时候所有人都在等待C点亮，终于C睡了2个小时候看到了B点亮，然后去点亮。D由于长期没有点亮，导致烽火出现问题，因此整个过程都在等待D的完成。
+</p>
+<p>
+这种就是典型的阻塞机制，无论如何我们只能等待上一个任务的完成，如果没有完成我们只能继续等待，这样造成的问题是，我们一直在浪费系统资源。
+</p></div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">异步调用</h2>
+<div class="outline-text-2" id="text-2">
+
+<p>异步调用是一种类似消息或事件的机制，不过它的调用方向刚好相反，接口的服务在收到某种讯息或发生某种事件时，会主动通知客户方（即调用客户方的接口）。
+</p>
+<p>
+依然是上面的例子： <br/>
+现在我们有一个将臣F，他专门负责告诉每个烽火需要去点亮 <br/>
+A、B、C、D四个烽火，F先告诉了A，然后不等A点亮，他继续告诉了B、C和D。最后A在2小时后告诉了F我完成了，B在1小时后告诉了F我完成了，C在1.5小时后告诉F完成了，而D在3小时后告诉F完成了。<br/>
+F收到这些信息后，才知道整个过程完成了。
+</p>
+<p>
+四个烽火的点亮虽然有先后次序，但是四个烽火的点亮并不会依赖前面一个烽火是否点亮。也就是代码执行虽然整体上看是依次执行的，但是执行的过程中，我们并不会因为前面的代码没有执行完，而不执行。而F收到了所有烽火的报告，程序才算完成。
+</p></div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3">回调</h2>
+<div class="outline-text-2" id="text-3">
+
+<p>回调是一种双向调用模式，也就是说，被调用方在接口被调用的时侯也会调用对方的接口
+</p>
+<p>
+同样上面的例子：<br/>
+现在我们还是A、B、C、D,但是A中有一个去B的信鸽（b），同样B中有(c)，C中有（d）。现在A收到消息后，立马告诉信鸽b，然后自己去点亮烽火，信鸽会把信息带给B，B收到信鸽信息后立马点亮，然后放信鸽c去C，C看到B点亮后立马告诉信鸽d，之后点亮烽火，然后收到了信鸽c，最后D收到信鸽d，点亮烽火。<br/>
+点亮烽火是正常的操作，而放信鸽就是执行回调函数。A放信鸽b就是执行B
+</p>
+<p>
+回调函数是一个通过函数指针调用的函数。程序B把回调函数的指针（地址）b作为参数传递给程序A，执行A时会通过函数指针b调用回调函数。回调函数不是由该函数的实现方(B)直接调用，而是在特定的事件或条件发生时由另外的一方(A)调用的，用于对该事件或条件进行响应。
+下面看一个python回调函数的例子：
+</p>
+
+
+<pre class="src src-python"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">call.py</span>
+<span style="color: #1c86ee;">import</span> called
+<span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">callback</span>():
+    <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"in callback"</span>
+<span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">main</span>():
+    <span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">called.test()</span>
+    called.test_call(callback)
+    <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"in call.py"</span>
+main()
+
+
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">called.py</span>
+<span style="color: #8b7355;">'''</span>
+<span style="color: #8b7355;">def test():</span>
+<span style="color: #8b7355;">    print "in called.py test()"</span>
+<span style="color: #8b7355;">'''</span>
+<span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">test_call</span>(p_call):
+    <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"in called.py test_call()"</span>
+    p_call()
+</pre>
+
+
+<pre class="src src-sh">python call.py
+<span style="color: #1c86ee;">in</span> called.py test_call()
+<span style="color: #1c86ee;">in</span> callback
+<span style="color: #1c86ee;">in</span> call.py
+</pre>
+
+<p>
+call.py中定义了回调函数callback(),并将地址callback作为参数传递给called.py中的test<sub>call</sub>().
+</p>
+<p>
+called.py中执行了p<sub>call</sub>()就等于运行了callback()函数因为地址一样。
+</p>
+</div>
+</div>

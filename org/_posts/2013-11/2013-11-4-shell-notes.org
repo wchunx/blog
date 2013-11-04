@@ -1,0 +1,31 @@
+#+BEGIN_HTML
+---
+layout: post
+keywords: 
+description: 
+title: Linux-shell多行注释 
+categories: [linux]
+tags: [linux,shell]
+group: archive
+icon: code
+featured: false
+---
+#+END_HTML
+* 强硬注释
+#+BEGIN_SRC sh
+有效代码
+:<<EOF
+要注释掉的代码
+EOF
+有效代码
+#+END_SRC
+这样，两个EOF之间的内容将不再执行。
+* 条件判断
+#+BEGIN_SRC sh
+有效代码
+k=NO
+if [ K == "YES" ];then
+要注释的代码
+fi
+有效代码
+#+END_SRC

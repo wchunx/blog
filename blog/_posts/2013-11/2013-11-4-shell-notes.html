@@ -1,0 +1,59 @@
+---
+layout: post
+keywords: 
+description: 
+title: Linux-shell多行注释 
+categories: [linux]
+tags: [linux,shell]
+group: archive
+icon: code
+featured: false
+---
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 强硬注释</a></li>
+<li><a href="#sec-2">2 条件判断</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">强硬注释</h2>
+<div class="outline-text-2" id="text-1">
+
+
+
+
+<pre class="src src-sh">&#26377;&#25928;&#20195;&#30721;
+:&lt;&lt;EOF
+<span style="color: #ffa54f;">&#35201;&#27880;&#37322;&#25481;&#30340;&#20195;&#30721;</span>
+<span style="color: #ffa54f;">EOF</span>
+&#26377;&#25928;&#20195;&#30721;
+</pre>
+
+<p>
+这样，两个EOF之间的内容将不再执行。
+</p></div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">条件判断</h2>
+<div class="outline-text-2" id="text-2">
+
+
+
+
+<pre class="src src-sh">&#26377;&#25928;&#20195;&#30721;
+<span style="color: #2e8b57;">k</span>=NO
+<span style="color: #1c86ee;">if</span> [ K == <span style="color: #8b7355;">"YES"</span> ];<span style="color: #1c86ee;">then</span>
+&#35201;&#27880;&#37322;&#30340;&#20195;&#30721;
+<span style="color: #1c86ee;">fi</span>
+&#26377;&#25928;&#20195;&#30721;
+</pre>
+
+</div>
+</div>
