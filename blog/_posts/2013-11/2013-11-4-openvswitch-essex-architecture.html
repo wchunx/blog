@@ -15,6 +15,9 @@ featured: false
 <div id="text-table-of-contents">
 <ul>
 <li><a href="#sec-1">1 参考资料</a></li>
+<li><a href="#sec-2">2 openstack简介</a></li>
+<li><a href="#sec-3">3 主要组件</a></li>
+<li><a href="#sec-4">4 概念架构</a></li>
 </ul>
 </div>
 </div>
@@ -23,12 +26,67 @@ featured: false
 <h2 id="sec-1">参考资料</h2>
 <div class="outline-text-2" id="text-1">
 
-<p><a href="http://ken.pepple.info/openstack/2011/04/22/openstack-nova-architecture/">OpenStack Nova Architecture</a>
+<p><a href="http://openstack.csdn.net/content.html?arcid=2808843">openstack的架构详解</a>
 </p>
 <p>
-<a href="http://blog.csdn.net/liuhong1123/article/details/8126476">http://blog.csdn.net/liuhong1123/article/details/8126476</a>
+<a href="http://ken.pepple.info/openstack/2011/04/22/openstack-nova-architecture/">OpenStack Nova Architecture</a>
 </p>
 <p>
-<a href="http://blog.csdn.net/xiangmin2587/article/details/7737778">http://blog.csdn.net/xiangmin2587/article/details/7737778</a>
+<a href="http://blog.csdn.net/liuhong1123/article/details/8126476">OpenStack：Nova基本功能介绍 </a>
+</p>
+<p>
+<a href="http://blog.csdn.net/xiangmin2587/article/details/7737778">OpenStack学习笔记之&ndash;OpenStack Nova 架构 </a>
+</p>
+<p>
+<a href="http://cloud.51cto.com/art/201210/360731_1.htm">f</a>
 </p></div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">openstack简介</h2>
+<div class="outline-text-2" id="text-2">
+
+<p>openstack是有一系列开源技术组合在一起提供了一个可扩展性很强的云操作平台。是一个跟Eucalyptus，AWS（Amazon web Services）类似的IaaS框架。
+</p>
+<p>
+<a href="https://wiki.openstack.org/wiki/Releases">目前已发布的版本</a>
+</p></div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3">主要组件</h2>
+<div class="outline-text-2" id="text-3">
+
+<p>最初的openstack主要包含三个组件
+</p><ul>
+<li>Object Store(<b>Swift</b>):提供对象存储。允许进行存储或者检索文件(但并不是像文件服务器那样挂载目录)。目前已经有几好家公司开始提供基于Swift商业存储服务，这些公司包括KT，Rackspace公司(Swift项目的发源地)和Internap，而且很多大公司内部也使用Swift来存储数据。
+</li>
+<li>Image(<b>Glance</b>):是一个虚拟机镜像的存储、查询和检索系统，它提供了一个虚拟磁盘映像的目录和存储库，这些磁盘映像常常广泛应用于OpenStack Compute之中，而且这种服务在技术上是属于可选的，任何规模的云都适用于它。
+</li>
+<li>Compute(<b>Nova</b>):根据需求提供虚拟服务。类似与亚马逊的Amazon Elastic Compute Cloud(EC2)。它还提供了类似与弹性块服务(EBS)的卷存储服务。
+</li>
+</ul>
+
+<p>Essex版本中新添加的两个组件
+</p><ul>
+<li>Dashboard(<b>Horizon</b>):为所有OpenStack的服务提供了一个模块化的web-based用户界面。使用这个Web GUI，可以在云上完成大多数的操作，如启动实例，分配IP地址，设置访问控制等。
+</li>
+<li>Identity(<b>Keystone</b>):为openstack服务提供身份认证和授权。它还提供了一个在特定OpenStack云服务上的服务目录。
+</li>
+</ul>
+
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4">概念架构</h2>
+<div class="outline-text-2" id="text-4">
+
+<p>OpenStack项目成立的目的是“提供一个大规模的可扩展的云操作系统”。要做到这一点，每一个组成服务的设计都要精心考虑，这样才能打造一个完整的IaaS平台。这中集成是通过各服务提供的灵活的公开API实现的。每个服务可以调用其它服务的API，同时允许实施者将任何服务单独拿出来使用，前提是他们能维持这写API(?).这些API与提供给云服务的最终用户的是相同的(大部分)。
+</p>
+
+</div>
 </div>
