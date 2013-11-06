@@ -1,0 +1,33 @@
+#+BEGIN_HTML
+---
+layout: post
+keywords: 
+description: 
+title: 元数据(MetaData) 
+categories: [something]
+tags: [metadata]
+group: archive
+icon: code
+featured: false
+---
+#+END_HTML
+* 元数据
+元数据是用来描述数据的数据（Data that describes other data）。
+
+下面是契诃夫的小说《套中人》中的一段，描写一个叫做瓦莲卡的女子：
+#+BEGIN_SRC sh
+年纪已经不轻，三十岁上下，个子高挑，身材匀称，黑黑的眉毛，红红的脸蛋－－一句话，不是姑娘，而是果冻，她那样活跃，吵吵嚷嚷，不停地哼着小俄罗斯的抒情歌曲，高声大笑，动不动就发出一连串响亮的笑声：哈，哈，哈！
+#+END_SRC
+这段话里提供了这样几个信息：年龄（三十岁上下）、身高（个子高挑）、相貌（身材匀称，黑黑的眉毛，红红的脸蛋）、性格（活跃，吵吵嚷嚷，不停地哼着小俄罗斯的抒情歌曲，高声大笑）。有了这些信息，我们就可以大致想像出瓦莲卡是个什么样的人。推而广之，只要提供这几类的信息，我们也可以推测出其他人的样子。
+
+这个例子中的“年龄”、“身高”、“相貌”、“性格”，就是元数据，因为它们是用来描述具体数据/信息的数据/信息。
+
+当然，这几个元数据用来刻画个人状况还不够精确。我们每个人从小到大，都填过《个人情况登记表》之类的东西吧，其中包括姓名、性别、民族、政治面貌、一寸照片、学历、职称等等……这一套元数据才算比较完备。
+
+再举一个例子。在电影数据库[[http://www.imdb.com/][IMDB]] 上可以查到每一部电影的信息。IMDB本身也定义了一套元数据，用来描述每一部电影。下面是它的一级元数据，每一级下面又列出了二级元数据，总共加起来，可以从100多个方面刻画一部电影：
+#+BEGIN_SRC sh
+Cast and Crew（演职人员）、Company Credits（相关公司）、Basic Data（基本情况）、Plot & Quotes（情节和引语）、Fun Stuff（趣味信息）、Links to Other Sites（外部链接）、Box Office and Business（票房和商业开发）、Technical Info（技术信息）、Literature（书面内容）、Other Data（其他信息）。
+#+END_SRC
+元数据最大的好处是，它使信息的描述和分类可以实现格式化，从而为机器处理创造了可能。
+* 参考资料
+http://www.ruanyifeng.com/blog/2007/03/metadata.html

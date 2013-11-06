@@ -24,6 +24,8 @@ featured: true
 
 孔令贤 [[http://lynnkong.iteye.com/][活到老，学到老]]    [[http://blog.csdn.net/lynn_kong][代码改变世界]]
 
+[[http://cloudops.sinaapp.com/?p=335][openstack虚拟机启动过程（部分源代码）]]
+
 [[http://www.ustack.com/blog/openstack_hacker/][openstack hacker养成指南]]
 
 [[http://my.oschina.net/chape/blog?catalog=321697][chape]]
