@@ -1,0 +1,31 @@
+#+BEGIN_HTML
+---
+layout: post
+keywords: 
+description: 
+title: kvm虚拟机增减磁盘 
+categories: [虚拟化]
+tags: [虚拟化,kvm]
+group: archive
+icon: code
+featured: false
+---
+#+END_HTML
+* 配置
+#+BEGIN_SRC sh
+#关闭虚拟机
+virsh destroy machine
+#创建新磁盘
+qemu-img create -f qcow2 /home/wchunx/disk2.qcow2 $SIZE
+#编辑VM配置
+virsh edit machine
+#添加以下字段
+<disk type='file' device='disk'>
+    <source file='/home/wchunx/disk2.qcow2'/>
+    <target dev='hdc' bus='ide'/>
+</disk>
+#退出编辑器，VM重新开机会自动加载新配置
+virsh start machine
+#+END_SRC
+* 参考
+[[http://serverfault.com/questions/244228/kvm-and-libvirt-how-to-configure-a-new-disc-device-to-an-existing-vm][KVM and libvirt: How to configure a new disc device to an existing VM?]]

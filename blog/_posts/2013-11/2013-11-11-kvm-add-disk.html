@@ -1,0 +1,55 @@
+---
+layout: post
+keywords: 
+description: 
+title: kvm虚拟机增减磁盘 
+categories: [虚拟化]
+tags: [虚拟化,kvm]
+group: archive
+icon: code
+featured: false
+---
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 配置</a></li>
+<li><a href="#sec-2">2 参考</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">配置</h2>
+<div class="outline-text-2" id="text-1">
+
+
+
+
+<pre class="src src-sh"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#20851;&#38381;&#34394;&#25311;&#26426;</span>
+virsh destroy machine
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#21019;&#24314;&#26032;&#30913;&#30424;</span>
+qemu-img create -f qcow2 /home/wchunx/disk2.qcow2 $<span style="color: #2e8b57;">SIZE</span>
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#32534;&#36753;VM&#37197;&#32622;</span>
+virsh edit machine
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#28155;&#21152;&#20197;&#19979;&#23383;&#27573;</span>
+&lt;disk <span style="color: #2e8b57;">type</span>=<span style="color: #8b7355;">'file'</span> <span style="color: #2e8b57;">device</span>=<span style="color: #8b7355;">'disk'</span>&gt;
+    &lt;source <span style="color: #2e8b57;">file</span>=<span style="color: #8b7355;">'/home/wchunx/disk2.qcow2'</span>/&gt;
+    &lt;target <span style="color: #2e8b57;">dev</span>=<span style="color: #8b7355;">'hdc'</span> <span style="color: #2e8b57;">bus</span>=<span style="color: #8b7355;">'ide'</span>/&gt;
+&lt;/disk&gt;
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#36864;&#20986;&#32534;&#36753;&#22120;&#65292;VM&#37325;&#26032;&#24320;&#26426;&#20250;&#33258;&#21160;&#21152;&#36733;&#26032;&#37197;&#32622;</span>
+virsh start machine
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">参考</h2>
+<div class="outline-text-2" id="text-2">
+
+<p><a href="http://serverfault.com/questions/244228/kvm-and-libvirt-how-to-configure-a-new-disc-device-to-an-existing-vm">KVM and libvirt: How to configure a new disc device to an existing VM?</a>
+</p></div>
+</div>
