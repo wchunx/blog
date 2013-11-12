@@ -1,0 +1,114 @@
+* 初始状态
+** ovs-vsctl show
+03d001c9-11ec-462d-929d-c2aacb9d9ded
+    Bridge br-ex
+        Port "eth1"
+            Interface "eth1"
+        Port br-ex
+            Interface br-ex
+                type: internal
+    Bridge br-tun
+        Port patch-int
+            Interface patch-int
+                type: patch
+                options: {peer=patch-tun}
+        Port br-tun
+            Interface br-tun
+                type: internal
+    Bridge br-int
+        Port patch-tun
+            Interface patch-tun
+                type: patch
+                options: {peer=patch-int}
+        Port br-int
+            Interface br-int
+                type: internal
+    ovs_version: "1.4.0+build0"
+** iptablas -nvL
+Chain INPUT (policy ACCEPT 29625 packets, 4480K bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+16922 2734K nova-api-INPUT  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+    0     0 ACCEPT     47   --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain FORWARD (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 nova-filter-top  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+    0     0 nova-api-FORWARD  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain OUTPUT (policy ACCEPT 29661 packets, 4573K bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+29448 4558K nova-filter-top  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+16754 2853K nova-api-OUTPUT  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain nova-api-FORWARD (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain nova-api-INPUT (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            192.168.20.93        tcp dpt:8775
+
+Chain nova-api-OUTPUT (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain nova-api-local (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain nova-filter-top (2 references)
+ pkts bytes target     prot opt in     out     source               destination         
+16754 2853K nova-api-local  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+** iptables -t nat -nvL
+Chain PREROUTING (policy ACCEPT 2096 packets, 274K bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+  392 78911 nova-api-PREROUTING  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain INPUT (policy ACCEPT 68 packets, 8579 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain OUTPUT (policy ACCEPT 369 packets, 22696 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+   62  3824 nova-api-OUTPUT  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain POSTROUTING (policy ACCEPT 369 packets, 22696 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+   62  3824 nova-api-POSTROUTING  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+  369 22696 nova-postrouting-bottom  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain nova-api-OUTPUT (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain nova-api-POSTROUTING (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain nova-api-PREROUTING (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain nova-api-float-snat (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain nova-api-snat (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+   62  3824 nova-api-float-snat  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain nova-postrouting-bottom (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+   62  3824 nova-api-snat  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+** 此时ip netns 无输出
+
+创建一个router设备后会生成一个qrouter-routerid的命名空间
+ip netns exec qrouter-28ee50e4-e961-4bdf-97ac-8933ae8e937c iptables -S
+-P INPUT ACCEPT
+-P FORWARD ACCEPT
+-P OUTPUT ACCEPT
+-N quantum-filter-top
+-N quantum-l3-agent-FORWARD
+-N quantum-l3-agent-INPUT
+-N quantum-l3-agent-OUTPUT
+-N quantum-l3-agent-local
+-A INPUT -j quantum-l3-agent-INPUT
+-A FORWARD -j quantum-filter-top
+-A FORWARD -j quantum-l3-agent-FORWARD
+-A OUTPUT -j quantum-filter-top
+-A OUTPUT -j quantum-l3-agent-OUTPUT
+-A quantum-filter-top -j quantum-l3-agent-local
+-A quantum-l3-agent-INPUT -d 127.0.0.1/32 -p tcp -m tcp --dport 9697 -j ACCEPT
+
