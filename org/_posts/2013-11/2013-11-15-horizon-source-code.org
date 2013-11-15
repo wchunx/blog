@@ -1,0 +1,19 @@
+#+BEGIN_HTML
+---
+layout: post
+keywords: 
+description: 
+title: Horizon源码分析 
+categories: openstack
+tags: [openstack,horizon]
+group: archive
+icon: code
+featured: false
+---
+#+END_HTML
+* 代码目录
+安装完openstack后，horizon源码位于/usr/share/pyshared/horizon/horizon，其他openstack也在这里例如, nova   novaclient   glance   keystone  keystoneclient.
+
+dashboard源码位于/usr/share/openstack-dashboard/openstack_dashboard
+
+这里也能找到/usr/lib/python2.7/dist-packages/horizon，用ll命令查看发现其实就是指向上面的那个目录里的文件

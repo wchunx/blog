@@ -1,0 +1,24 @@
+#+BEGIN_HTML
+---
+layout: post
+keywords: 
+description: 
+title: 装完ubuntu要做的事
+categories: linux
+tags: [linux,ubuntu]
+group: archive
+icon: globe
+featured: false
+---
+#+END_HTML
+* 更新
+#+BEGIN_SRC sh
+sudo apt-get update
+#+END_SRC
+* 常用软件
+** apt-get 
+vim  firefox git 
+** 手动装
+emacs24 nutstore goagent idea jekyll
+** soft center
+flash plugins
