@@ -72,32 +72,32 @@ F收到这些信息后，才知道整个过程完成了。
 </p>
 
 
-<pre class="src src-python"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">call.py</span>
-<span style="color: #1c86ee;">import</span> called
-<span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">callback</span>():
-    <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"in callback"</span>
-<span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">main</span>():
-    <span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">called.test()</span>
+<pre class="example">#call.py
+import called
+def callback():
+    print "in callback"
+def main():
+    #called.test()
     called.test_call(callback)
-    <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"in call.py"</span>
+    print "in call.py"
 main()
 
 
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">called.py</span>
-<span style="color: #8b7355;">'''</span>
-<span style="color: #8b7355;">def test():</span>
-<span style="color: #8b7355;">    print "in called.py test()"</span>
-<span style="color: #8b7355;">'''</span>
-<span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">test_call</span>(p_call):
-    <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"in called.py test_call()"</span>
+#called.py
+'''
+def test():
+    print "in called.py test()"
+'''
+def test_call(p_call):
+    print "in called.py test_call()"
     p_call()
 </pre>
 
 
-<pre class="src src-sh">python call.py
-<span style="color: #1c86ee;">in</span> called.py test_call()
-<span style="color: #1c86ee;">in</span> callback
-<span style="color: #1c86ee;">in</span> call.py
+<pre class="example">python call.py
+in called.py test_call()
+in callback
+in call.py
 </pre>
 
 <p>

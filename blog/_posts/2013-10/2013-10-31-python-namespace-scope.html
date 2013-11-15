@@ -128,15 +128,15 @@ featured: false
 </p>
 
 
-<pre class="src src-python"><span style="color: #2e8b57;">value</span> = 1
-<span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">fun</span>():
-    <span style="color: #2e8b57;">value</span> = value + 1
-    <span style="color: #1c86ee;">print</span> value
+<pre class="example">value = 1
+def fun():
+    value = value + 1
+    print value
 fun()
 Traceback (most recent call last):
-  File <span style="color: #8b7355;">"&lt;stdin&gt;"</span>, line 1, <span style="color: #1c86ee;">in</span> &lt;module&gt;
-  File <span style="color: #8b7355;">"&lt;stdin&gt;"</span>, line 2, <span style="color: #1c86ee;">in</span> fun
-<span style="color: #00688b;">UnboundLocalError</span>: local variable <span style="color: #8b7355;">'value'</span> referenced before assignment
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+  File "&lt;stdin&gt;", line 2, in fun
+UnboundLocalError: local variable 'value' referenced before assignment
 </pre>
 
 <p>
@@ -153,11 +153,11 @@ python提出如下假设，如果在函数体内的任何地方对变量赋值�
 </p>
 
 
-<pre class="src src-python"><span style="color: #2e8b57;">value</span> = 1
-<span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">fun</span>():
-    <span style="color: #1c86ee;">global</span> value
-    <span style="color: #2e8b57;">value</span> = value + 1
-    <span style="color: #1c86ee;">print</span> value
+<pre class="example">value = 1
+def fun():
+    global value
+    value = value + 1
+    print value
 fun()
 2
 </pre>
@@ -172,15 +172,15 @@ fun()
 
 
 
-<pre class="src src-python"><span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">create_counter</span>(initval):
-    <span style="color: #2e8b57;">val</span> = initval
-    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">_inner_counter</span>():
-        <span style="color: #2e8b57;">val</span> = val + 1
-        <span style="color: #1c86ee;">return</span> val
-    <span style="color: #1c86ee;">return</span> _inner_counter
+<pre class="example">def create_counter(initval):
+    val = initval
+    def _inner_counter():
+        val = val + 1
+        return val
+    return _inner_counter
 
-<span style="color: #2e8b57;">counter</span> = create_counter(0)
-<span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"First invocation: "</span>, counter()
+counter = create_counter(0)
+print "First invocation: ", counter()
 </pre>
 
 <p>
@@ -188,11 +188,11 @@ fun()
 </p>
 
 
-<pre class="src src-sh">First invocation:
-<span style="color: #cd9b1d;">Traceback</span> (most recent call last):
-  File <span style="color: #8b7355;">"&lt;stdin&gt;"</span>, line 1,<span style="color: #1c86ee;"> in</span> &lt;module&gt;
-  File <span style="color: #8b7355;">"&lt;stdin&gt;"</span>, line 4,<span style="color: #1c86ee;"> in</span> _inner_counter
-UnboundLocalError: local variable <span style="color: #8b7355;">'val'</span> referenced before assignment
+<pre class="example">First invocation:
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+  File "&lt;stdin&gt;", line 4, in _inner_counter
+UnboundLocalError: local variable 'val' referenced before assignment
 </pre>
 
 <p>
@@ -200,16 +200,16 @@ UnboundLocalError: local variable <span style="color: #8b7355;">'val'</span> ref
 </p>
 
 
-<pre class="src src-python"><span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">outer_func</span>():
-    <span style="color: #2e8b57;">x</span> = 3
-    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">inner_func1</span>():
-        <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"inner func 1:"</span>, x
-    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">inner_func2</span>():
-        <span style="color: #2e8b57;">x</span> = <span style="color: #8b7355;">"hello"</span>
-        <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"inner func 2:"</span>, x
+<pre class="example">def outer_func():
+    x = 3
+    def inner_func1():
+        print "inner func 1:", x
+    def inner_func2():
+        x = "hello"
+        print "inner func 2:", x
     inner_func1()
     inner_func2()
-    <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"outer func"</span>, x
+    print "outer func", x
 outer_func()
 inner func 1: 3
 inner func 2: hello
@@ -227,19 +227,19 @@ outer func 3
 </p>
 
 
-<pre class="src src-python"><span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">create_counter</span>(initval):
-    <span style="color: #2e8b57;">val</span> = initval
-    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">_inner_counter</span>():
-        <span style="color: #1c86ee;">nonlocal</span> val
-        <span style="color: #2e8b57;">val</span> = val + 1
-        <span style="color: #1c86ee;">return</span> val
-    <span style="color: #1c86ee;">return</span> _inner_counter
+<pre class="example">def create_counter(initval):
+    val = initval
+    def _inner_counter():
+        nonlocal val
+        val = val + 1
+        return val
+    return _inner_counter
 
-<span style="color: #1c86ee;">if</span> <span style="color: #cd6600;">__name__</span> == <span style="color: #8b7355;">'__main__'</span>:
+if __name__ == '__main__':
     counter = create_counter(10)
-    <span style="color: #1c86ee;">print</span>(<span style="color: #8b7355;">"First invocation: "</span>, counter())
-    <span style="color: #1c86ee;">print</span>(<span style="color: #8b7355;">"Second invocation: "</span>, counter())
-    <span style="color: #1c86ee;">print</span>(<span style="color: #8b7355;">"Third invocation: "</span>, counter())
+    print("First invocation: ", counter())
+    print("Second invocation: ", counter())
+    print("Third invocation: ", counter())
 </pre>
 
 <p>
@@ -247,7 +247,7 @@ outer func 3
 </p>
 
 
-<pre class="src src-sh">python3.2 counter.py                                                                                                                [git:master]
+<pre class="example">python3.2 counter.py                                                                                                                [git:master]
 First invocation:  11
 Second invocation:  12
 Third invocation:  13

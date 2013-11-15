@@ -48,7 +48,7 @@ featured: false
 
 
 
-<pre class="src src-sh">tcpdump [ -AdDeflLnNOpqRStuUvxX ] [ -c count ]
+<pre class="example">tcpdump [ -AdDeflLnNOpqRStuUvxX ] [ -c count ]
            [ -C file_size ] [ -F file ]
            [ -i interface ] [ -m module ] [ -M secret ]
            [ -r file ] [ -s snaplen ] [ -T type ] [ -w file ]
@@ -165,10 +165,10 @@ expression由若干'表达元'(primitive)组成，表达元由若干 '修饰符'
 
 
 
-<pre class="src src-sh"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#21305;&#37197;&#25351;&#23450;mac&#22320;&#22336;</span>
-tcpdump -i eth0 -c 10 -e -n <span style="color: #8b7355;">'ether src 00:19:21:1D:75:E6'</span>
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#21305;&#37197;&#24191;&#25773;&#21253;</span>
-tcpdump <span style="color: #8b7355;">'ether dst ff:ff:ff:ff:ff:ff'</span>
+<pre class="example">#匹配指定mac地址
+tcpdump -i eth0 -c 10 -e -n 'ether src 00:19:21:1D:75:E6'
+#匹配广播包
+tcpdump 'ether dst ff:ff:ff:ff:ff:ff'
 </pre>
 
 </div>
@@ -183,7 +183,7 @@ tcpdump <span style="color: #8b7355;">'ether dst ff:ff:ff:ff:ff:ff'</span>
 </p>
 
 
-<pre class="src src-sh">arping -c 4 192.168.240.1&gt;/dev/null&amp; sudo tcpdump -p <span style="color: #8b7355;">'arp'</span>
+<pre class="example">arping -c 4 192.168.240.1&gt;/dev/null&amp; sudo tcpdump -p 'arp'
 </pre>
 
 <p>
@@ -200,7 +200,7 @@ tcpdump <span style="color: #8b7355;">'ether dst ff:ff:ff:ff:ff:ff'</span>
 </p>
 
 
-<pre class="src src-sh">tcpdump <span style="color: #8b7355;">'ip src 192.168.240.69'</span> 
+<pre class="example">tcpdump 'ip src 192.168.240.69' 
 </pre>
 
 </div>
@@ -218,8 +218,8 @@ tcpdump <span style="color: #8b7355;">'ether dst ff:ff:ff:ff:ff:ff'</span>
 </p>
 
 
-<pre class="src src-sh">tcpdump <span style="color: #8b7355;">'tcp dst port 80'</span> 
-wget http://www.baidu.com 2&gt;1 &gt;/dev/null &amp; sudo tcpdump -c 5 <span style="color: #8b7355;">'tcp port 80'</span> 
+<pre class="example">tcpdump 'tcp dst port 80' 
+wget http://www.baidu.com 2&gt;1 &gt;/dev/null &amp; sudo tcpdump -c 5 'tcp port 80' 
 </pre>
 
 </div>
@@ -234,8 +234,8 @@ wget http://www.baidu.com 2&gt;1 &gt;/dev/null &amp; sudo tcpdump -c 5 <span sty
 </p>
 
 
-<pre class="src src-sh"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#26597;&#30475;DNS&#25968;&#25454;&#21253;</span>
-tcpdump <span style="color: #8b7355;">'upd port 53'</span>
+<pre class="example">#查看DNS数据包
+tcpdump 'upd port 53'
 ping -c 1 www.baidu.com &gt; /dev/null&amp; sudo tcpdump -p udp port 53 
 </pre>
 

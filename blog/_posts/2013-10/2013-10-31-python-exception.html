@@ -69,9 +69,9 @@ featured: false
 
 
 
-<pre class="src src-python"><span style="color: #1c86ee;">try</span>:
+<pre class="example">try:
     block
-<span style="color: #1c86ee;">except</span> [exception,[data&#8230;]]:
+except [exception,[data…]]:
     block
 </pre>
 
@@ -103,20 +103,20 @@ featured: false
 </p>
 
 
-<pre class="src src-python"><span style="color: #1c86ee;">try</span>:
+<pre class="example">try:
     block
-<span style="color: #1c86ee;">except</span> [exception,[data...]]:
+except [exception,[data...]]:
     block
-<span style="color: #1c86ee;">else</span>:
+else:
     block
 
-<span style="color: #1c86ee;">try</span>:
-    <span style="color: #2e8b57;">f</span> = <span style="color: #cd6600;">open</span>(<span style="color: #8b7355;">'file.txt'</span>,<span style="color: #8b7355;">'r'</span>)
-<span style="color: #1c86ee;">except</span> <span style="color: #00688b;">IOError</span>, e:
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#20063;&#21487;&#20197;&#20889;&#20316;except IOError as e:</span>
-    <span style="color: #1c86ee;">print</span> e
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#32467;&#26524;</span>
-[Errno 2] No such <span style="color: #cd6600;">file</span> <span style="color: #1c86ee;">or</span> directory: <span style="color: #8b7355;">'file.txt'</span>
+try:
+    f = open('file.txt','r')
+except IOError, e:
+#也可以写作except IOError as e:
+    print e
+#结果
+[Errno 2] No such file or directory: 'file.txt'
 </pre>
 
 <p>
@@ -133,11 +133,11 @@ featured: false
 </p>
 
 
-<pre class="src src-python"><span style="color: #1c86ee;">try</span>:
+<pre class="example">try:
     block
-<span style="color: #1c86ee;">except</span> [exception,[data...]]:
+except [exception,[data...]]:
     block
-<span style="color: #1c86ee;">finally</span>:
+finally:
     block
 </pre>
 
@@ -173,15 +173,15 @@ featured: false
 </p>
 
 
-<pre class="src src-python"><span style="color: #1c86ee;">class</span> <span style="color: #00688b;">MyError</span>(<span style="color: #00688b;">Exception</span>):
-    <span style="color: #1c86ee;">pass</span>
-<span style="color: #1c86ee;">try</span>:
-    <span style="color: #1c86ee;">raise</span> MyError, <span style="color: #8b7355;">"some error happend"</span>
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#20063;&#21487;&#20889;&#20316;raise MyError("some error happend")</span>
-<span style="color: #1c86ee;">except</span> MyError,data:
-    <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"MyError encoutered"</span>
-    <span style="color: #1c86ee;">print</span> data
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#32467;&#26524;</span>
+<pre class="example">class MyError(Exception):
+    pass
+try:
+    raise MyError, "some error happend"
+#也可写作raise MyError("some error happend")
+except MyError,data:
+    print "MyError encoutered"
+    print data
+#结果
 MyError encoutered
 some error happend
 </pre>
@@ -208,11 +208,11 @@ some error happend
 </p>
 
 
-<pre class="src src-python"><span style="color: #1c86ee;">try</span>:
+<pre class="example">try:
     block1
-<span style="color: #1c86ee;">except</span>...:
+except...:
     block2
-<span style="color: #1c86ee;">finally</span>:
+finally:
     block3
 </pre>
 
@@ -229,11 +229,11 @@ some error happend
 
 
 
-<pre class="src src-python"><span style="color: #1c86ee;">try</span>:
+<pre class="example">try:
     block1
-<span style="color: #1c86ee;">except</span> <span style="color: #00688b;">Exception</span>, ex:
-    <span style="color: #1c86ee;">print</span> <span style="color: #00688b;">Exception</span>,<span style="color: #8b7355;">':'</span>,ex
-<span style="color: #1c86ee;">finally</span>:
+except Exception, ex:
+    print Exception,':',ex
+finally:
     block3
 </pre>
 
@@ -248,15 +248,15 @@ some error happend
 
 
 
-<pre class="src src-python"><span style="color: #1c86ee;">import</span> traceback
-<span style="color: #1c86ee;">try</span>:
-    <span style="color: #1c86ee;">raise</span> <span style="color: #00688b;">SyntaxError</span>, <span style="color: #8b7355;">"traceback test"</span>
-<span style="color: #1c86ee;">except</span>:
+<pre class="example">import traceback
+try:
+    raise SyntaxError, "traceback test"
+except:
     traceback.print_exc()
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#36755;&#20986;</span>
+#输出
 Traceback (most recent call last):
-  File <span style="color: #8b7355;">"&lt;stdin&gt;"</span>, line 2, <span style="color: #1c86ee;">in</span> &lt;module&gt;
-<span style="color: #00688b;">SyntaxError</span>: traceback test
+  File "&lt;stdin&gt;", line 2, in &lt;module&gt;
+SyntaxError: traceback test
 </pre>
 
 <p>
@@ -267,12 +267,12 @@ Traceback (most recent call last):
 </p>
 
 
-<pre class="src src-python"><span style="color: #1c86ee;">import</span> traceback
-<span style="color: #1c86ee;">try</span>:
-    <span style="color: #1c86ee;">raise</span> <span style="color: #00688b;">SyntaxError</span>, <span style="color: #8b7355;">"traceback test"</span>
-<span style="color: #1c86ee;">except</span>:
-    <span style="color: #2e8b57;">f</span>=<span style="color: #cd6600;">open</span>(<span style="color: #8b7355;">"/home/wchunx/log.txt"</span>,<span style="color: #8b7355;">'a'</span>)
-    traceback.print_exc(<span style="color: #cd6600;">file</span> = f)
+<pre class="example">import traceback
+try:
+    raise SyntaxError, "traceback test"
+except:
+    f=open("/home/wchunx/log.txt",'a')
+    traceback.print_exc(file = f)
     f.close()
 </pre>
 
@@ -281,27 +281,27 @@ traceback模块还提供了extract<sub>tb函数来格式化跟踪返回信息</s
 </p>
 
 
-<pre class="src src-python"><span style="color: #1c86ee;">import</span> traceback
-<span style="color: #1c86ee;">import</span> sys
+<pre class="example">import traceback
+import sys
 
-<span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">tracebacktest</span>():
-    <span style="color: #1c86ee;">raise</span> <span style="color: #00688b;">SyntaxError</span>, <span style="color: #8b7355;">"traceback test"</span>
-<span style="color: #1c86ee;">try</span>:
+def tracebacktest():
+    raise SyntaxError, "traceback test"
+try:
     tracebacktest()
-<span style="color: #1c86ee;">except</span>:
-    <span style="color: #2e8b57;">info</span> = sys.exc_info()
-    <span style="color: #1c86ee;">print</span> info
-    <span style="color: #1c86ee;">for</span> <span style="color: #cd6600;">file</span>, lineno, function, text <span style="color: #1c86ee;">in</span> traceback.extract_tb(info[1]):
-        <span style="color: #1c86ee;">print</span> <span style="color: #cd6600;">file</span>, <span style="color: #8b7355;">"line:"</span>, lineno, <span style="color: #8b7355;">"in"</span>, function
-        <span style="color: #1c86ee;">print</span> text
-    <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"** %s: %s"</span> % info[:2]
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#36755;&#20986;</span>
-(&lt;<span style="color: #cd6600;">type</span> <span style="color: #8b7355;">'exceptions.SyntaxError'</span>&gt;, <span style="color: #00688b;">SyntaxError</span>(<span style="color: #8b7355;">'traceback test'</span>,), &lt;traceback <span style="color: #cd6600;">object</span> at 0xb72c39b4&gt;)
-trace.py line: 7 <span style="color: #1c86ee;">in</span> &lt;module&gt;
+except:
+    info = sys.exc_info()
+    print info
+    for file, lineno, function, text in traceback.extract_tb(info[1]):
+        print file, "line:", lineno, "in", function
+        print text
+    print "** %s: %s" % info[:2]
+#输出
+(&lt;type 'exceptions.SyntaxError'&gt;, SyntaxError('traceback test',), &lt;traceback object at 0xb72c39b4&gt;)
+trace.py line: 7 in &lt;module&gt;
 tracebacktest()
-trace.py line: 5 <span style="color: #1c86ee;">in</span> tracebacktest
-<span style="color: #1c86ee;">raise</span> <span style="color: #00688b;">SyntaxError</span>, <span style="color: #8b7355;">"traceback test"</span>
-** &lt;<span style="color: #cd6600;">type</span> <span style="color: #8b7355;">'exceptions.SyntaxError'</span>&gt;: traceback test
+trace.py line: 5 in tracebacktest
+raise SyntaxError, "traceback test"
+** &lt;type 'exceptions.SyntaxError'&gt;: traceback test
 </pre>
 
 </div>
@@ -315,16 +315,16 @@ trace.py line: 5 <span style="color: #1c86ee;">in</span> tracebacktest
 
 
 
-<pre class="src src-python"><span style="color: #1c86ee;">import</span> sys
-<span style="color: #1c86ee;">try</span>:
-    <span style="color: #1c86ee;">raise</span> <span style="color: #00688b;">TypeError</span>, <span style="color: #8b7355;">"Type Error happened"</span>
-<span style="color: #1c86ee;">except</span>:
-    <span style="color: #2e8b57;">info</span> = sys.exc_info()
-    <span style="color: #1c86ee;">print</span> info
-    <span style="color: #1c86ee;">print</span> info[0],<span style="color: #8b7355;">':'</span>,info[1]
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#32467;&#26524;</span>
-(&lt;<span style="color: #cd6600;">type</span> <span style="color: #8b7355;">'exceptions.TypeError'</span>&gt;, <span style="color: #00688b;">TypeError</span>(<span style="color: #8b7355;">'Type Error happened'</span>,), &lt;traceback <span style="color: #cd6600;">object</span> at 0xb6b33eb4&gt;)
-&lt;<span style="color: #cd6600;">type</span> <span style="color: #8b7355;">'exceptions.TypeError'</span>&gt; : Type Error happened
+<pre class="example">import sys
+try:
+    raise TypeError, "Type Error happened"
+except:
+    info = sys.exc_info()
+    print info
+    print info[0],':',info[1]
+#结果
+(&lt;type 'exceptions.TypeError'&gt;, TypeError('Type Error happened',), &lt;traceback object at 0xb6b33eb4&gt;)
+&lt;type 'exceptions.TypeError'&gt; : Type Error happened
 </pre>
 
 </div>

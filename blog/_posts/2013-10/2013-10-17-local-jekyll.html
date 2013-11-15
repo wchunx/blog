@@ -50,17 +50,17 @@ featured: false
 
 
 
-<pre class="src src-sh"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#23433;&#35013;ruby</span>
+<pre class="example">#安装ruby
 sudo apt-get install ruby1.9.1-dev
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#22312;&#22269;&#20869;&#21487;&#33021;Ruby&#30340;Gem sources&#24456;&#24930;&#65292;&#22312;install jekyll&#21069;&#21487;&#20197;&#25191;&#34892;&#19979;&#38754;&#20004;&#20010;&#21629;&#20196;</span>
-&#26367;&#25442;gem sources&#20026;&#28120;&#23453;&#30340;gem&#38236;&#20687;&#12290;&#20294;&#25105;&#27809;&#26377;&#25442;&#65292;&#23433;&#35013;&#20063;&#26159;&#27809;&#38382;&#39064;&#30340;
+#在国内可能Ruby的Gem sources很慢，在install jekyll前可以执行下面两个命令
+替换gem sources为淘宝的gem镜像。但我没有换，安装也是没问题的
 gem sources -r http://rubygems.org/
 gem sources -a http://ruby.taobao.org/
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#23433;&#35013;jekyll</span>
+#安装jekyll
 sudo gem install jekyll
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#23433;&#35013;rdiscount</span>
+#安装rdiscount
 sudo gem install rdiscount
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#26597;&#30475;jekyll&#29256;&#26412;</span>
+#查看jekyll版本
 jekyll -v
 jekyll 1.2.1
 </pre>

@@ -1,0 +1,180 @@
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 初始状态</a>
+<ul>
+<li><a href="#sec-1-1">1.1 ovs-vsctl show</a></li>
+<li><a href="#sec-1-2">1.2 iptablas -nvL</a></li>
+<li><a href="#sec-1-3">1.3 iptables -t nat -nvL</a></li>
+<li><a href="#sec-1-4">1.4 此时ip netns 无输出</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">初始状态</h2>
+<div class="outline-text-2" id="text-1">
+
+
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">ovs-vsctl show</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>03d001c9-11ec-462d-929d-c2aacb9d9ded
+    Bridge br-ex
+        Port "eth1"
+            Interface "eth1"
+        Port br-ex
+            Interface br-ex
+                type: internal
+    Bridge br-tun
+        Port patch-int
+            Interface patch-int
+                type: patch
+                options: {peer=patch-tun}
+        Port br-tun
+            Interface br-tun
+                type: internal
+    Bridge br-int
+        Port patch-tun
+            Interface patch-tun
+                type: patch
+                options: {peer=patch-int}
+        Port br-int
+            Interface br-int
+                type: internal
+    ovs<sub>version</sub>: "1.4.0+build0"
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">iptablas -nvL</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>Chain INPUT (policy ACCEPT 29625 packets, 4480K bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+16922 2734K nova-api-INPUT  all  &ndash;  *      *       0.0.0.0/0            0.0.0.0/0           
+    0     0 ACCEPT     47   &ndash;  *      *       0.0.0.0/0            0.0.0.0/0           
+</p>
+<p>
+Chain FORWARD (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 nova-filter-top  all  &ndash;  *      *       0.0.0.0/0            0.0.0.0/0           
+    0     0 nova-api-FORWARD  all  &ndash;  *      *       0.0.0.0/0            0.0.0.0/0           
+</p>
+<p>
+Chain OUTPUT (policy ACCEPT 29661 packets, 4573K bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+29448 4558K nova-filter-top  all  &ndash;  *      *       0.0.0.0/0            0.0.0.0/0           
+16754 2853K nova-api-OUTPUT  all  &ndash;  *      *       0.0.0.0/0            0.0.0.0/0           
+</p>
+<p>
+Chain nova-api-FORWARD (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+</p>
+<p>
+Chain nova-api-INPUT (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 ACCEPT     tcp  &ndash;  *      *       0.0.0.0/0            192.168.20.93        tcp dpt:8775
+</p>
+<p>
+Chain nova-api-OUTPUT (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+</p>
+<p>
+Chain nova-api-local (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+</p>
+<p>
+Chain nova-filter-top (2 references)
+ pkts bytes target     prot opt in     out     source               destination         
+16754 2853K nova-api-local  all  &ndash;  *      *       0.0.0.0/0            0.0.0.0/0           
+</p></div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">iptables -t nat -nvL</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>Chain PREROUTING (policy ACCEPT 2096 packets, 274K bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+  392 78911 nova-api-PREROUTING  all  &ndash;  *      *       0.0.0.0/0            0.0.0.0/0           
+</p>
+<p>
+Chain INPUT (policy ACCEPT 68 packets, 8579 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+</p>
+<p>
+Chain OUTPUT (policy ACCEPT 369 packets, 22696 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+   62  3824 nova-api-OUTPUT  all  &ndash;  *      *       0.0.0.0/0            0.0.0.0/0           
+</p>
+<p>
+Chain POSTROUTING (policy ACCEPT 369 packets, 22696 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+   62  3824 nova-api-POSTROUTING  all  &ndash;  *      *       0.0.0.0/0            0.0.0.0/0           
+  369 22696 nova-postrouting-bottom  all  &ndash;  *      *       0.0.0.0/0            0.0.0.0/0           
+</p>
+<p>
+Chain nova-api-OUTPUT (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+</p>
+<p>
+Chain nova-api-POSTROUTING (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+</p>
+<p>
+Chain nova-api-PREROUTING (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+</p>
+<p>
+Chain nova-api-float-snat (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+</p>
+<p>
+Chain nova-api-snat (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+   62  3824 nova-api-float-snat  all  &ndash;  *      *       0.0.0.0/0            0.0.0.0/0           
+</p>
+<p>
+Chain nova-postrouting-bottom (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+   62  3824 nova-api-snat  all  &ndash;  *      *       0.0.0.0/0            0.0.0.0/0           
+</p></div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">此时ip netns 无输出</h3>
+<div class="outline-text-3" id="text-1-4">
+
+
+<p>
+创建一个router设备后会生成一个qrouter-routerid的命名空间
+ip netns exec qrouter-28ee50e4-e961-4bdf-97ac-8933ae8e937c iptables -S
+-P INPUT ACCEPT
+-P FORWARD ACCEPT
+-P OUTPUT ACCEPT
+-N quantum-filter-top
+-N quantum-l3-agent-FORWARD
+-N quantum-l3-agent-INPUT
+-N quantum-l3-agent-OUTPUT
+-N quantum-l3-agent-local
+-A INPUT -j quantum-l3-agent-INPUT
+-A FORWARD -j quantum-filter-top
+-A FORWARD -j quantum-l3-agent-FORWARD
+-A OUTPUT -j quantum-filter-top
+-A OUTPUT -j quantum-l3-agent-OUTPUT
+-A quantum-filter-top -j quantum-l3-agent-local
+-A quantum-l3-agent-INPUT -d 127.0.0.1/32 -p tcp -m tcp &ndash;dport 9697 -j ACCEPT
+</p>
+</div>
+</div>
+</div>

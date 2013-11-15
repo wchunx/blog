@@ -40,8 +40,8 @@ featured: false
 
 
 
-<pre class="src src-python"><span style="color: #cd6600;">list</span> = [<span style="color: #8b7355;">''</span>,<span style="color: #8b7355;">'12'</span>,<span style="color: #8b7355;">'34'</span>,<span style="color: #8b7355;">''</span>]
-<span style="color: #cd6600;">list</span> = <span style="color: #cd6600;">filter</span>(<span style="color: #1c86ee;">lambda</span> x:x != <span style="color: #8b7355;">''</span>, <span style="color: #cd6600;">list</span>)
+<pre class="example">list = ['','12','34','']
+list = filter(lambda x:x != '', list)
 </pre>
 
 </div>
@@ -55,8 +55,8 @@ featured: false
 
 
 
-<pre class="src src-python"><span style="color: #cd6600;">list</span> = [<span style="color: #8b7355;">''</span>,<span style="color: #8b7355;">'12'</span>,<span style="color: #8b7355;">'34'</span>,<span style="color: #8b7355;">''</span>]
-<span style="color: #cd6600;">list</span> = [ i <span style="color: #1c86ee;">for</span> i <span style="color: #1c86ee;">in</span> <span style="color: #cd6600;">list</span> <span style="color: #1c86ee;">if</span> i != <span style="color: #8b7355;">''</span>]
+<pre class="example">list = ['','12','34','']
+list = [ i for i in list if i != '']
 </pre>
 
 </div>
@@ -70,9 +70,9 @@ featured: false
 
 
 
-<pre class="src src-python"><span style="color: #cd6600;">list</span> = [<span style="color: #8b7355;">''</span>,<span style="color: #8b7355;">'12'</span>,<span style="color: #8b7355;">'34'</span>,<span style="color: #8b7355;">''</span>]
-<span style="color: #1c86ee;">while</span> <span style="color: #8b7355;">''</span> <span style="color: #1c86ee;">in</span> <span style="color: #cd6600;">list</span>:
-    <span style="color: #cd6600;">list</span>.remove(<span style="color: #8b7355;">''</span>)
+<pre class="example">list = ['','12','34','']
+while '' in list:
+    list.remove('')
 </pre>
 
 </div>

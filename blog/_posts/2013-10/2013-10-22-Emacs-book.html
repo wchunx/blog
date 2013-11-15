@@ -54,17 +54,17 @@ featured: false
 
 
 
-<pre class="src src-elisp">(<span style="color: #1c86ee;">defadvice</span> <span style="color: #cd9b1d;">org-publish</span> (around fsh-org-publish-advice
-                                        (project <span style="color: #00688b;">&amp;optional</span> force async) activate)
-  <span style="color: #cd853f;">"Change theme before publishing, for getting a good html code highlight style through</span>
-<span style="color: #cd853f;">htmlize."</span>
-  (<span style="color: #1c86ee;">let</span> ((thems custom-enabled-themes))
-      (<span style="color: #1c86ee;">dolist</span> (theme thems)
+<pre class="example">(defadvice org-publish (around fsh-org-publish-advice
+                                        (project &amp;optional force async) activate)
+  "Change theme before publishing, for getting a good html code highlight style through
+htmlize."
+  (let ((thems custom-enabled-themes))
+      (dolist (theme thems)
         (disable-theme theme))
       (load-theme 'whiteboard)
       ad-do-it
       (disable-theme 'whiteboard)
-      (<span style="color: #1c86ee;">dolist</span> (theme thems)
+      (dolist (theme thems)
         (enable-theme theme))
       ))
 </pre>

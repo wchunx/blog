@@ -176,31 +176,31 @@ patch -R A C A还原成原来的内容.过程中文件名不发生变化，文�
 </p>
 
 
-<pre class="src src-sh"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">patch&#25991;&#20214;&#35760;&#24405;&#30340;&#20449;&#24687;</span>
+<pre class="example">#patch文件记录的信息
 wchunx@wchunx:~$ cat dir.patch
 diff -Nuar dir1/gernel/hello.txt dir2/gernel/hello.txt
-&#8212; dir1/gernel/hello.txt 2013-09-29 10:38:00.042518181 +0800
+— dir1/gernel/hello.txt 2013-09-29 10:38:00.042518181 +0800
 +++ dir2/gernel/hello.txt   2013-09-29 10:38:09.362517972 +0800
 @@ -1 +1 @@
 -aaa
 +bbb
 
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#20351;&#29992;&#20840;&#36335;&#24452;&#25171;&#34917;&#19969;</span>
+#使用全路径打补丁
 patch -p0 &lt; dir.patch
 patching file dir1/gernel/hello.txt
 
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#27492;&#26102;&#22914;&#26524;&#20877;&#27425;&#20351;&#29992;&#35813;&#21629;&#20196;&#65292;&#31995;&#32479;&#35810;&#38382;&#26159;&#21542;&#36824;&#21407;</span>
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">patch -p0 &lt; dir.patch</span>
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">patching file dir1/gernel/hello.txt</span>
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">Reversed (or previously applied) patch detected!  Assume -R? [n] y</span>
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#36824;&#21407;&#65292;&#21516;&#19978;&#27493;&#20013;&#27880;&#37322;&#30340;&#25805;&#20316;</span>
+#此时如果再次使用该命令，系统询问是否还原
+#patch -p0 &lt; dir.patch
+#patching file dir1/gernel/hello.txt
+#Reversed (or previously applied) patch detected!  Assume -R? [n] y
+#还原，同上步中注释的操作
 
 patch -R -p0 &lt; dir.patch
 patching file dir1/gernel/hello.txt
 
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#25913;&#21464;&#19968;&#19979;&#24403;&#21069;&#36335;&#24452;</span>
-<span style="color: #cd6600;">cd</span> dir1
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#36825;&#20010;&#26102;&#20505;&#23601;&#19981;&#33021;&#20351;&#29992;dir.patch&#35760;&#24405;&#30340;&#28304;&#25991;&#20214;&#20840;&#36335;&#24452;dir1/gernel/hello.txt&#20102;&#65292;&#24212;&#35813;&#24573;&#30053;&#31532;&#19968;&#20010;/&#21069;&#30340;dir1&#65292;&#36825;&#20063;&#23601;&#26159;&#19979;&#38754;&#21629;&#20196;&#20013;p1&#30340;&#21547;&#20041;</span>
+#改变一下当前路径
+cd dir1
+#这个时候就不能使用dir.patch记录的源文件全路径dir1/gernel/hello.txt了，应该忽略第一个/前的dir1，这也就是下面命令中p1的含义
 patch -p1 &lt; ../dir.patch
 patching file gernel/hello.txt
 </pre>
@@ -220,7 +220,7 @@ patching file gernel/hello.txt
 
 
 
-<pre class="src src-sh">cat test1
+<pre class="example">cat test1
 11111
 11111
 11111

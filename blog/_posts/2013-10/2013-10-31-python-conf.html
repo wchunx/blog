@@ -48,7 +48,7 @@ featured: false
 
 
 
-<pre class="src src-python">python d:/pythonSrc/test/test.py
+<pre class="example">python d:/pythonSrc/test/test.py
 </pre>
 
 <p>
@@ -61,7 +61,7 @@ featured: false
 
 
 
-<pre class="src src-python">python test.py
+<pre class="example">python test.py
 </pre>
 
 <p>
@@ -72,7 +72,7 @@ featured: false
 </p>
 
 
-<pre class="src src-python"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#33719;&#21462;&#33050;&#26412;&#32477;&#23545;&#36335;&#24452;</span>
+<pre class="example">#获取脚本绝对路径
 os.path.abspath(os.path.dirname(__file__))
 </pre>
 
@@ -97,7 +97,7 @@ os.path.abspath(os.path.dirname(__file__))
 
 
 
-<pre class="src src-sh">global]
+<pre class="example">global]
 ip = 192.168.1.100
 </pre>
 
@@ -112,17 +112,17 @@ ip = 192.168.1.100
 
 
 
-<pre class="src src-python"><span style="color: #1c86ee;">import</span> ConfigParser
-<span style="color: #1c86ee;">import</span> os
+<pre class="example">import ConfigParser
+import os
 
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#33719;&#21462;&#33050;&#26412;&#25152;&#22312;&#32477;&#23545;&#36335;&#24452;</span>
-<span style="color: #2e8b57;">localDir</span> = os.path.abspath(os.path.dirname(__file__))
+#获取脚本所在绝对路径
+localDir = os.path.abspath(os.path.dirname(__file__))
 
-<span style="color: #2e8b57;">config</span> = ConfigParser.ConfigParser()
-<span style="color: #2e8b57;">conf</span> = localDir + <span style="color: #8b7355;">"/node.conf"</span>
-config.readfp(<span style="color: #cd6600;">open</span>(conf),<span style="color: #8b7355;">"rb"</span>)
+config = ConfigParser.ConfigParser()
+conf = localDir + "/node.conf"
+config.readfp(open(conf),"rb")
 
-<span style="color: #1c86ee;">print</span> config.get(<span style="color: #8b7355;">"global"</span>,<span style="color: #8b7355;">"ip"</span>)
+print config.get("global","ip")
 </pre>
 
 </div>

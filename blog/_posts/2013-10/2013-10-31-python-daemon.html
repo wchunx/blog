@@ -48,43 +48,43 @@ featured: false
 </p>
 
 
-<pre class="src src-python"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">!/usr/bin/env python</span>
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">coding=utf8</span>
+<pre class="example">#!/usr/bin/env python
+#coding=utf8
 
-<span style="color: #1c86ee;">import</span> os, sys, time
+import os, sys, time
 
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#20135;&#29983;&#23376;&#36827;&#31243;&#65292;&#32780;&#21518;&#29238;&#36827;&#31243;&#36864;&#20986;</span>
-<span style="color: #2e8b57;">pid</span> = os.fork()
-<span style="color: #1c86ee;">if</span> pid &gt; 0:
-    sys.<span style="color: #6e8b3d;">exit</span>(0)
+#产生子进程，而后父进程退出
+pid = os.fork()
+if pid &gt; 0:
+    sys.exit(0)
 
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#20462;&#25913;&#23376;&#36827;&#31243;&#24037;&#20316;&#30446;&#24405;</span>
-os.chdir(<span style="color: #8b7355;">"/"</span>)
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#21019;&#24314;&#26032;&#30340;&#20250;&#35805;&#65292;&#23376;&#36827;&#31243;&#25104;&#20026;&#20250;&#35805;&#30340;&#39318;&#36827;&#31243;</span>
+#修改子进程工作目录
+os.chdir("/")
+#创建新的会话，子进程成为会话的首进程
 os.setsid()
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#20462;&#25913;&#24037;&#20316;&#30446;&#24405;&#30340;umask</span>
+#修改工作目录的umask
 os.umask(0)
 
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#21019;&#24314;&#23385;&#23376;&#36827;&#31243;&#65292;&#32780;&#21518;&#23376;&#36827;&#31243;&#36864;&#20986;</span>
-<span style="color: #2e8b57;">pid</span> = os.fork()
-<span style="color: #1c86ee;">if</span> pid &gt; 0:
-    sys.<span style="color: #6e8b3d;">exit</span>(0)
+#创建孙子进程，而后子进程退出
+pid = os.fork()
+if pid &gt; 0:
+    sys.exit(0)
 
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#37325;&#23450;&#21521;&#26631;&#20934;&#36755;&#20837;&#27969;&#12289;&#26631;&#20934;&#36755;&#20986;&#27969;&#12289;&#26631;&#20934;&#38169;&#35823;</span>
+#重定向标准输入流、标准输出流、标准错误
 sys.stdout.flush()
 sys.stderr.flush()
-<span style="color: #2e8b57;">si</span> = <span style="color: #cd6600;">file</span>(<span style="color: #8b7355;">"/dev/null"</span>, <span style="color: #8b7355;">'r'</span>)
-<span style="color: #2e8b57;">so</span> = <span style="color: #cd6600;">file</span>(<span style="color: #8b7355;">"/dev/null"</span>, <span style="color: #8b7355;">'a+'</span>)
-<span style="color: #2e8b57;">se</span> = <span style="color: #cd6600;">file</span>(<span style="color: #8b7355;">"/dev/null"</span>, <span style="color: #8b7355;">'a+'</span>, 0)
+si = file("/dev/null", 'r')
+so = file("/dev/null", 'a+')
+se = file("/dev/null", 'a+', 0)
 os.dup2(si.fileno(), sys.stdin.fileno())
 os.dup2(so.fileno(), sys.stdout.fileno())
 os.dup2(se.fileno(), sys.stderr.fileno())
 
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#23385;&#23376;&#36827;&#31243;&#30340;&#31243;&#24207;&#20869;&#23481;</span>
-<span style="color: #1c86ee;">while</span> <span style="color: #6e8b3d;">True</span>:
+#孙子进程的程序内容
+while True:
     time.sleep(10)
-    <span style="color: #2e8b57;">f</span> = <span style="color: #cd6600;">open</span>(<span style="color: #8b7355;">'/home/test.txt'</span>, <span style="color: #8b7355;">'a'</span>)
-    f.write(<span style="color: #8b7355;">'hello'</span>)
+    f = open('/home/test.txt', 'a')
+    f.write('hello')
 </pre>
 
 </div>

@@ -36,9 +36,9 @@ featured: false
 </p>
 
 
-<pre class="src src-python"><span style="color: #1c86ee;">import</span> time
-time.strftime(<span style="color: #8b7355;">'%c'</span>)
-<span style="color: #8b7355;">'Fri Nov  1 10:06:20 2013'</span>
+<pre class="example">import time
+time.strftime('%c')
+'Fri Nov  1 10:06:20 2013'
 </pre>
 
 </div>
@@ -64,9 +64,9 @@ time.strftime(<span style="color: #8b7355;">'%c'</span>)
 
 
 
-<pre class="src src-sh">import time
+<pre class="example">import time
 print time.time()
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#36755;&#20986;&#30340;&#32467;&#26524;&#26159;&#65306;</span>
+#输出的结果是：
 1383271867.539839
 </pre>
 
@@ -82,14 +82,14 @@ print time.time()
 </p>
 
 
-<pre class="src src-python">time.localtime(time.time())
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#29992;time.localtime()&#26041;&#27861;&#65292;&#20316;&#29992;&#26159;&#26684;&#24335;&#21270;&#26102;&#38388;&#25139;&#20026;&#26412;&#22320;&#30340;&#26102;&#38388;&#12290;</span>
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#36755;&#20986;&#30340;&#32467;&#26524;&#26159;&#65306;</span>
+<pre class="example">time.localtime(time.time())
+#用time.localtime()方法，作用是格式化时间戳为本地的时间。
+#输出的结果是：
 time.struct_time(tm_year=2013, tm_mon=11, tm_mday=1, tm_hour=10, tm_min=11, tm_sec=15, tm_wday=4, tm_yday=305, tm_isdst=0)
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#26368;&#21518;&#29992;time.strftime()&#26041;&#27861;&#65292;&#25226;&#21018;&#25165;&#30340;&#19968;&#22823;&#20018;&#20449;&#24687;&#26684;&#24335;&#21270;&#25104;&#25105;&#20204;&#24819;&#35201;&#30340;&#19996;&#35199;&#65292;</span>
-time.strftime(<span style="color: #8b7355;">'%Y-%m-%d'</span>,time.localtime(time.time()))
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#29616;&#22312;&#30340;&#32467;&#26524;&#26159;&#65306;</span>
-<span style="color: #8b7355;">'2013-11-01'</span>
+#最后用time.strftime()方法，把刚才的一大串信息格式化成我们想要的东西，
+time.strftime('%Y-%m-%d',time.localtime(time.time()))
+#现在的结果是：
+'2013-11-01'
 </pre>
 
 </div>
@@ -110,10 +110,10 @@ time.strftime(<span style="color: #8b7355;">'%Y-%m-%d'</span>,time.localtime(tim
 </p>
 
 
-<pre class="src src-sh">import time
-<span style="color: #cd9b1d;">time.strftime</span>()
-<span style="color: #cd9b1d;">time.strftime</span>(<span style="color: #8b7355;">'%Y-%m-%d'</span>)
-<span style="color: #8b7355;">'2013-11-01'</span>
+<pre class="example">import time
+time.strftime()
+time.strftime('%Y-%m-%d')
+'2013-11-01'
 </pre>
 
 </div>

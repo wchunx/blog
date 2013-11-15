@@ -186,15 +186,15 @@ featured: false
 </p>
 
 
-<pre class="src src-sh">iptables -nvL
+<pre class="example">iptables -nvL
 Chain INPUT (policy ACCEPT 0 packets, 0 bytes)
- pkts bytes target     prot opt<span style="color: #1c86ee;"> in</span>     out     source               destination         
+ pkts bytes target     prot opt in     out     source               destination         
 
 Chain FORWARD (policy ACCEPT 0 packets, 0 bytes)
- pkts bytes target     prot opt<span style="color: #1c86ee;"> in</span>     out     source               destination         
+ pkts bytes target     prot opt in     out     source               destination         
 
 Chain OUTPUT (policy ACCEPT 0 packets, 0 bytes)
- pkts bytes target     prot opt<span style="color: #1c86ee;"> in</span>     out     source               destination         
+ pkts bytes target     prot opt in     out     source               destination         
 </pre>
 
 <p>
@@ -202,7 +202,7 @@ Chain OUTPUT (policy ACCEPT 0 packets, 0 bytes)
 </p>
 
 
-<pre class="src src-sh">iptables -t nat -nvL
+<pre class="example">iptables -t nat -nvL
 </pre>
 
 </div>
@@ -218,8 +218,8 @@ Chain OUTPUT (policy ACCEPT 0 packets, 0 bytes)
 </p>
 
 
-<pre class="src src-sh">iptables --flush
-&#25110;
+<pre class="example">iptables --flush
+或
 iptables -F
 </pre>
 
@@ -228,7 +228,7 @@ iptables -F
 </p>
 
 
-<pre class="src src-sh">iptables -t NAT -F
+<pre class="example">iptables -t NAT -F
 </pre>
 
 </div>
@@ -251,7 +251,7 @@ iptables -F
 </p>
 
 
-<pre class="src src-sh">iptables-save &gt; /etc/iptables.rules
+<pre class="example">iptables-save &gt; /etc/iptables.rules
 </pre>
 
 <p>
@@ -259,7 +259,7 @@ iptables -F
 </p>
 
 
-<pre class="src src-sh"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">!/bin/</span><span style="color: #1c86ee;">bash</span>
+<pre class="example">#!/bin/bash
 iptables-restore &lt; /etc/iptables.rules
 </pre>
 
@@ -277,12 +277,12 @@ iptables-restore &lt; /etc/iptables.rules
 
 
 
-<pre class="src src-sh"><span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">&#20445;&#23384;iptables&#35268;&#21017;</span>
+<pre class="example"># 保存iptables规则
 service iptables save
-<span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">&#37325;&#21551;iptables&#26381;&#21153;</span>
+# 重启iptables服务
 service iptables stop
 service iptables start
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#26597;&#30475;&#24403;&#21069;&#35268;&#21017;&#65306;</span>
+#查看当前规则：
 cat  /etc/sysconfig/iptables
 </pre>
 
@@ -529,7 +529,7 @@ cat  /etc/sysconfig/iptables
 </p>
 
 
-<pre class="src src-sh">iptables -P FORWARD DROP
+<pre class="example">iptables -P FORWARD DROP
 </pre>
 
 </div>
@@ -550,9 +550,9 @@ cat  /etc/sysconfig/iptables
 
 
 
-<pre class="src src-sh"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">1.&#20801;&#35768;&#25509;&#25910;&#36828;&#31243;&#20027;&#26426;&#30340;SSH&#35831;&#27714;</span>
+<pre class="example">#1.允许接收远程主机的SSH请求
 iptables -A INPUT -i eth0 -p tcp --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">2.&#20801;&#35768;&#21457;&#36865;&#26412;&#22320;&#20027;&#26426;&#30340;SSH&#21709;&#24212;</span>
+#2.允许发送本地主机的SSH响应
 iptables -A OUTPUT -o eth0 -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT
 </pre>
 
@@ -571,9 +571,9 @@ iptables -A OUTPUT -o eth0 -p tcp --sport 22 -m state --state ESTABLISHED -j ACC
 </p>
 
 
-<pre class="src src-sh"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">1.&#36865;&#20986;&#30340;&#25968;&#25454;&#21253;&#30446;&#30340;&#31471;&#21475;&#20026;22</span>
+<pre class="example">#1.送出的数据包目的端口为22
 iptables -A OUTPUT -o eth0 -p tcp --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">2.&#25509;&#25910;&#30340;&#25968;&#25454;&#21253;&#28304;&#31471;&#21475;&#20026;22</span>
+#2.接收的数据包源端口为22
 iptables -A INPUT -i eth0 -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT
 </pre>
 
@@ -589,9 +589,9 @@ iptables -A INPUT -i eth0 -p tcp --sport 22 -m state --state ESTABLISHED -j ACCE
 </p>
 
 
-<pre class="src src-sh"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">1.&#20801;&#35768;&#25509;&#25910;&#36828;&#31243;&#20027;&#26426;&#30340;HTTP&#35831;&#27714;</span>
+<pre class="example">#1.允许接收远程主机的HTTP请求
 iptables -A INPUT -i eth0 -p tcp --dport 80 -m state --state NEW,ESTABLISHED -j ACCEPT
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">1.&#20801;&#35768;&#21457;&#36865;&#26412;&#22320;&#20027;&#26426;&#30340;HTTP&#21709;&#24212;</span>
+#1.允许发送本地主机的HTTP响应
 iptables -A OUTPUT -o eth0 -p tcp --sport 80 -m state --state ESTABLISHED -j ACCEPT
 </pre>
 
@@ -606,23 +606,23 @@ iptables -A OUTPUT -o eth0 -p tcp --sport 80 -m state --state ESTABLISHED -j ACC
 
 
 
-<pre class="src src-sh"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">1.&#21024;&#38500;&#29616;&#26377;&#35268;&#21017;</span>
+<pre class="example">#1.删除现有规则
 iptables -F
 
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">2.&#37197;&#32622;&#40664;&#35748;&#38142;&#31574;&#30053;</span>
+#2.配置默认链策略
 iptables -P INPUT DROP
 iptables -P FORWARD DROP
 iptables -P OUTPUT DROP
 
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">3.&#20801;&#35768;&#36828;&#31243;&#20027;&#26426;&#36827;&#34892;SSH&#36830;&#25509;</span>
+#3.允许远程主机进行SSH连接
 iptables -A INPUT -i eth0 -p tcp --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT
 iptables -A OUTPUT -o eth0 -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT
 
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">4.&#20801;&#35768;&#26412;&#22320;&#20027;&#26426;&#36827;&#34892;SSH&#36830;&#25509;</span>
+#4.允许本地主机进行SSH连接
 iptables -A OUTPUT -o eth0 -p tcp --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT
 iptables -A INPUT -i eth0 -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT
 
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">5.&#20801;&#35768;HTTP&#35831;&#27714;</span>
+#5.允许HTTP请求
 iptables -A INPUT -i eth0 -p tcp --dport 80 -m state --state NEW,ESTABLISHED -j ACCEPT
 iptables -A OUTPUT -o eth0 -p tcp --sport 80 -m state --state ESTABLISHED -j ACCEPT
 </pre>

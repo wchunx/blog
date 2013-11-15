@@ -27,18 +27,18 @@ featured: false
 
 
 
-<pre class="src src-sh"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#20851;&#38381;&#34394;&#25311;&#26426;</span>
+<pre class="example">#关闭虚拟机
 virsh destroy machine
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#21019;&#24314;&#26032;&#30913;&#30424;</span>
-qemu-img create -f qcow2 /home/wchunx/disk2.qcow2 $<span style="color: #2e8b57;">SIZE</span>
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#32534;&#36753;VM&#37197;&#32622;</span>
+#创建新磁盘
+qemu-img create -f qcow2 /home/wchunx/disk2.qcow2 $SIZE
+#编辑VM配置
 virsh edit machine
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#28155;&#21152;&#20197;&#19979;&#23383;&#27573;</span>
-&lt;disk <span style="color: #2e8b57;">type</span>=<span style="color: #8b7355;">'file'</span> <span style="color: #2e8b57;">device</span>=<span style="color: #8b7355;">'disk'</span>&gt;
-    &lt;source <span style="color: #2e8b57;">file</span>=<span style="color: #8b7355;">'/home/wchunx/disk2.qcow2'</span>/&gt;
-    &lt;target <span style="color: #2e8b57;">dev</span>=<span style="color: #8b7355;">'hdc'</span> <span style="color: #2e8b57;">bus</span>=<span style="color: #8b7355;">'ide'</span>/&gt;
+#添加以下字段
+&lt;disk type='file' device='disk'&gt;
+    &lt;source file='/home/wchunx/disk2.qcow2'/&gt;
+    &lt;target dev='hdc' bus='ide'/&gt;
 &lt;/disk&gt;
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#36864;&#20986;&#32534;&#36753;&#22120;&#65292;VM&#37325;&#26032;&#24320;&#26426;&#20250;&#33258;&#21160;&#21152;&#36733;&#26032;&#37197;&#32622;</span>
+#退出编辑器，VM重新开机会自动加载新配置
 virsh start machine
 </pre>
 

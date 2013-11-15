@@ -63,7 +63,7 @@ featured: false
 
 
 
-<pre class="src src-python"><span style="color: #1c86ee;">import</span> xml.etree.ElementTree <span style="color: #1c86ee;">as</span> ET
+<pre class="example">import xml.etree.ElementTree as ET
 </pre>
 
 </div>
@@ -119,65 +119,65 @@ attrib:节点属性，通常为字典类型 {'hash': '1cdf045c', 'name': 'testin
 </p>
 
 
-<pre class="src src-xml">&lt;?<span style="color: #1c86ee;">xml</span> <span style="color: #2e8b57;">version</span>=<span style="color: #8b7355;">"</span><span style="color: #8b7355;">1.0</span><span style="color: #8b7355;">"</span>?&gt;
-&lt;<span style="color: #cd9b1d;">doc</span>&gt;
-  &lt;<span style="color: #cd9b1d;">branch1</span> <span style="color: #2e8b57;">name</span>=<span style="color: #8b7355;">"</span><span style="color: #8b7355;">one</span><span style="color: #8b7355;">"</span> <span style="color: #2e8b57;">num</span>=<span style="color: #8b7355;">"</span><span style="color: #8b7355;">001</span><span style="color: #8b7355;">"</span>&gt;
+<pre class="example">&lt;?xml version="1.0"?&gt;
+&lt;doc&gt;
+  &lt;branch1 name="one" num="001"&gt;
      beijing
-  &lt;/<span style="color: #cd9b1d;">branch1</span>&gt;
-  &lt;<span style="color: #cd9b1d;">branch2</span> <span style="color: #2e8b57;">name</span>=<span style="color: #8b7355;">"</span><span style="color: #8b7355;">two</span><span style="color: #8b7355;">"</span> <span style="color: #2e8b57;">num</span>=<span style="color: #8b7355;">"</span><span style="color: #8b7355;">002</span><span style="color: #8b7355;">"</span>&gt;
-    &lt;<span style="color: #cd9b1d;">sub-branch2</span> <span style="color: #2e8b57;">name</span>=<span style="color: #8b7355;">"</span><span style="color: #8b7355;">twenty-one</span><span style="color: #8b7355;">"</span>&gt;
+  &lt;/branch1&gt;
+  &lt;branch2 name="two" num="002"&gt;
+    &lt;sub-branch2 name="twenty-one"&gt;
       heibei
-    &lt;/<span style="color: #cd9b1d;">sub-branch2</span>&gt;
-  &lt;/<span style="color: #cd9b1d;">branch2</span>&gt;
-  &lt;<span style="color: #cd9b1d;">branch3</span>&gt;shanghai&lt;/<span style="color: #cd9b1d;">branch3</span>&gt;
-&lt;/<span style="color: #cd9b1d;">doc</span>&gt;
+    &lt;/sub-branch2&gt;
+  &lt;/branch2&gt;
+  &lt;branch3&gt;shanghai&lt;/branch3&gt;
+&lt;/doc&gt;
 </pre>
 
 
-<pre class="src src-python"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#23548;&#20837;&#27169;&#22359;</span>
-<span style="color: #1c86ee;">import</span> xml.etree.ElementTree <span style="color: #1c86ee;">as</span> ET
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#33719;&#21462;ElementTree&#23545;&#35937;</span>
-<span style="color: #2e8b57;">tree</span> = ET.parse(r<span style="color: #8b7355;">"/home/wchunx/test.xml"</span>)
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#33719;&#21462;&#26681;&#33410;&#28857;</span>
-<span style="color: #2e8b57;">root</span> = tree.getroot()
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#22914;&#26524;&#35299;&#26512;xml&#26684;&#24335;&#30340;&#23383;&#31526;&#20018;&#65292;&#29992;fromstring()&#20989;&#25968;</span>
-&gt;&gt;&gt; ET.fromstring(<span style="color: #8b7355;">"&lt;root&gt;&lt;item&gt;One&lt;/item&gt;&lt;item&gt;Two&lt;/item&gt;&lt;item&gt;Three&lt;/item&gt;&lt;/root&gt;"</span>)
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#30452;&#25509;&#33719;&#21462;&#21040;&#26681;&#33410;&#28857;</span>
-&lt;Element <span style="color: #8b7355;">'root'</span> at 0xb6bcd6cc&gt;
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#19968;&#20010;&#33410;&#28857;&#30340;&#23383;&#33410;&#28857;&#24418;&#25104;&#19968;&#20010;&#21015;&#34920;&#65292;&#35775;&#38382;&#26681;&#33410;&#28857;&#30340;&#23376;&#33410;&#28857;</span>
-&gt;&gt;&gt; <span style="color: #1c86ee;">for</span> i <span style="color: #1c86ee;">in</span> <span style="color: #cd6600;">range</span>(0, <span style="color: #cd6600;">len</span>(root)):
-...     <span style="color: #1c86ee;">print</span> root[i].tag, root[i].text, root[i].attrib
+<pre class="example">#导入模块
+import xml.etree.ElementTree as ET
+#获取ElementTree对象
+tree = ET.parse(r"/home/wchunx/test.xml")
+#获取根节点
+root = tree.getroot()
+#如果解析xml格式的字符串，用fromstring()函数
+&gt;&gt;&gt; ET.fromstring("&lt;root&gt;&lt;item&gt;One&lt;/item&gt;&lt;item&gt;Two&lt;/item&gt;&lt;item&gt;Three&lt;/item&gt;&lt;/root&gt;")
+#直接获取到根节点
+&lt;Element 'root' at 0xb6bcd6cc&gt;
+#一个节点的字节点形成一个列表，访问根节点的子节点
+&gt;&gt;&gt; for i in range(0, len(root)):
+...     print root[i].tag, root[i].text, root[i].attrib
 ... 
 branch1 
      beijing
-   {<span style="color: #8b7355;">'num'</span>: <span style="color: #8b7355;">'001'</span>, <span style="color: #8b7355;">'name'</span>: <span style="color: #8b7355;">'one'</span>}
+   {'num': '001', 'name': 'one'}
 branch2 
-     {<span style="color: #8b7355;">'num'</span>: <span style="color: #8b7355;">'002'</span>, <span style="color: #8b7355;">'name'</span>: <span style="color: #8b7355;">'two'</span>}
+     {'num': '002', 'name': 'two'}
 branch3 shanghai {}
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">iter()&#26041;&#27861;&#21487;&#20197;&#33410;&#28857;&#36827;&#34892;&#28145;&#24230;&#36941;&#21382;&#65292;&#36941;&#21382;&#25152;&#26377;&#33410;&#28857;&#65292;&#21253;&#25324;&#33258;&#24049;&#65292;&#36820;&#22238;&#19968;&#20010;&#36845;&#20195;&#22120;&#23545;&#35937;</span>
-&gt;&gt;&gt; <span style="color: #1c86ee;">for</span> elem <span style="color: #1c86ee;">in</span> root.<span style="color: #cd6600;">iter</span>():
-...     <span style="color: #1c86ee;">print</span> elem.tag,elem.attrib
+#iter()方法可以节点进行深度遍历，遍历所有节点，包括自己，返回一个迭代器对象
+&gt;&gt;&gt; for elem in root.iter():
+...     print elem.tag,elem.attrib
 ... 
 doc {}
-branch1 {<span style="color: #8b7355;">'num'</span>: <span style="color: #8b7355;">'001'</span>, <span style="color: #8b7355;">'name'</span>: <span style="color: #8b7355;">'one'</span>}
-branch2 {<span style="color: #8b7355;">'num'</span>: <span style="color: #8b7355;">'002'</span>, <span style="color: #8b7355;">'name'</span>: <span style="color: #8b7355;">'two'</span>}
-sub-branch2 {<span style="color: #8b7355;">'name'</span>: <span style="color: #8b7355;">'twenty-one'</span>}
+branch1 {'num': '001', 'name': 'one'}
+branch2 {'num': '002', 'name': 'two'}
+sub-branch2 {'name': 'twenty-one'}
 branch3 {}
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">iter()&#65292;&#36941;&#21382;&#26377;&#25351;&#23450;&#26631;&#31614;&#30340;&#33410;&#28857;</span>
-&gt;&gt;&gt; <span style="color: #1c86ee;">for</span> elem <span style="color: #1c86ee;">in</span> root.<span style="color: #cd6600;">iter</span>(tag=<span style="color: #8b7355;">'branch2'</span>):
-...     <span style="color: #1c86ee;">print</span> elem.tag, elem.attrib     
+#iter()，遍历有指定标签的节点
+&gt;&gt;&gt; for elem in root.iter(tag='branch2'):
+...     print elem.tag, elem.attrib     
 ... 
-branch2 {<span style="color: #8b7355;">'num'</span>: <span style="color: #8b7355;">'002'</span>, <span style="color: #8b7355;">'name'</span>: <span style="color: #8b7355;">'two'</span>}
+branch2 {'num': '002', 'name': 'two'}
 &gt;&gt;&gt; 
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#21024;&#38500;&#33410;&#28857;,&#20004;&#31181;&#26041;&#27861;</span>
+#删除节点,两种方法
 &gt;&gt;&gt;root.remove(root[0])
-&gt;&gt;&gt;<span style="color: #1c86ee;">del</span> root[1]
+&gt;&gt;&gt;del root[1]
 
-&gt;&gt;&gt; <span style="color: #1c86ee;">for</span> elem <span style="color: #1c86ee;">in</span> root:
-...     <span style="color: #1c86ee;">print</span> elem
+&gt;&gt;&gt; for elem in root:
+...     print elem
 ... 
-&lt;Element <span style="color: #8b7355;">'branch2'</span> at 0xb6b5c5ac&gt;
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#21024;&#38500;&#26576;&#33410;&#28857;&#19979;&#30340;&#25152;&#26377;&#23376;&#33410;&#28857;</span>
+&lt;Element 'branch2' at 0xb6b5c5ac&gt;
+#删除某节点下的所有子节点
 &gt;&gt;&gt; root[0].clear()
 </pre>
 
@@ -192,20 +192,20 @@ branch2 {<span style="color: #8b7355;">'num'</span>: <span style="color: #8b7355
 
 
 
-<pre class="src src-python"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#21019;&#24314;&#33410;&#28857;&#65292;&#29992;Element()&#20989;&#25968;&#12290;&#21019;&#24314;root&#33410;&#28857;&#65292;&#25351;&#23450;tag&#20026;root</span>
-<span style="color: #2e8b57;">root</span> = ET.Element(<span style="color: #8b7355;">'root'</span>)
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#21019;&#24314;&#23376;&#33410;&#28857;&#65292;&#29238;&#33410;&#28857;&#20026;root.&#21019;&#24314;&#33410;&#28857;&#65292;&#28155;&#21152;&#21040;root&#19979;&#20004;&#27493;&#12290;</span>
-<span style="color: #2e8b57;">a</span> = ET.Element(<span style="color: #8b7355;">'one'</span>)
+<pre class="example">#创建节点，用Element()函数。创建root节点，指定tag为root
+root = ET.Element('root')
+#创建子节点，父节点为root.创建节点，添加到root下两步。
+a = ET.Element('one')
 root.append(a)
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">SubElement()&#20989;&#25968;&#19987;&#38376;&#29992;&#26469;&#21019;&#24314;&#23376;&#33410;&#28857;</span>
-<span style="color: #2e8b57;">b</span> = ET.SubElement(root, <span style="color: #8b7355;">'two'</span>)
-<span style="color: #2e8b57;">c</span> = ET.SubElement(root, <span style="color: #8b7355;">'three'</span>)
-<span style="color: #2e8b57;">d</span> = ET.SubElement(c, <span style="color: #8b7355;">'four'</span>)
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#33410;&#28857;&#21516;&#26679;&#25903;&#25345;&#20999;&#29255;&#25805;&#20316;&#65292;&#20197;&#21450;append,insert,remove&#26041;&#27861;</span>
-<span style="color: #2e8b57;">nodes</span> = root[0:2]
+#SubElement()函数专门用来创建子节点
+b = ET.SubElement(root, 'two')
+c = ET.SubElement(root, 'three')
+d = ET.SubElement(c, 'four')
+#节点同样支持切片操作，以及append,insert,remove方法
+nodes = root[0:2]
 root.remove(a)
 root.insert(0, a)
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">append,insert,remove&#30340;&#21442;&#25968;&#26159;&#33410;&#28857;&#32780;&#38750;tag,element is None&#26597;&#30475;&#33410;&#28857;&#23384;&#22312;&#65292;len(element)&#26597;&#30475;&#23376;&#33410;&#28857;&#25968;&#37327;</span>
+#append,insert,remove的参数是节点而非tag,element is None查看节点存在，len(element)查看子节点数量
 </pre>
 
 
@@ -228,19 +228,19 @@ root.getiterator()获取root和其下层全部子节点root,a,b,c,d的列表
 </p>
 
 
-<pre class="src src-python"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#28165;&#26224;&#21015;&#20986;&#29238;&#23376;&#33410;&#28857;&#30340;&#20851;&#31995;</span>
-&gt;&gt;&gt; <span style="color: #1c86ee;">for</span> parent <span style="color: #1c86ee;">in</span> root.getiterator():
-...     <span style="color: #1c86ee;">for</span> child <span style="color: #1c86ee;">in</span> parent:
-...             <span style="color: #1c86ee;">print</span> (parent, child)
+<pre class="example">#清晰列出父子节点的关系
+&gt;&gt;&gt; for parent in root.getiterator():
+...     for child in parent:
+...             print (parent, child)
 ... 
-(&lt;Element <span style="color: #8b7355;">'root'</span> at 0xb72541cc&gt;, &lt;Element <span style="color: #8b7355;">'one'</span> at 0xb725c18c&gt;)
-(&lt;Element <span style="color: #8b7355;">'root'</span> at 0xb72541cc&gt;, &lt;Element <span style="color: #8b7355;">'two'</span> at 0xb6b1adac&gt;)
-(&lt;Element <span style="color: #8b7355;">'root'</span> at 0xb72541cc&gt;, &lt;Element <span style="color: #8b7355;">'three'</span> at 0xb6b1e36c&gt;)
-(&lt;Element <span style="color: #8b7355;">'three'</span> at 0xb6b1e36c&gt;, &lt;Element <span style="color: #8b7355;">'four'</span> at 0xb6b1ad2c&gt;)
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#24314;&#31435;&#29238;&#23376;&#33410;&#28857;&#30340;&#26144;&#23556;&#20851;&#31995;</span>
-&gt;&gt;&gt; <span style="color: #2e8b57;">parent_map</span>=<span style="color: #cd6600;">dict</span>((c,p) <span style="color: #1c86ee;">for</span> p <span style="color: #1c86ee;">in</span> root.getiterator() <span style="color: #1c86ee;">for</span> c <span style="color: #1c86ee;">in</span> p)
+(&lt;Element 'root' at 0xb72541cc&gt;, &lt;Element 'one' at 0xb725c18c&gt;)
+(&lt;Element 'root' at 0xb72541cc&gt;, &lt;Element 'two' at 0xb6b1adac&gt;)
+(&lt;Element 'root' at 0xb72541cc&gt;, &lt;Element 'three' at 0xb6b1e36c&gt;)
+(&lt;Element 'three' at 0xb6b1e36c&gt;, &lt;Element 'four' at 0xb6b1ad2c&gt;)
+#建立父子节点的映射关系
+&gt;&gt;&gt; parent_map=dict((c,p) for p in root.getiterator() for c in p)
 &gt;&gt;&gt; parent_map
-{&lt;Element <span style="color: #8b7355;">'one'</span> at 0xb725c18c&gt;: &lt;Element <span style="color: #8b7355;">'root'</span> at 0xb72541cc&gt;, &lt;Element <span style="color: #8b7355;">'two'</span> at 0xb6b1adac&gt;: &lt;Element <span style="color: #8b7355;">'root'</span> at 0xb72541cc&gt;, &lt;Element <span style="color: #8b7355;">'four'</span> at 0xb6b1ad2c&gt;: &lt;Element <span style="color: #8b7355;">'three'</span> at 0xb6b1e36c&gt;, &lt;Element <span style="color: #8b7355;">'three'</span> at 0xb6b1e36c&gt;: &lt;Element <span style="color: #8b7355;">'root'</span> at 0xb72541cc&gt;}
+{&lt;Element 'one' at 0xb725c18c&gt;: &lt;Element 'root' at 0xb72541cc&gt;, &lt;Element 'two' at 0xb6b1adac&gt;: &lt;Element 'root' at 0xb72541cc&gt;, &lt;Element 'four' at 0xb6b1ad2c&gt;: &lt;Element 'three' at 0xb6b1e36c&gt;, &lt;Element 'three' at 0xb6b1e36c&gt;: &lt;Element 'root' at 0xb72541cc&gt;}
 </pre>
 
 </div>
@@ -255,28 +255,28 @@ root.getiterator()获取root和其下层全部子节点root,a,b,c,d的列表
 </p>
 
 
-<pre class="src src-python"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#27880;&#24847;&#23450;&#20041;&#26041;&#24335;first = '1',&#19981;&#33021;&#20889;&#25104;'first' = '1'</span>
-<span style="color: #2e8b57;">e</span> = ET.SubElement(root, <span style="color: #8b7355;">'five'</span>, first = <span style="color: #8b7355;">'1'</span>, second = <span style="color: #8b7355;">'2'</span>)
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#21487;&#20197;&#36890;&#36807;attrib.get,attrib.keys&#21644;attrib.items&#20197;&#21450;set&#26041;&#27861;&#26469;&#25805;&#20316;attribute</span>
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#33719;&#21462;'first'&#30340;&#20540;</span>
-<span style="color: #1c86ee;">print</span> e.attrib.get(<span style="color: #8b7355;">'first'</span>)
+<pre class="example">#注意定义方式first = '1',不能写成'first' = '1'
+e = ET.SubElement(root, 'five', first = '1', second = '2')
+#可以通过attrib.get,attrib.keys和attrib.items以及set方法来操作attribute
+#获取'first'的值
+print e.attrib.get('first')
 1
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#19978;&#27493;&#30340;&#31616;&#20889;&#24418;&#24335;</span>
-<span style="color: #1c86ee;">print</span> e.get(<span style="color: #8b7355;">'first'</span>)
+#上步的简写形式
+print e.get('first')
 1
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#38190;&#20540;&#21015;&#34920;&#65288;&#31616;&#20889;&#65289;</span>
-<span style="color: #1c86ee;">print</span> e.keys()
-[<span style="color: #8b7355;">'second'</span>, <span style="color: #8b7355;">'first'</span>]
-<span style="color: #1c86ee;">print</span> e.items()
-[(<span style="color: #8b7355;">'second'</span>, <span style="color: #8b7355;">'2'</span>), (<span style="color: #8b7355;">'first'</span>, <span style="color: #8b7355;">'1'</span>)]
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">'third'&#19981;&#23384;&#22312;</span>
-<span style="color: #1c86ee;">print</span> elem.get(<span style="color: #8b7355;">'third'</span>)
-<span style="color: #6e8b3d;">None</span>
-<span style="color: #1c86ee;">print</span> elem.get(<span style="color: #8b7355;">'third'</span>,<span style="color: #8b7355;">'default'</span>)
+#键值列表（简写）
+print e.keys()
+['second', 'first']
+print e.items()
+[('second', '2'), ('first', '1')]
+#'third'不存在
+print elem.get('third')
+None
+print elem.get('third','default')
 default
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#28155;&#21152;&#25968;&#25454;</span>
-elem.<span style="color: #cd6600;">set</span>(<span style="color: #8b7355;">'third'</span>,<span style="color: #8b7355;">'3'</span>)
-<span style="color: #1c86ee;">print</span> elem.get(<span style="color: #8b7355;">'third'</span>,<span style="color: #8b7355;">'default'</span>)
+#添加数据
+elem.set('third','3')
+print elem.get('third','default')
 3
 </pre>
 
@@ -292,8 +292,8 @@ elem.<span style="color: #cd6600;">set</span>(<span style="color: #8b7355;">'thi
 </p>
 
 
-<pre class="src src-python">&gt;&gt;&gt; <span style="color: #2e8b57;">f</span> = ET.SubElement(e, <span style="color: #8b7355;">'six'</span> ,ni = <span style="color: #8b7355;">'hello'</span>)
-&gt;&gt;&gt; <span style="color: #2e8b57;">f.text</span> = <span style="color: #8b7355;">'sample'</span>
+<pre class="example">&gt;&gt;&gt; f = ET.SubElement(e, 'six' ,ni = 'hello')
+&gt;&gt;&gt; f.text = 'sample'
 </pre>
 
 </div>
@@ -307,13 +307,13 @@ elem.<span style="color: #cd6600;">set</span>(<span style="color: #8b7355;">'thi
 
 
 
-<pre class="src src-python"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#23383;&#31526;&#20018;&#36716;&#21270;&#20026;Element&#65292;&#21487;&#20197;&#29992;XML()&#25110;fromstring()</span>
-<span style="color: #2e8b57;">text</span> = <span style="color: #8b7355;">"&lt;title font='large'&gt;A sample text window&lt;/title&gt;"</span>
-<span style="color: #2e8b57;">elem</span> = ET.XML(text)
-<span style="color: #2e8b57;">el</span> = ET.fromstring(text)
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">Element&#36716;&#21270;&#20026;&#23383;&#31526;&#20018;</span>
-<span style="color: #2e8b57;">text</span>=et.tostring(elem)
-<span style="color: #8b7355;">'&lt;title font="large"&gt;A sample text window&lt;/title&gt;'</span>
+<pre class="example">#字符串转化为Element，可以用XML()或fromstring()
+text = "&lt;title font='large'&gt;A sample text window&lt;/title&gt;"
+elem = ET.XML(text)
+el = ET.fromstring(text)
+#Element转化为字符串
+text=et.tostring(elem)
+'&lt;title font="large"&gt;A sample text window&lt;/title&gt;'
 </pre>
 
 </div>
@@ -328,20 +328,20 @@ elem.<span style="color: #cd6600;">set</span>(<span style="color: #8b7355;">'thi
 </p>
 
 
-<pre class="src src-python"><span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">indent</span>(elem, level=0):
-    <span style="color: #2e8b57;">i</span> = <span style="color: #8b7355;">"\n"</span> + level*<span style="color: #8b7355;">"  "</span>
-    <span style="color: #1c86ee;">if</span> <span style="color: #cd6600;">len</span>(elem):
-        <span style="color: #1c86ee;">if</span> <span style="color: #1c86ee;">not</span> elem.text <span style="color: #1c86ee;">or</span> <span style="color: #1c86ee;">not</span> elem.text.strip():
-            <span style="color: #2e8b57;">elem.text</span> = i + <span style="color: #8b7355;">"  "</span>
-        <span style="color: #1c86ee;">if</span> <span style="color: #1c86ee;">not</span> elem.tail <span style="color: #1c86ee;">or</span> <span style="color: #1c86ee;">not</span> elem.tail.strip():
-            <span style="color: #2e8b57;">elem.tail</span> = i
-        <span style="color: #1c86ee;">for</span> elem <span style="color: #1c86ee;">in</span> elem:
+<pre class="example">def indent(elem, level=0):
+    i = "\n" + level*"  "
+    if len(elem):
+        if not elem.text or not elem.text.strip():
+            elem.text = i + "  "
+        if not elem.tail or not elem.tail.strip():
+            elem.tail = i
+        for elem in elem:
             indent(elem, level+1)
-        <span style="color: #1c86ee;">if</span> <span style="color: #1c86ee;">not</span> elem.tail <span style="color: #1c86ee;">or</span> <span style="color: #1c86ee;">not</span> elem.tail.strip():
-            <span style="color: #2e8b57;">elem.tail</span> = i
-    <span style="color: #1c86ee;">else</span>:
-        <span style="color: #1c86ee;">if</span> level <span style="color: #1c86ee;">and</span> (<span style="color: #1c86ee;">not</span> elem.tail <span style="color: #1c86ee;">or</span> <span style="color: #1c86ee;">not</span> elem.tail.strip()):
-            <span style="color: #2e8b57;">elem.tail</span> = i
+        if not elem.tail or not elem.tail.strip():
+            elem.tail = i
+    else:
+        if level and (not elem.tail or not elem.tail.strip()):
+            elem.tail = i
 </pre>
 
 </div>
@@ -355,13 +355,13 @@ elem.<span style="color: #cd6600;">set</span>(<span style="color: #8b7355;">'thi
 
 
 
-<pre class="src src-python"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">dump&#29992;&#20110;&#23558;element&#25171;&#21360;&#21040;&#26631;&#20934;&#36755;&#20986;&#65292;This function should be used for debugging only.</span>
+<pre class="example">#dump用于将element打印到标准输出，This function should be used for debugging only.
 &gt;&gt;&gt; ET.dump(root)
-&lt;root&gt;&lt;one /&gt;&lt;two /&gt;&lt;three&gt;&lt;four /&gt;&lt;/three&gt;&lt;five <span style="color: #2e8b57;">first</span>=<span style="color: #8b7355;">"1"</span> <span style="color: #2e8b57;">second</span>=<span style="color: #8b7355;">"2"</span> <span style="color: #2e8b57;">third</span>=<span style="color: #8b7355;">"3"</span>&gt;&lt;six <span style="color: #2e8b57;">ni</span>=<span style="color: #8b7355;">"hello"</span>&gt;sample&lt;/six&gt;&lt;/five&gt;&lt;/root&gt;
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">ElementTree()&#26041;&#27861;&#30001;Element&#23545;&#35937;&#33719;&#21462;tree&#23545;&#35937;&#65292;tree&#23545;&#35937;&#30340;write()&#26041;&#27861;&#23558;xml&#20869;&#23481;&#20889;&#21040;&#25991;&#20214;&#25110;&#26631;&#20934;&#36755;&#20986;</span>
-&gt;&gt;&gt; <span style="color: #2e8b57;">tree</span> = ET.ElementTree(root)
-&gt;&gt;&gt; tree.write(<span style="color: #8b7355;">'good.xml'</span>)
-&gt;&gt;&gt; <span style="color: #1c86ee;">import</span> sys
+&lt;root&gt;&lt;one /&gt;&lt;two /&gt;&lt;three&gt;&lt;four /&gt;&lt;/three&gt;&lt;five first="1" second="2" third="3"&gt;&lt;six ni="hello"&gt;sample&lt;/six&gt;&lt;/five&gt;&lt;/root&gt;
+#ElementTree()方法由Element对象获取tree对象，tree对象的write()方法将xml内容写到文件或标准输出
+&gt;&gt;&gt; tree = ET.ElementTree(root)
+&gt;&gt;&gt; tree.write('good.xml')
+&gt;&gt;&gt; import sys
 &gt;&gt;&gt; tree.write(sys.stdout)
 </pre>
 
@@ -377,7 +377,7 @@ elem.<span style="color: #cd6600;">set</span>(<span style="color: #8b7355;">'thi
 
 
 
-<pre class="src src-python">&gt;&gt;&gt; indent(root)
+<pre class="example">&gt;&gt;&gt; indent(root)
 &gt;&gt;&gt; ET.dump(root)
 &lt;root&gt;
   &lt;one /&gt;
@@ -385,8 +385,8 @@ elem.<span style="color: #cd6600;">set</span>(<span style="color: #8b7355;">'thi
   &lt;three&gt;
     &lt;four /&gt;
   &lt;/three&gt;
-  &lt;five <span style="color: #2e8b57;">first</span>=<span style="color: #8b7355;">"1"</span> <span style="color: #2e8b57;">second</span>=<span style="color: #8b7355;">"2"</span> <span style="color: #2e8b57;">third</span>=<span style="color: #8b7355;">"3"</span>&gt;
-    &lt;six <span style="color: #2e8b57;">ni</span>=<span style="color: #8b7355;">"hello"</span>&gt;sample&lt;/six&gt;
+  &lt;five first="1" second="2" third="3"&gt;
+    &lt;six ni="hello"&gt;sample&lt;/six&gt;
   &lt;/five&gt;
 &lt;/root&gt;
 </pre>
@@ -459,32 +459,32 @@ getchildren() 返回当前节点的所有一级子节点组成的列表
 
 
 
-<pre class="src src-python"><span style="color: #1c86ee;">import</span> xml.etree.ElementTree <span style="color: #1c86ee;">as</span> ET
-<span style="color: #2e8b57;">root</span> = ET.Element(<span style="color: #8b7355;">'html'</span>)
-<span style="color: #2e8b57;">head</span> = ET.SubElement(root,<span style="color: #8b7355;">'head'</span>)
-<span style="color: #2e8b57;">title</span> = ET.SubElement(head,<span style="color: #8b7355;">'title'</span>)
-<span style="color: #2e8b57;">title.text</span> = <span style="color: #8b7355;">'Page Title'</span>
-<span style="color: #2e8b57;">body</span> = ET.SubElement(root,<span style="color: #8b7355;">'body'</span>)
-body.<span style="color: #cd6600;">set</span>(<span style="color: #8b7355;">'bgcolor'</span>,<span style="color: #8b7355;">'#ffffff'</span>)
-<span style="color: #2e8b57;">body.text</span> = <span style="color: #8b7355;">'Hello,world'</span>
-<span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">indent</span>(elem, level=0):
-    <span style="color: #2e8b57;">i</span> = <span style="color: #8b7355;">"\n"</span> + level*<span style="color: #8b7355;">"  "</span>
-    <span style="color: #1c86ee;">if</span> <span style="color: #cd6600;">len</span>(elem):
-        <span style="color: #1c86ee;">if</span> <span style="color: #1c86ee;">not</span> elem.text <span style="color: #1c86ee;">or</span> <span style="color: #1c86ee;">not</span> elem.text.strip():
-            <span style="color: #2e8b57;">elem.text</span> = i + <span style="color: #8b7355;">"  "</span>
-        <span style="color: #1c86ee;">if</span> <span style="color: #1c86ee;">not</span> elem.tail <span style="color: #1c86ee;">or</span> <span style="color: #1c86ee;">not</span> elem.tail.strip():
-            <span style="color: #2e8b57;">elem.tail</span> = i
-        <span style="color: #1c86ee;">for</span> elem <span style="color: #1c86ee;">in</span> elem:
+<pre class="example">import xml.etree.ElementTree as ET
+root = ET.Element('html')
+head = ET.SubElement(root,'head')
+title = ET.SubElement(head,'title')
+title.text = 'Page Title'
+body = ET.SubElement(root,'body')
+body.set('bgcolor','#ffffff')
+body.text = 'Hello,world'
+def indent(elem, level=0):
+    i = "\n" + level*"  "
+    if len(elem):
+        if not elem.text or not elem.text.strip():
+            elem.text = i + "  "
+        if not elem.tail or not elem.tail.strip():
+            elem.tail = i
+        for elem in elem:
             indent(elem, level+1)
-        <span style="color: #1c86ee;">if</span> <span style="color: #1c86ee;">not</span> elem.tail <span style="color: #1c86ee;">or</span> <span style="color: #1c86ee;">not</span> elem.tail.strip():
-            <span style="color: #2e8b57;">elem.tail</span> = i
-    <span style="color: #1c86ee;">else</span>:
-        <span style="color: #1c86ee;">if</span> level <span style="color: #1c86ee;">and</span> (<span style="color: #1c86ee;">not</span> elem.tail <span style="color: #1c86ee;">or</span> <span style="color: #1c86ee;">not</span> elem.tail.strip()):
-            <span style="color: #2e8b57;">elem.tail</span> = i
+        if not elem.tail or not elem.tail.strip():
+            elem.tail = i
+    else:
+        if level and (not elem.tail or not elem.tail.strip()):
+            elem.tail = i
 indent(root)
-<span style="color: #2e8b57;">tree</span>=ET.ElementTree(root)
-tree.write(<span style="color: #8b7355;">'no.xml'</span>)
-<span style="color: #1c86ee;">import</span> sys
+tree=ET.ElementTree(root)
+tree.write('no.xml')
+import sys
 tree.write(sys.stdout)
 </pre>
 
