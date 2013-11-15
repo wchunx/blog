@@ -1,3 +1,16 @@
+#+BEGIN_HTML
+---
+layout: post
+keywords: 
+description: 
+title: openstack agent 
+categories: [openstack]
+tags: [openstack]
+group: archive
+icon: [globe]
+featured: false
+---
+#+END_HTML
 * 初始状态
 ** ovs-vsctl show
 03d001c9-11ec-462d-929d-c2aacb9d9ded

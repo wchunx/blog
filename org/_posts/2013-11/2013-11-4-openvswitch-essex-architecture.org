@@ -7,7 +7,7 @@ title: openstack Essex架构
 categories: [openstack]
 tags: [openstack,esses]
 group: archive
-icon: openstack
+icon: globe
 featured: false
 ---
 #+END_HTML
