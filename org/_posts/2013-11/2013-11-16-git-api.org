@@ -12,6 +12,7 @@ featured: false
 ---
 #+END_HTML
 #+BEGIN_HTML
+<<a href="/images/2013-11/git-api.png" title="git-api">
 <img src ="/images/2013-11/git-api.png"/>
 #+END_HTML
 
