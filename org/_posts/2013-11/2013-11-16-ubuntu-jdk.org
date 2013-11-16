@@ -1,0 +1,52 @@
+#+BEGIN_HTML
+---
+layout: post
+keywords: 
+description: 
+title: ubuntu12.04安装和配置java JDK 
+categories: [java]
+tags: [java,jdk]
+group: archive
+icon: code
+featured: false
+---
+#+END_HTML
+* 下载
+先去[[http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html][Oracle]] 下载Linux下的JDK压缩包，我下载的是jdk-7u45-linux-x64.tar.gz文件，下好后直接解压
+* 安装
+** Step1:
+#+BEGIN_SRC sh
+#将压缩包解压到/usr/lib/jvm目录里
+tar xvzf jdk-7u45-linux-x64.tar.gz -C /usr/lib/jvm/
+#+END_SRC
+** Step2:
+#+BEGIN_SRC sh
+# 配置环境变量
+sudo vim /etc/profile
+#在文件的最后面增加如下四行：
+export JAVA_HOME=/usr/lib/jvm/jdk1.7.0_45
+export JRE_HOME=/usr/lib/jvm/jdk1.7.0_45/jre
+export PATH=$JAVA_HOME/bin:$JAVA_HOME/jre/bin:$PATH
+export CLASSPATH=$CLASSPATH:.:$JAVA_HOME/lib:$JAVA_HOME/jre/lib
+#+END_SRC
+** Step3:
+#+BEGIN_SRC sh
+# 将系统默认的jdk修改过来
+sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/jdk1.7.0_45/bin/java 300
+sudo update-alternatives --install /usr/bin/javac javac /usr/lib/jvm/jdk1.7.0_45/bin/javac 300
+sudo update-alternatives --config java
+#输入sun jdk前的数字
+sudo update-alternatives --config javac
+#显示Nothing to configure
+#+END_SRC
+** Step4:
+然后再输入java -version,看到如下信息，就说明改成sun的jdk了:
+#+BEGIN_SRC sh
+java version "1.7.0_45"
+Java(TM) SE Runtime Environment (build 1.7.0_45-b18)
+Java HotSpot(TM) 64-Bit Server VM (build 24.45-b08, mixed mode)
+#+END_SRC
+* 参考资料
+http://img.snail8.com/?p=461
+
+http://ivan-site.com/2012/05/download-oracle-java-jre-jdk-using-a-script/
