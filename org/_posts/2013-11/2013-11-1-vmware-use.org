@@ -11,15 +11,8 @@ icon: globe
 featured: false
 ---
 #+END_HTML
-* linux下vmware tools安装
-#+BEGIN_SRC sh
-mount /cdrom
-cp /cdrom/vmware-linux-tools.tar.gz /tmp
-cd /tmp
-tar zxvf vmware-linux-tools.tar.gz
-cd vmware-tools-distrib
-./vmware-install.pl
-#+END_SRC
+* vmdk转qcow2
+qemu-img convert -f vmdk VM.vmdk -O qcow2 VM.qcow2
 * vmware中ubuntu虚拟机增加磁盘
 本文主要介绍vmware为ubuntu虚拟机添加一块硬盘后，系统内挂载的过程。
 #+BEGIN_SRC sh

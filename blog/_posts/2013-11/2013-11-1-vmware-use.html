@@ -14,7 +14,7 @@ featured: false
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#sec-1">1 linux下vmware tools安装</a></li>
+<li><a href="#sec-1">1 vmdk转qcow2</a></li>
 <li><a href="#sec-2">2 vmware中ubuntu虚拟机增加磁盘</a></li>
 <li><a href="#sec-3">3 windows下vmware合并多个vmdx</a></li>
 <li><a href="#sec-4">4 VMWare安装Ubuntu 12.04开启虚拟机的Unity Mode模式</a>
@@ -32,21 +32,11 @@ featured: false
 </div>
 
 <div id="outline-container-1" class="outline-2">
-<h2 id="sec-1">linux下vmware tools安装</h2>
+<h2 id="sec-1">vmdk转qcow2</h2>
 <div class="outline-text-2" id="text-1">
 
-
-
-
-<pre class="example">mount /cdrom
-cp /cdrom/vmware-linux-tools.tar.gz /tmp
-cd /tmp
-tar zxvf vmware-linux-tools.tar.gz
-cd vmware-tools-distrib
-./vmware-install.pl
-</pre>
-
-</div>
+<p>qemu-img convert -f vmdk VM.vmdk -O qcow2 VM.qcow2
+</p></div>
 
 </div>
 
