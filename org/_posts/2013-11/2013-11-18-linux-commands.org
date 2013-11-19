@@ -3,7 +3,7 @@
 layout: post
 keywords: 
 description: 
-title: Linux常用名录  
+title: Linux常用命令
 categories: [linux]
 tags: [linux]
 group: archive
@@ -11,18 +11,18 @@ icon: compass
 featured: false
 ---
 #+END_HTML
-1. 用grep命令查找带有特定字符串的文件
++ 用grep命令查找带有特定字符串的文件
 grep -irl "jay"  .   在当前目录查找带jay字符的文件路径
-2. find查找带有特定字符串的文件
++ find查找带有特定字符串的文件
 find . | xargs grep "jay" 连带文件和字符串所在语句都会输出
-3. shell获取ip地址
++ shell获取ip地址
 ifconfig | grep 'inet addr:' | grep -v '127.0.0.1' | cut -d: -f2 | awk '{print $1}'
-4. shell替换文本中的字符串
++ shell替换文本中的字符串
 sed -i -e 's/CN/US/' locale 
-5. 查看端口
-+ netstate    -ntlp  查看端口情况
-+ lsof    -i:8443     查看8443端口给哪个进程所占用
-6. vi替换字符串
++ 查看端口
+netstate    -ntlp  查看端口情况 \\
+lsof    -i:8443     查看8443端口给哪个进程所占用
++ vi替换字符串
 ：%s/hello/nihao/g
-7. 查看系统是多少位的
++ 查看系统是多少位的
 getconf LONG_BIT

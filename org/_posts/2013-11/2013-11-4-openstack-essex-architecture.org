@@ -27,9 +27,9 @@ openstack是有一系列开源技术组合在一起提供了一个可扩展性�
 [[https://wiki.openstack.org/wiki/Releases][目前已发布的版本]]
 * 主要组件
 最初的openstack主要包含三个组件
-+ Object Store(*Swift*):提供对象存储。允许进行存储或者检索文件(但并不是像文件服务器那样挂载目录)。目前已经有几好家公司开始提供基于Swift商业存储服务，这些公司包括KT，Rackspace公司(Swift项目的发源地)和Internap，而且很多大公司内部也使用Swift来存储数据。
-+ Image(*Glance*):是一个虚拟机镜像的存储、查询和检索系统，它提供了一个虚拟磁盘映像的目录和存储库，这些磁盘映像常常广泛应用于OpenStack Compute之中，而且这种服务在技术上是属于可选的，任何规模的云都适用于它。
-+ Compute(*Nova*):根据需求提供虚拟服务。类似与亚马逊的Amazon Elastic Compute Cloud(EC2)。它还提供了类似与弹性块服务(EBS)的卷存储服务。
++ Object Store(*Swift*):提供对象存储。允许存储或者检索文件(但并不是像文件服务器那样挂载目录)。目前已经有几好家公司开始提供基于Swift商业存储服务，这些公司包括KT，Rackspace公司(Swift项目的发源地)和Internap，而且很多大公司内部也使用Swift来存储数据。
++ Image(*Glance*):是一个虚拟机镜像的存储、查询和检索系统，它提供了一个虚拟磁盘映像的目录和存储库，这些磁盘映像常常广泛应用于OpenStack Compute之中.
++ Compute(*Nova*):根据需求提供虚拟服务。类似于亚马逊的Amazon Elastic Compute Cloud(EC2)。它还提供了类似与弹性块服务(EBS)的卷存储服务。
 Essex版本中新添加的两个组件
 + Dashboard(*Horizon*):为所有OpenStack的服务提供了一个模块化的web-based用户界面。使用这个Web GUI，可以在云上完成大多数的操作，如启动实例，分配IP地址，设置访问控制等。
 + Identity(*Keystone*):为openstack服务提供身份认证和授权。它还提供了一个在特定OpenStack云服务上的服务目录。

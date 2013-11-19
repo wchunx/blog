@@ -2,53 +2,54 @@
 layout: post
 keywords: 
 description: 
-title: Linux常用名录  
+title: Linux常用命令
 categories: [linux]
 tags: [linux]
 group: archive
 icon: compass
 featured: false
 ---
-<ol>
+<ul>
 <li>用grep命令查找带有特定字符串的文件
 </li>
-</ol>
+</ul>
 
 <p>grep -irl "jay"  .   在当前目录查找带jay字符的文件路径
-</p><ol>
+</p><ul>
 <li>find查找带有特定字符串的文件
 </li>
-</ol>
+</ul>
 
 <p>find . | xargs grep "jay" 连带文件和字符串所在语句都会输出
-</p><ol>
+</p><ul>
 <li>shell获取ip地址
 </li>
-</ol>
+</ul>
 
 <p>ifconfig | grep 'inet addr:' | grep -v '127.0.0.1' | cut -d: -f2 | awk '{print $1}'
-</p><ol>
+</p><ul>
 <li>shell替换文本中的字符串
 </li>
-</ol>
+</ul>
 
 <p>sed -i -e 's/CN/US/' locale 
-</p><ol>
+</p><ul>
 <li>查看端口
 </li>
-<li>netstate    -ntlp  查看端口情况
-</li>
-<li>lsof    -i:8443     查看8443端口给哪个进程所占用
-</li>
+</ul>
+
+<p>netstate    -ntlp  查看端口情况 <br/>
+lsof    -i:8443     查看8443端口给哪个进程所占用
+</p><ul>
 <li>vi替换字符串
 </li>
-</ol>
+</ul>
 
 <p>：%s/hello/nihao/g
-</p><ol>
+</p><ul>
 <li>查看系统是多少位的
 </li>
-</ol>
+</ul>
 
 <p>getconf LONG<sub>BIT</sub>
 </p>
