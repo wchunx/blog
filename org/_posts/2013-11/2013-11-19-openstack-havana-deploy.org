@@ -1,0 +1,89 @@
+#+BEGIN_HTML
+---
+layout: post
+keywords: 
+description: 
+title: openstack havana all-in-one部署 
+categories: [openstack]
+tags: [openstack,havana]
+group: archive
+icon: compass
+featured: false
+---
+#+END_HTML
+* 部署环境
+64位ubuntu-12.04.3-server系统 \\
+双网卡
++ 外网eth0 192.168.150.8/24
++ 内网eth1 172.16.0.254/24
+双硬盘
+* 初始网卡配置
+为eth0和eth1配置IP
+#+BEGIN_SRC sh
+# cat /etc/network/interfaces
+auto lo
+iface lo inet loopback
+
+auto eth0
+iface eth0 inet static
+address 192.168.150.8
+netmask 255.255.255.0
+gateway 192.168.150.1
+dns-nameservers 8.8.8.8
+
+auto eth1
+iface eth1 inet static
+        address 172.16.0.254
+        netmask 255.255.255.0
+#+END_SRC
+
+#重启网络
+/etc/init.d/networking restart
+* 添加havana源
+#+BEGIN_SRC sh
+apt-get install ubuntu-cloud-keyring
+echo deb http://ubuntu-cloud.archive.canonical.com/ubuntu precise-updates/havana main >> /etc/apt/sources.list.d/havana.list
+echo deb http://ubuntu-cloud.archive.canonical.com/ubuntu precise-proposed/havana main >> /etc/apt/sources.list.d/havana.list
+apt-get update
+apt-get dist-upgrade
+#+END_SRC
+* 安装mysql和rabbitmq
+#+BEGIN_SRC sh
+#设置mysql root用户密码为123456
+echo mysql-server-5.5 mysql-server/root_password password 123456 | debconf-set-selections
+echo mysql-server-5.5 mysql-server/root_password_again password 123456 | debconf-set-selections
+apt-get -y install mysql-server python-mysqldb
+#允许外部访问mysql
+sed -i -e  "s/^\(bind-address\s*=\).*/\1 0.0.0.0/" /etc/mysql/my.cnf
+#重启mysql服务
+/etc/init.d/mysql restart
+apt-get -y install rabbitmq-server
+#+END_SRC
+* 安装和配置Keystone
+** 安装
+apt-get install -y keystone python-keystone python-keystoneclient
+** 创建数据库
+用户名和密码均为keystone
+#+BEGIN_SRC sh
+# mysql -uroot -pmysql
+mysql> create database keystone;
+mysql> grant all on keystone.* to 'keystone'@'%' identified by 'keystone';
+mysql> flush privileges; quit;
+#+END_SRC
+** 修改配置文件
+将
+#+BEGIN_HTML
+<a href="/images/2013-11/openstack_conf/keystone.conf">keystone.conf</a>
+#+END_HTML
+替换/etc/keystone/keystone.conf
+
+重启keystone
+/etc/init.d/keystone restart
+同步 keystone 表数据到 db 中:
+keystone-manage db_sync
+创建tenant、user、roles、service、endpoint的脚本
+#+BEGIN_HTML
+<a href="/images/2013-11/openstack_conf/keystone.sh">keystone.conf</a>
+#+END_HTML
+
+

@@ -1,0 +1,169 @@
+---
+layout: post
+keywords: 
+description: 
+title: openstack havana all-in-one部署 
+categories: [openstack]
+tags: [openstack,havana]
+group: archive
+icon: compass
+featured: false
+---
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 部署环境</a></li>
+<li><a href="#sec-2">2 初始网卡配置</a></li>
+<li><a href="#sec-3">3 添加havana源</a></li>
+<li><a href="#sec-4">4 安装mysql和rabbitmq</a></li>
+<li><a href="#sec-5">5 安装和配置Keystone</a>
+<ul>
+<li><a href="#sec-5-1">5.1 安装</a></li>
+<li><a href="#sec-5-2">5.2 创建数据库</a></li>
+<li><a href="#sec-5-3">5.3 修改配置文件</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">部署环境</h2>
+<div class="outline-text-2" id="text-1">
+
+<p>64位ubuntu-12.04.3-server系统 <br/>
+双网卡
+</p><ul>
+<li>外网eth0 192.168.150.8/24
+</li>
+<li>内网eth1 172.16.0.254/24
+</li>
+</ul>
+
+<p>双硬盘
+</p></div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">初始网卡配置</h2>
+<div class="outline-text-2" id="text-2">
+
+<p>为eth0和eth1配置IP
+</p>
+
+
+<pre class="example"># cat /etc/network/interfaces
+auto lo
+iface lo inet loopback
+
+auto eth0
+iface eth0 inet static
+address 192.168.150.8
+netmask 255.255.255.0
+gateway 192.168.150.1
+dns-nameservers 8.8.8.8
+
+auto eth1
+iface eth1 inet static
+        address 172.16.0.254
+        netmask 255.255.255.0
+</pre>
+
+
+<p>
+#重启网络
+/etc/init.d/networking restart
+</p></div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3">添加havana源</h2>
+<div class="outline-text-2" id="text-3">
+
+
+
+
+<pre class="example">apt-get install ubuntu-cloud-keyring
+echo deb http://ubuntu-cloud.archive.canonical.com/ubuntu precise-updates/havana main &gt;&gt; /etc/apt/sources.list.d/havana.list
+echo deb http://ubuntu-cloud.archive.canonical.com/ubuntu precise-proposed/havana main &gt;&gt; /etc/apt/sources.list.d/havana.list
+apt-get update
+apt-get dist-upgrade
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4">安装mysql和rabbitmq</h2>
+<div class="outline-text-2" id="text-4">
+
+
+
+
+<pre class="example">#设置mysql root用户密码为123456
+echo mysql-server-5.5 mysql-server/root_password password 123456 | debconf-set-selections
+echo mysql-server-5.5 mysql-server/root_password_again password 123456 | debconf-set-selections
+apt-get -y install mysql-server python-mysqldb
+#允许外部访问mysql
+sed -i -e  "s/^\(bind-address\s*=\).*/\1 0.0.0.0/" /etc/mysql/my.cnf
+#重启mysql服务
+/etc/init.d/mysql restart
+apt-get -y install rabbitmq-server
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-5" class="outline-2">
+<h2 id="sec-5">安装和配置Keystone</h2>
+<div class="outline-text-2" id="text-5">
+
+
+</div>
+
+<div id="outline-container-5-1" class="outline-3">
+<h3 id="sec-5-1">安装</h3>
+<div class="outline-text-3" id="text-5-1">
+
+<p>apt-get install -y keystone python-keystone python-keystoneclient
+</p></div>
+
+</div>
+
+<div id="outline-container-5-2" class="outline-3">
+<h3 id="sec-5-2">创建数据库</h3>
+<div class="outline-text-3" id="text-5-2">
+
+<p>用户名和密码均为keystone
+</p>
+
+
+<pre class="example"># mysql -uroot -pmysql
+mysql&gt; create database keystone;
+mysql&gt; grant all on keystone.* to 'keystone'@'%' identified by 'keystone';
+mysql&gt; flush privileges; quit;
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-5-3" class="outline-3">
+<h3 id="sec-5-3">修改配置文件</h3>
+<div class="outline-text-3" id="text-5-3">
+
+<p>将
+<a href="/images/2013-11/openstack_conf/keystone.conf">keystone.conf</a>
+
+
+
+
+</p></div>
+</div>
+</div>
