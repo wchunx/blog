@@ -41,11 +41,12 @@ iface eth1 inet static
 /etc/init.d/networking restart
 * 添加havana源
 #+BEGIN_SRC sh
-apt-get install ubuntu-cloud-keyring
-echo deb http://ubuntu-cloud.archive.canonical.com/ubuntu precise-updates/havana main >> /etc/apt/sources.list.d/havana.list
-echo deb http://ubuntu-cloud.archive.canonical.com/ubuntu precise-proposed/havana main >> /etc/apt/sources.list.d/havana.list
-apt-get update
-apt-get dist-upgrade
+#apt-get install ubuntu-cloud-keyring
+#echo deb http://ubuntu-cloud.archive.canonical.com/ubuntu precise-updates/havana main >> /etc/apt/sources.list.d/havana.list
+#echo deb http://ubuntu-cloud.archive.canonical.com/ubuntu precise-proposed/havana main >> /etc/apt/sources.list.d/havana.list
+apt-get install python-software-properties
+add-apt-repository cloud-archive:havana
+apt-get update && apt-get dist-upgrade
 #+END_SRC
 * 安装mysql和rabbitmq
 #+BEGIN_SRC sh
@@ -59,31 +60,296 @@ sed -i -e  "s/^\(bind-address\s*=\).*/\1 0.0.0.0/" /etc/mysql/my.cnf
 /etc/init.d/mysql restart
 apt-get -y install rabbitmq-server
 #+END_SRC
+rabbitmq-server默认会创建一个用户，用户名密码均为guest，并允许任何人用guest用户和默认密码访问RabbitMQ server。
+修改guest密码的命令
+#+BEGIN_SRC sh
+rabbitmqctl change_password guest NEW_PASS
+#+END_SRC
 * 安装和配置Keystone
 ** 安装
-apt-get install -y keystone python-keystone python-keystoneclient
+apt-get install -y keystone
+** 删除默认keystone的sqlite db 文件
+#+BEGIN_SRC sh
+rm -f /var/lib/keystone/keystone.sqlite
+#+END_SRC
 ** 创建数据库
 用户名和密码均为keystone
 #+BEGIN_SRC sh
-# mysql -uroot -pmysql
-mysql> create database keystone;
-mysql> grant all on keystone.* to 'keystone'@'%' identified by 'keystone';
-mysql> flush privileges; quit;
+# mysql -u root -p
+mysql> CREATE DATABASE keystone;
+mysql> GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'localhost' \
+IDENTIFIED BY 'keystone';
+mysql> GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'%' \
+IDENTIFIED BY 'keystone';
 #+END_SRC
 ** 修改配置文件
-将
-#+BEGIN_HTML
-<a href="/images/2013-11/openstack_conf/keystone.conf">keystone.conf</a>
-#+END_HTML
-替换/etc/keystone/keystone.conf
-
-重启keystone
-/etc/init.d/keystone restart
-同步 keystone 表数据到 db 中:
+*** 配置认证服务与其它服务的token认证
+openssk产生随机token
+#+BEGIN_SRC sh
+openssl rand -hex 10
+2c006f393f3775b503f4
+#+END_SRC
+修改/etc/keystone/keystone.conf,[DEFAULT]admin_token值替换为openssl产生的， 修改[sql]的connection.
+#+BEGIN_SRC sh
+[DEFAULT]
+admin_token = 2c006f393f3775b503f4
+...
+[sql]
+# The SQLAlchemy connection string used to connect to the database
+connection = mysql://keystone:keystone@172.16.0.254/keystone
+...
+#+END_SRC
+*** 同步keystone表数据到db中并重启keystone
+#+BEGIN_SRC sh
 keystone-manage db_sync
-创建tenant、user、roles、service、endpoint的脚本
-#+BEGIN_HTML
-<a href="/images/2013-11/openstack_conf/keystone.sh">keystone.conf</a>
-#+END_HTML
+/etc/init.d/keystone restart
+#+END_SRC
+** 创建tenant、user、roles
+*** 首先创建两个环境变量
+#+BEGIN_SRC sh
+export OS_SERVICE_TOKEN=2c006f393f3775b503f4
+export OS_SERVICE_ENDPOINT=http://172.16.0.254:35357/v2.0
+#+END_SRC
+***  创建admin和service两个租户
+#+BEGIN_SRC sh
+keystone tenant-create --name=admin --description="Admin Tenant"
+keystone tenant-create --name=service --description="Service Tenant"
+#+END_SRC
+*** 创建用户admin，密码password 
+#+BEGIN_SRC sh
+keystone user-create --name=admin --pass=password \
+--email=admin@126.com
+#+END_SRC
+*** 创建角色admin
+#+BEGIN_SRC sh
+keystone role-create --name=admin
+#+END_SRC
+*** 关联用户、角色、租户
+#+BEGIN_SRC sh
+keystone user-role-add --user=admin --tenant=admin --role=admin
+#+END_SRC
+** 创建Services 及 API endpoints
+首先创建一个类型为identity的keystone服务，名称为keystone：
+#+BEGIN_SRC sh
+keystone service-create --name=keystone --type=identity \
+--description="Keystone Identity Service"
+#+END_SRC
+创建endpoint
+#+BEGIN_SRC sh
+keystone endpoint-create \
+--service-id=the_service_id_above \
+--publicurl=http://172.16.0.254:5000/v2.0 \
+--internalurl=http://172.16.0.254:5000/v2.0 \
+--adminurl=http://172.16.0.254:35357/v2.0
+#+END_SRC
+** 验证认证服务(Keystone)安装是否成功
+先unset之前的环境变量：
+#+BEGIN_SRC sh
+unset OS_SERVICE_TOKEN OS_SERVICE_ENDPOINT
+#+END_SRC
+创建keystonerc文件(环境变量)
+#+BEGIN_SRC sh
+cat > keystonerc << _EOF_
+OS_USERNAME=admin
+OS_PASSWORD=password
+OS_TENANT_NAME=admin
+OS_AUTH_URL=http://172.16.0.254:35357/v2.0
+_EOF_
+source keystonerc
+#+END_SRC
+验证keystone是否正常
+#+BEGIN_SRC sh
+keystone token
+keystone user-list
+keystone role-list
+keystone tenant-list
+keystone endpoint-list
+#+END_SRC
+* 安装和配置glance
+** 安装
+#+BEGIN_SRC sh
+apt-get install glance
+#+END_SRC
+删除 glance sqlite 文件：
+#+BEGIN_SRC sh
+rm -f /var/lib/glance/glance.sqlite
+#+END_SRC
+** 创建 glance 数据库
+用户名密码均为glance
+#+BEGIN_SRC sh
+mysql -u root -p
+mysql> CREATE DATABASE glance;
+mysql> GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'localhost' \
+IDENTIFIED BY 'glance';
+mysql> GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'%' \
+IDENTIFIED BY 'glance';
+#+END_SRC
+** 修改glance配置文件
+修改/etc/glance/glance-api.conf
+#+BEGIN_SRC sh
+verbose = True
+debug = True
+sql_connection = mysql://glance:glance@172.16.0.254/glance
+[keystone_authtoken]
+auth_host = 172.16.0.254
+auth_port = 35357
+auth_protocol = http
+admin_tenant_name = service
+admin_user = glance
+admin_password = glance
+#+END_SRC
+修改/etc/glance/glance-registry.conf
+#+BEGIN_SRC sh
+verbose = True
+debug = True
+sql_connection = mysql://glance:glance@172.16.0.254/glance
+[keystone_authtoken]
+auth_host = 172.16.0.254
+auth_port = 35357
+auth_protocol = http
+admin_tenant_name = service
+admin_user = glance
+admin_password = glance
+#+END_SRC
+** 同步数据库
+#+BEGIN_SRC sh
+glance-manage db_sync
+#+END_SRC
 
+** 创建名为glance的认证用户
+#+BEGIN_SRC sh
+keystone user-create --name=glance --pass=glance \
+--email=glance@126.com
+keystone user-role-add --user=glance --tenant=service --role=admin
+#+END_SRC
+配置/etc/glance/glance-api-paste.ini和/etc/glance/glance-registry-paste.ini.两个文件都修改[filter:authtoken]部分如下:
+#+BEGIN_SRC sh
+[filter:authtoken]
+paste.filter_factory=keystoneclient.middleware.auth_token:filter_factory
+auth_host=172.16.0.254
+admin_user=glance
+admin_tenant_name=service
+admin_password=glance
+#+END_SRC
+** 创建service服务和endpoint
+#+BEGIN_SRC sh
+keystone service-create --name=glance --type=image \
+--description="Glance Image Service"
+#+END_SRC
+记录下service id,下面创建endpoint要用到
+#+BEGIN_SRC sh
+keystone endpoint-create \
+--service-id=the_service_id_above \
+--publicurl=http://172.16.0.254:9292 \
+--internalurl=http://172.16.0.254:9292 \
+--adminurl=http://172.16.0.254:9292
+#+END_SRC
+** 重启glance服务
+#+BEGIN_SRC sh
+service glance-registry restart
+service glance-api restart
+#+END_SRC
+** 上传镜像
+下载测试镜像
+#+BEGIN_SRC sh
+wget http://cdn.download.cirros-cloud.net/0.3.1/cirros-0.3.1-x86_64-
+disk.img
+#+END_SRC
+上传
+#+BEGIN_SRC sh
+glance image-create --name='cirros' --is-public true --container-format bare --disk-format qcow2 < ./cirros-0.3.0-x86_64-disk.img
+#+END_SRC
+查看上传的镜像
+#+BEGIN_SRC sh
+glance image-list
+#+END_SRC
+* 安装和配置nova
+** 安装计算服务
+#+BEGIN_SRC sh
+apt-get install nova-novncproxy novnc nova-api \
+nova-ajax-console-proxy nova-cert nova-conductor \
+nova-consoleauth nova-doc nova-scheduler
+apt-get install nova-compute-kvm python-guestfs
+#+END_SRC
+** 修复guestfs的一个bug
+#+BEGIN_SRC sh
+chmod 0644 /boot/vmlinuz*
+#+END_SRC
+** 删除默认nova的sqlite db文件
+#+BEGIN_SRC sh
+rm -f /var/lib/keystone/nova.sqlite
+#+END_SRC
+** 创建数据库
+#+BEGIN_SRC sh
+mysql -u root -p
+mysql> CREATE DATABASE nova;
+mysql> GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'localhost' \
+IDENTIFIED BY 'nova';
+mysql> GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'%' \
+IDENTIFIED BY 'nova';
+#+END_SRC
+** 修改配置文件
+修改/etc/nova/nova.conf
+#+BEGIN_SRC sh
+[DEFAULT]
+my_ip=192.168.150.8
+vncserver_listen=0.0.0.0
+vncserver_proxyclient_address=172.16.0.254
+novncproxy_base_url=http://192.168.150.8:6080/vnc_auto.html
+auth_strategy=keystone
+rpc_backend = nova.rpc.impl_kombu
+rabbit_host = 172.16.0.254
+glance_host = 172.16.0.254
+[database]
+connection = mysql://nova:nova@172.16.0.254/nova
+#+END_SRC
+修该/etc/nova/api-paste.ini的[filter:authtoken]部分
+#+BEGIN_SRC sh
+[filter:authtoken]
+paste.filter_factory=keystoneclient.middleware.auth_token:filter_factory
+auth_host=172.16.0.254
+auth_port = 35357
+auth_protocol = http
+auth_uri=http://172.16.0.254:5000
+admin_tenant_name=service
+admin_user=nova
+admin_password=nova
+#+END_SRC
+** 创建用户与角色
+#+BEGIN_SRC sh
+keystone user-create --name=nova --pass=nova --email=nova@126.
+com
+keystone user-role-add --user=nova --tenant=service --role=admin
+#+END_SRC
+** 创建service服务和endpoint
+#+BEGIN_SRC sh
+keystone service-create --name=nova --type=compute \
+--description="Nova Compute service"
+#+END_SRC
+记下service id
+#+BEGIN_SRC sh
+keystone endpoint-create \
+--service-id=the_service_id_above \
+--publicurl=http://172.16.0.254:8774/v2/%\(tenant_id\)s \
+--internalurl=http://172.16.0.254:8774/v2/%\(tenant_id\)s \
+--adminurl=http://172.16.0.254:8774/v2/%\(tenant_id\)s
+#+END_SRC
+** 重启nova服务
+同步数据
+#+BEGIN_SRC sh
+nova-manage db sync
+#+END_SRC
+重启服务
+#+BEGIN_SRC sh
+cd /etc/init.d/; for i in $( ls nova-* ); do sudo service $i restart; done
+#+END_SRC
+测试nova是否安装正常
+#+BEGIN_SRC sh
+nova image-list
+#+END_SRC
+* 安装和配置neutron
+* 其他
+hostname
+
+ntp
 
