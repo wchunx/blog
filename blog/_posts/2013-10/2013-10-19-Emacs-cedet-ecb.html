@@ -59,10 +59,10 @@ featured: false
 </p>
 
 
-<pre class="example">Byte-compiling ECB with LOADPATH= ...
-emacs -batch -no-site-file -l ecb-compile-script --eval '(ecb-byte-compile t)'
+<pre class="src src-sh">Byte-compiling ECB with <span style="color: #2e8b57;">LOADPATH</span>= ...
+emacs -batch -no-site-file -l ecb-compile-script --eval <span style="color: #8b7355;">'(ecb-byte-compile t)'</span>
 Cannot open load file: /home/latelee/.emacs.d/ecb-2.40/c:/Programme/emacs-22.3/site-lisp/package-development/cedet/common/cedet.el
-make: *** [ecb] 错误 255
+make: *** [ecb] &#38169;&#35823; 255
 </pre>
 
 <p>
@@ -76,7 +76,7 @@ ecb依赖于cedet的,修改Makefile文件，51行CEDET=这一行，它的默认�
 </p>
 
 
-<pre class="example">Error: ECB can only be used with cedet [1.0pre6, 1.0.9]! Please install it and restart Emacs!
+<pre class="src src-sh">Error: ECB can only be used with cedet [1.0pre6, 1.0.9]! Please install it and restart Emacs!
 </pre>
 
 <p>
@@ -132,70 +132,70 @@ ecb依赖于cedet的,修改Makefile文件，51行CEDET=这一行，它的默认�
 </p>
 
 
-<pre class="example">;cedet
-(load-file "~/.emacs.d/plugins/cedet-1.1/common/cedet.el")
+<pre class="src src-elisp"><span style="color: #7f7f7f;">;</span><span style="color: #7f7f7f;">cedet</span>
+(load-file <span style="color: #8b7355;">"~/.emacs.d/plugins/cedet-1.1/common/cedet.el"</span>)
 
-;ecb
-(add-to-list 'load-path "~/.emacs.d/plugins/ecb-2.40")
-(require 'ecb)
+<span style="color: #7f7f7f;">;</span><span style="color: #7f7f7f;">ecb</span>
+(add-to-list 'load-path <span style="color: #8b7355;">"~/.emacs.d/plugins/ecb-2.40"</span>)
+(<span style="color: #1c86ee;">require</span> '<span style="color: #6e8b3d;">ecb</span>)
 (setq stack-trace-on-error nil)
-;鼠标支持：Emacs中执行“M-x ecb-customize-most-important”，找到“Ecb Primary Secondary Mouse Buttons”选项，将其设为“Primary: mouse-1, secondary: mouse-2”，并且&gt;以“Save for Future Sessions”保存。
-;;;自动启动ecb
-;; (setq ecb-auto-activate t)
-;;;F7:打开ecb
+<span style="color: #7f7f7f;">;</span><span style="color: #7f7f7f;">&#40736;&#26631;&#25903;&#25345;&#65306;Emacs&#20013;&#25191;&#34892;&#8220;M-x ecb-customize-most-important&#8221;&#65292;&#25214;&#21040;&#8220;Ecb Primary Secondary Mouse Buttons&#8221;&#36873;&#39033;&#65292;&#23558;&#20854;&#35774;&#20026;&#8220;Primary: mouse-1, secondary: mouse-2&#8221;&#65292;&#24182;&#19988;&gt;&#20197;&#8220;Save for Future Sessions&#8221;&#20445;&#23384;&#12290;</span>
+<span style="color: #7f7f7f;">;;;</span><span style="color: #7f7f7f;">&#33258;&#21160;&#21551;&#21160;ecb</span>
+<span style="color: #7f7f7f;">;; </span><span style="color: #7f7f7f;">(setq ecb-auto-activate t)</span>
+<span style="color: #7f7f7f;">;;;</span><span style="color: #7f7f7f;">F7:&#25171;&#24320;ecb</span>
 (global-set-key  [(f7)] 'ecb-activate)
-;;;F8:关闭ecb
+<span style="color: #7f7f7f;">;;;</span><span style="color: #7f7f7f;">F8:&#20851;&#38381;ecb</span>
 (global-set-key  [(f8)] 'ecb-deactivate)
-;关闭ecb启动窗口
+<span style="color: #7f7f7f;">;</span><span style="color: #7f7f7f;">&#20851;&#38381;ecb&#21551;&#21160;&#31383;&#21475;</span>
 (setq ecb-tip-of-the-day nil)
 
-;安装cscope apt-get install cscope                                   
-;cscope
-(load-file "~/.emacs.d/plugins/xcscope.el")
-(require 'xcscope)
+<span style="color: #7f7f7f;">;</span><span style="color: #7f7f7f;">&#23433;&#35013;cscope apt-get install cscope                                   </span>
+<span style="color: #7f7f7f;">;</span><span style="color: #7f7f7f;">cscope</span>
+(load-file <span style="color: #8b7355;">"~/.emacs.d/plugins/xcscope.el"</span>)
+(<span style="color: #1c86ee;">require</span> '<span style="color: #6e8b3d;">xcscope</span>)
 (setq cscope-do-not-update-database t)
 
-;yasnippet
+<span style="color: #7f7f7f;">;</span><span style="color: #7f7f7f;">yasnippet</span>
 (add-to-list 'load-path
-             "~/.emacs.d/plugins/yasnippet")
-(require 'yasnippet)
+             <span style="color: #8b7355;">"~/.emacs.d/plugins/yasnippet"</span>)
+(<span style="color: #1c86ee;">require</span> '<span style="color: #6e8b3d;">yasnippet</span>)
 (yas-global-mode 1)
 
 (add-to-list 'load-path
-             "~/.emacs.d/plugins/pos-tip")
+             <span style="color: #8b7355;">"~/.emacs.d/plugins/pos-tip"</span>)
 (add-to-list 'load-path
-             "~/.emacs.d/plugins/fuzzy-el")
+             <span style="color: #8b7355;">"~/.emacs.d/plugins/fuzzy-el"</span>)
 (add-to-list 'load-path
-             "~/.emacs.d/plugins/popup-el")
+             <span style="color: #8b7355;">"~/.emacs.d/plugins/popup-el"</span>)
 (add-to-list 'load-path
-             "~/.emacs.d/plugins/auto-complete")
+             <span style="color: #8b7355;">"~/.emacs.d/plugins/auto-complete"</span>)
 
-;加载auto-complete及内置模版
-(require 'auto-complete-config)
+<span style="color: #7f7f7f;">;</span><span style="color: #7f7f7f;">&#21152;&#36733;auto-complete&#21450;&#20869;&#32622;&#27169;&#29256;</span>
+(<span style="color: #1c86ee;">require</span> '<span style="color: #6e8b3d;">auto-complete-config</span>)
 (add-to-list 'ac-dictionary-directories
-        "~/.emacs.d/plugins/auto-complete/dict")
+        <span style="color: #8b7355;">"~/.emacs.d/plugins/auto-complete/dict"</span>)
 (ac-config-default)
 
-;quick-help,默认就是打开的
-;(setq ac-use-quick-help t)
-;(setq ac-quick-help-delay 1.0)
+<span style="color: #7f7f7f;">;</span><span style="color: #7f7f7f;">quick-help,&#40664;&#35748;&#23601;&#26159;&#25171;&#24320;&#30340;</span>
+<span style="color: #7f7f7f;">;</span><span style="color: #7f7f7f;">(setq ac-use-quick-help t)</span>
+<span style="color: #7f7f7f;">;</span><span style="color: #7f7f7f;">(setq ac-quick-help-delay 1.0)</span>
 
-;使用增强popup列表,pos-tip模式
-(require 'pos-tip)
-(setq ac-quick-help-prefer-pos-tip t)   ;default is t
+<span style="color: #7f7f7f;">;</span><span style="color: #7f7f7f;">&#20351;&#29992;&#22686;&#24378;popup&#21015;&#34920;,pos-tip&#27169;&#24335;</span>
+(<span style="color: #1c86ee;">require</span> '<span style="color: #6e8b3d;">pos-tip</span>)
+(setq ac-quick-help-prefer-pos-tip t)   <span style="color: #7f7f7f;">;</span><span style="color: #7f7f7f;">default is t</span>
 
-;关闭自动触发补全，定义TAB为触发键
-(setq ac-auto-start nil)   ;auto complete using clang is CPU sensitive
-(ac-set-trigger-key "&lt;tab&gt;")
+<span style="color: #7f7f7f;">;</span><span style="color: #7f7f7f;">&#20851;&#38381;&#33258;&#21160;&#35302;&#21457;&#34917;&#20840;&#65292;&#23450;&#20041;TAB&#20026;&#35302;&#21457;&#38190;</span>
+(setq ac-auto-start nil)   <span style="color: #7f7f7f;">;</span><span style="color: #7f7f7f;">auto complete using clang is CPU sensitive</span>
+(ac-set-trigger-key <span style="color: #8b7355;">"&lt;tab&gt;"</span>)
 
-;设置tab键的使用模式
+<span style="color: #7f7f7f;">;</span><span style="color: #7f7f7f;">&#35774;&#32622;tab&#38190;&#30340;&#20351;&#29992;&#27169;&#24335;</span>
 (setq ac-dwim t)
 
-;使用backspace后，ac补全就消失，设置backspace删除后仍可出发补全
+<span style="color: #7f7f7f;">;</span><span style="color: #7f7f7f;">&#20351;&#29992;backspace&#21518;&#65292;ac&#34917;&#20840;&#23601;&#28040;&#22833;&#65292;&#35774;&#32622;backspace&#21024;&#38500;&#21518;&#20173;&#21487;&#20986;&#21457;&#34917;&#20840;</span>
 (setq ac-trigger-commands
       (cons 'backward-delete-char-untabify ac-trigger-commands))
 
-;fuzzy功能，输入错误信息也能模糊匹配
+<span style="color: #7f7f7f;">;</span><span style="color: #7f7f7f;">fuzzy&#21151;&#33021;&#65292;&#36755;&#20837;&#38169;&#35823;&#20449;&#24687;&#20063;&#33021;&#27169;&#31946;&#21305;&#37197;</span>
 (setq ac-fuzzy-enable t)
 </pre>
 
