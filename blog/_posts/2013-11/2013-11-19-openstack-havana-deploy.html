@@ -25,7 +25,7 @@ featured: false
 <li><a href="#sec-5-3">5.3 创建数据库</a></li>
 <li><a href="#sec-5-4">5.4 修改配置文件</a>
 <ul>
-<li><a href="#sec-5-4-1">5.4.1 配置认证服务与其它服务的token认证</a></li>
+<li><a href="#sec-5-4-1">5.4.1 修改/etc/keystone/keystone.conf</a></li>
 <li><a href="#sec-5-4-2">5.4.2 同步keystone表数据到db中并重启keystone</a></li>
 </ul>
 </li>
@@ -84,7 +84,7 @@ featured: false
 <li><a href="#sec-9-3">9.3 安装网络服务</a>
 <ul>
 <li><a href="#sec-9-3-1">9.3.1 安装neutron组件</a></li>
-<li><a href="#sec-9-3-2">9.3.2 打开ip<sub>forward</sub></a></li>
+<li><a href="#sec-9-3-2">9.3.2 打开ip_forward</a></li>
 <li><a href="#sec-9-3-3">9.3.3 编辑配置文件</a></li>
 </ul>
 </li>
@@ -112,7 +112,8 @@ featured: false
 <li><a href="#sec-10-5">10.5 创建用户和角色</a></li>
 <li><a href="#sec-10-6">10.6 创建服务和endpoint</a></li>
 <li><a href="#sec-10-7">10.7 重启服务</a></li>
-<li><a href="#sec-10-8">10.8 创建和管理stacks</a></li>
+<li><a href="#sec-10-8">10.8 创建openrc</a></li>
+<li><a href="#sec-10-9">10.9 创建和管理stacks</a></li>
 </ul>
 </li>
 <li><a href="#sec-11">11 Metering/Monitoring Server（Ceilometer）安装</a>
@@ -125,7 +126,12 @@ featured: false
 </ul>
 </li>
 <li><a href="#sec-12">12 安装horizon</a></li>
-<li><a href="#sec-13">13 其他</a></li>
+<li><a href="#sec-13">13 参考资料</a>
+<ul>
+<li><a href="#sec-13-1">13.1 heat</a></li>
+</ul>
+</li>
+<li><a href="#sec-14">14 其他</a></li>
 </ul>
 </div>
 </div>
@@ -137,7 +143,7 @@ featured: false
 <p>64位ubuntu-12.04.3-server系统 <br/>
 双网卡
 </p><ul>
-<li>外网eth0 192.168.150.8/24
+<li>外网eth0 192.168.150.9/24
 </li>
 <li>内网eth1 172.16.0.254/24
 </li>
@@ -162,7 +168,7 @@ iface lo inet loopback
 
 auto eth0
 iface eth0 inet static
-address 192.168.150.8
+address 192.168.150.9
 netmask 255.255.255.0
 gateway 192.168.150.1
 dns-nameservers 8.8.8.8
@@ -173,11 +179,15 @@ iface eth1 inet static
         netmask 255.255.255.0
 </pre>
 
-
 <p>
-#重启网络
-/etc/init.d/networking restart
-</p></div>
+重启网络
+</p>
+
+
+<pre class="src src-sh">/etc/init.d/networking restart
+</pre>
+
+</div>
 
 </div>
 
@@ -239,8 +249,13 @@ rabbitmq-server默认会创建一个用户，用户名密码均为guest，并允
 <h3 id="sec-5-1">安装</h3>
 <div class="outline-text-3" id="text-5-1">
 
-<p>apt-get install -y keystone
-</p></div>
+
+
+
+<pre class="src src-sh">apt-get install -y keystone
+</pre>
+
+</div>
 
 </div>
 
@@ -266,12 +281,10 @@ rabbitmq-server默认会创建一个用户，用户名密码均为guest，并允
 </p>
 
 
-<pre class="src src-sh"><span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">mysql -u root -p</span>
+<pre class="src src-sh"><span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">mysql -u root -p123456</span>
 mysql&gt; CREATE DATABASE keystone;
-mysql&gt; GRANT ALL PRIVILEGES ON keystone.* TO <span style="color: #8b7355;">'keystone'</span>@<span style="color: #8b7355;">'localhost'</span> <span style="color: #8b7355;">\</span>
-IDENTIFIED BY <span style="color: #8b7355;">'keystone'</span>;
-mysql&gt; GRANT ALL PRIVILEGES ON keystone.* TO <span style="color: #8b7355;">'keystone'</span>@<span style="color: #8b7355;">'%'</span> <span style="color: #8b7355;">\</span>
-IDENTIFIED BY <span style="color: #8b7355;">'keystone'</span>;
+mysql&gt; GRANT ALL PRIVILEGES ON keystone.* TO <span style="color: #8b7355;">'keystone'</span>@<span style="color: #8b7355;">'localhost'</span> IDENTIFIED BY <span style="color: #8b7355;">'keystone'</span>;
+mysql&gt; GRANT ALL PRIVILEGES ON keystone.* TO <span style="color: #8b7355;">'keystone'</span>@<span style="color: #8b7355;">'%'</span> IDENTIFIED BY <span style="color: #8b7355;">'keystone'</span>;
 </pre>
 
 </div>
@@ -286,24 +299,15 @@ IDENTIFIED BY <span style="color: #8b7355;">'keystone'</span>;
 </div>
 
 <div id="outline-container-5-4-1" class="outline-4">
-<h4 id="sec-5-4-1">配置认证服务与其它服务的token认证</h4>
+<h4 id="sec-5-4-1">修改/etc/keystone/keystone.conf</h4>
 <div class="outline-text-4" id="text-5-4-1">
 
-<p>openssk产生随机token
-</p>
-
-
-<pre class="src src-sh">openssl rand -hex 10
-2c006f393f3775b503f4
-</pre>
-
-<p>
-修改/etc/keystone/keystone.conf,[DEFAULT]admin<sub>token值替换为openssl产生的，</sub> 修改[sql]的connection.
+<p>修改[DEFAULT]admin_token值， 修改[sql]的connection.
 </p>
 
 
 <pre class="src src-sh">[DEFAULT]
-admin_token = 2c006f393f3775b503f4
+admin_token = wchunx
 ...
 [sql]
 <span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">The SQLAlchemy connection string used to connect to the database</span>
@@ -345,7 +349,7 @@ connection = mysql://keystone:keystone@172.16.0.254/keystone
 
 
 
-<pre class="src src-sh"><span style="color: #cd6600;">export</span> <span style="color: #2e8b57;">OS_SERVICE_TOKEN</span>=2c006f393f3775b503f4
+<pre class="src src-sh"><span style="color: #cd6600;">export</span> <span style="color: #2e8b57;">OS_SERVICE_TOKEN</span>=wchunx
 <span style="color: #cd6600;">export</span> <span style="color: #2e8b57;">OS_SERVICE_ENDPOINT</span>=http://172.16.0.254:35357/v2.0
 </pre>
 
@@ -423,7 +427,8 @@ keystone tenant-create --name=service --description=<span style="color: #8b7355;
 </pre>
 
 <p>
-创建endpoint
+记下server id,创建endpoint会用到。后面创建server和endpoint也是如此。<br/>
+创建endpoint,命令中的the_service_id_above用上步产生的server id替换。
 </p>
 
 
@@ -460,7 +465,7 @@ keystone tenant-create --name=service --description=<span style="color: #8b7355;
 <span style="color: #ffa54f;">export OS_TENANT_NAME=admin</span>
 <span style="color: #ffa54f;">export OS_AUTH_URL=http://172.16.0.254:35357/v2.0</span>
 <span style="color: #ffa54f;">_EOF_</span>
-<span style="color: #cd6600;">echo</span> <span style="color: #8b7355;">'source /root/keystonerc &gt;&gt; /root/.bashrc'</span>
+<span style="color: #cd6600;">echo</span> <span style="color: #8b7355;">'source /root/keystonerc'</span> &gt;&gt; /root/.bashrc
 <span style="color: #cd6600;">source</span> /root/keystonerc
 </pre>
 
@@ -469,7 +474,7 @@ keystone tenant-create --name=service --description=<span style="color: #8b7355;
 </p>
 
 
-<pre class="src src-sh">keystone token
+<pre class="src src-sh">keystone token-get
 keystone user-list
 keystone role-list
 keystone tenant-list
@@ -518,7 +523,7 @@ keystone endpoint-list
 </p>
 
 
-<pre class="src src-sh">mysql -u root -p
+<pre class="src src-sh">mysql -u root -p123456
 mysql&gt; CREATE DATABASE glance;
 mysql&gt; GRANT ALL PRIVILEGES ON glance.* TO <span style="color: #8b7355;">'glance'</span>@<span style="color: #8b7355;">'localhost'</span> IDENTIFIED BY <span style="color: #8b7355;">'glance'</span>;
 mysql&gt; GRANT ALL PRIVILEGES ON glance.* TO <span style="color: #8b7355;">'glance'</span>@<span style="color: #8b7355;">'%'</span> IDENTIFIED BY <span style="color: #8b7355;">'glance'</span>;
@@ -633,14 +638,8 @@ keystone user-role-add --user=glance --tenant=service --role=admin
 
 
 <pre class="src src-sh">keystone service-create --name=glance --type=image --description=<span style="color: #8b7355;">"Glance Image Service"</span>
-</pre>
 
-<p>
-记录下service id,下面创建endpoint要用到
-</p>
-
-
-<pre class="src src-sh">keystone endpoint-create <span style="color: #8b7355;">\</span>
+keystone endpoint-create <span style="color: #8b7355;">\</span>
 --service-id=the_service_id_above <span style="color: #8b7355;">\</span>
 --publicurl=http://172.16.0.254:9292 <span style="color: #8b7355;">\</span>
 --internalurl=http://172.16.0.254:9292 <span style="color: #8b7355;">\</span>
@@ -759,7 +758,7 @@ apt-get install nova-compute-kvm python-guestfs
 
 
 
-<pre class="src src-sh">mysql -u root -p
+<pre class="src src-sh">mysql -u root -p123456
 mysql&gt; CREATE DATABASE nova;
 mysql&gt; GRANT ALL PRIVILEGES ON nova.* TO <span style="color: #8b7355;">'nova'</span>@<span style="color: #8b7355;">'localhost'</span> IDENTIFIED BY <span style="color: #8b7355;">'nova'</span>;
 mysql&gt; GRANT ALL PRIVILEGES ON nova.* TO <span style="color: #8b7355;">'nova'</span>@<span style="color: #8b7355;">'%'</span> IDENTIFIED BY <span style="color: #8b7355;">'nova'</span>;
@@ -773,7 +772,7 @@ mysql&gt; GRANT ALL PRIVILEGES ON nova.* TO <span style="color: #8b7355;">'nova'
 <h3 id="sec-7-5">修改配置文件</h3>
 <div class="outline-text-3" id="text-7-5">
 
-<p>修改/etc/nova/nova.conf
+<p>修改/etc/nova/nova.conf，原有基础上添加
 </p>
 
 
@@ -786,6 +785,9 @@ mysql&gt; GRANT ALL PRIVILEGES ON nova.* TO <span style="color: #8b7355;">'nova'
 rpc_backend = nova.rpc.impl_kombu
 rabbit_host = 172.16.0.254
 glance_host = 172.16.0.254
+
+neutron_metadata_proxy_shared_secret = wchunx
+service_neutron_metadata_proxy = true
 
 <span style="color: #2e8b57;">instance_usage_audit</span>=True
 <span style="color: #2e8b57;">instance_usage_audit_period</span>=hour
@@ -816,7 +818,7 @@ paste.filter_factory=keystoneclient.middleware.auth_token:filter_factory
 <span style="color: #2e8b57;">auth_host</span>=172.16.0.254
 auth_port = 35357
 auth_protocol = http
-<span style="color: #2e8b57;">auth_url</span>=http://172.16.0.254:5000
+<span style="color: #2e8b57;">auth_uri</span>=http://172.16.0.254:5000
 <span style="color: #2e8b57;">admin_tenant_name</span>=service
 <span style="color: #2e8b57;">admin_user</span>=nova
 <span style="color: #2e8b57;">admin_password</span>=nova
@@ -848,16 +850,9 @@ keystone user-role-add --user=nova --tenant=service --role=admin
 
 
 
-<pre class="src src-sh">keystone service-create --name=nova --type=compute <span style="color: #8b7355;">\</span>
---description=<span style="color: #8b7355;">"Nova Compute service"</span>
-</pre>
+<pre class="src src-sh">keystone service-create --name=nova --type=compute --description=<span style="color: #8b7355;">"Nova Compute service"</span>
 
-<p>
-记下service id
-</p>
-
-
-<pre class="src src-sh">keystone endpoint-create <span style="color: #8b7355;">\</span>
+keystone endpoint-create <span style="color: #8b7355;">\</span>
 --service-id=the_service_id_above <span style="color: #8b7355;">\</span>
 --publicurl=http://172.16.0.254:8774/v2/%<span style="color: #8b7355;">\(</span>tenant_id<span style="color: #8b7355;">\)</span>s <span style="color: #8b7355;">\</span>
 --internalurl=http://172.16.0.254:8774/v2/%<span style="color: #8b7355;">\(</span>tenant_id<span style="color: #8b7355;">\)</span>s <span style="color: #8b7355;">\</span>
@@ -928,7 +923,7 @@ keystone user-role-add --user=nova --tenant=service --role=admin
 
 
 
-<pre class="src src-sh">mysql -u root -p
+<pre class="src src-sh">mysql -u root -p123456
 mysql&gt; CREATE DATABASE cinder;
 mysql&gt; GRANT ALL PRIVILEGES ON cinder.* TO <span style="color: #8b7355;">'cinder'</span>@<span style="color: #8b7355;">'localhost'</span> IDENTIFIED BY <span style="color: #8b7355;">'cinder'</span>;
 mysql&gt; GRANT ALL PRIVILEGES ON cinder.* TO <span style="color: #8b7355;">'cinder'</span>@<span style="color: #8b7355;">'%'</span> IDENTIFIED BY <span style="color: #8b7355;">'cinder'</span>;
@@ -1079,7 +1074,7 @@ service cinder-api restart
 
 
 
-<pre class="src src-sh">mysql -u root -p
+<pre class="src src-sh">mysql -u root -p123456
 mysql&gt; CREATE DATABASE neutron;
 mysql&gt; GRANT ALL PRIVILEGES ON neutron.* TO <span style="color: #8b7355;">'neutron'</span>@<span style="color: #8b7355;">'localhost'</span> IDENTIFIED BY <span style="color: #8b7355;">'neutron'</span>;
 mysql&gt; GRANT ALL PRIVILEGES ON neutron.* TO <span style="color: #8b7355;">'neutron'</span>@<span style="color: #8b7355;">'%'</span> IDENTIFIED BY <span style="color: #8b7355;">'neutron'</span>;
@@ -1122,13 +1117,18 @@ keystone endpoint-create <span style="color: #8b7355;">\</span>
 <h4 id="sec-9-3-1">安装neutron组件</h4>
 <div class="outline-text-4" id="text-9-3-1">
 
-<p>apt-get install neutron-server neutron-dhcp-agent neutron-plugin-openvswitch-agent neutron-l3-agent neutron-lbaas-agent
-</p></div>
+
+
+
+<pre class="src src-sh">apt-get install neutron-server neutron-dhcp-agent  neutron-l3-agent neutron-lbaas-agent
+</pre>
+
+</div>
 
 </div>
 
 <div id="outline-container-9-3-2" class="outline-4">
-<h4 id="sec-9-3-2">打开ip<sub>forward</sub></h4>
+<h4 id="sec-9-3-2">打开ip_forward</h4>
 <div class="outline-text-4" id="text-9-3-2">
 
 <p>编辑/etc/sysctl.conf
@@ -1189,14 +1189,14 @@ admin_password = neutron
 <pre class="src src-sh">[filter:authtoken]
 paste.filter_factory = keystoneclient.middleware.auth_token:filter_factory
 <span style="color: #2e8b57;">auth_host</span>=172.16.0.254
-<span style="color: #2e8b57;">auth_url</span>=http://172.16.0.254:5000
+<span style="color: #2e8b57;">auth_uri</span>=http://172.16.0.254:5000
 <span style="color: #2e8b57;">admin_user</span>=neutron
 <span style="color: #2e8b57;">admin_tenant_name</span>=service
 <span style="color: #2e8b57;">admin_password</span>=neutron
 </pre>
 
 <p>
-编辑/etc/neutron/dhcp<sub>agent</sub>.ini
+编辑/etc/neutron/dhcp_agent.ini
 </p>
 
 
@@ -1208,16 +1208,35 @@ interface_driver = neutron.agent.linux.interface.OVSInterfaceDriver
 </pre>
 
 <p>
-编辑/etc/neutron/l3<sub>agent</sub>.ini
+编辑/etc/neutron/l3_agent.ini
 </p>
 
 
-<pre class="src src-sh">use_namespaces = True
+<pre class="src src-sh">auth_url = http://172.16.0.254:35357/v2.0
+admin_tenant_name = service
+admin_user = neutron
+admin_password = neutron
+metadata_ip = 172.16.0.254
+use_namespaces = True
 interface_driver = neutron.agent.linux.interface.OVSInterfaceDriver
 </pre>
 
 <p>
-编辑/etc/neutron/lbaas<sub>agent</sub>.ini
+编辑/etc/neutron/metadata_agent.ini
+</p>
+
+
+<pre class="src src-sh">[DEFAULT]
+auth_url = http://172.16.0.254:5000/v2.0
+admin_tenant_name = service
+admin_user = neutron
+admin_password = neutron
+nova_metadata_ip = 172.16.0.254
+metadata_proxy_shared_secret = wchunx
+</pre>
+
+<p>
+编辑/etc/neutron/lbaas_agent.ini
 </p>
 
 
@@ -1226,7 +1245,7 @@ device_driver = neutron.services.loadbalancer.drivers.haproxy.namespace_driver.H
 </pre>
 
 <p>
-创建/etc/neutron/fwaas<sub>driver</sub>.ini
+创建/etc/neutron/fwaas_driver.ini
 </p>
 
 
@@ -1251,8 +1270,13 @@ enabled = True
 <h4 id="sec-9-4-1">安装</h4>
 <div class="outline-text-4" id="text-9-4-1">
 
-<p>apt-get install neutron-plugin-openvswitch-agent openvswitch-common openvswitch-datapath-dkms openvswitch-switch
-</p></div>
+
+
+
+<pre class="src src-sh">apt-get install openvswitch-switch neutron-plugin-openvswitch neutron-plugin-openvswitch-agent  
+</pre>
+
+</div>
 
 </div>
 
@@ -1320,7 +1344,7 @@ iface br-ex inet static
 <h4 id="sec-9-4-3">编辑配置文件</h4>
 <div class="outline-text-4" id="text-9-4-3">
 
-<p>编辑/etc/neutron/plugins/openvswitch/ovs<sub>neutron</sub><sub>plugin</sub>.ini
+<p>编辑/etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini
 </p>
 
 
@@ -1370,7 +1394,7 @@ local_ip = 172.16.0.254
 
 
 
-<pre class="src src-sh">apt-get install heat-api heat-api-cfn heat-engine
+<pre class="src src-sh">apt-get install heat-api heat-api-cfn heat-engine heat-api-cloudwatch
 </pre>
 
 </div>
@@ -1384,7 +1408,7 @@ local_ip = 172.16.0.254
 
 
 
-<pre class="src src-sh">mysql -u root -p
+<pre class="src src-sh">mysql -u root -p123456
 mysql&gt; CREATE DATABASE heat;
 mysql&gt; GRANT ALL PRIVILEGES ON heat.* TO <span style="color: #8b7355;">'heat'</span>@<span style="color: #8b7355;">'localhost'</span> IDENTIFIED BY <span style="color: #8b7355;">'heat'</span>;
 mysql&gt; GRANT ALL PRIVILEGES ON heat.* TO <span style="color: #8b7355;">'heat'</span>@<span style="color: #8b7355;">'%'</span> IDENTIFIED BY <span style="color: #8b7355;">'heat'</span>;
@@ -1404,6 +1428,8 @@ mysql&gt; GRANT ALL PRIVILEGES ON heat.* TO <span style="color: #8b7355;">'heat'
 
 <pre class="src src-sh">verbose = True
 <span style="color: #2e8b57;">log_dir</span>=/var/log/heat
+rabbit_host = 172.16.0.254
+rabbit_password = guest
 [database]
 <span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">The SQLAlchemy connection string used to connect to the database</span>
 connection = mysql://heat:heat@172.16.0.254/heat
@@ -1419,6 +1445,7 @@ paste.filter_factory = heat.common.auth_token:filter_factory
 auth_host = 172.16.0.254
 auth_port = 35357
 auth_protocol = http
+auth_uri = http://172.16.0.254:35357/v2.0
 admin_tenant_name = service
 admin_user = heat
 admin_password = heat
@@ -1467,9 +1494,9 @@ keystone user-role-add --user=heat --tenant=service --role=admin
 <pre class="src src-sh">keystone service-create --name=heat --type=orchestration --description=<span style="color: #8b7355;">"Heat Orchestration API"</span>
 keystone endpoint-create <span style="color: #8b7355;">\</span>
 --service-id=the_service_id_above <span style="color: #8b7355;">\</span>
---publicurl=http://172.16.0.254:8004/v1/<span style="color: #8b7355;">\$</span>(<span style="color: #ff00ff;">tenant_id</span>)s <span style="color: #8b7355;">\</span>
---internalurl=http://172.16.0.254:8004/v1/<span style="color: #8b7355;">\$</span>(<span style="color: #ff00ff;">tenant_id</span>)s <span style="color: #8b7355;">\</span>
---adminurl=http://172.16.0.254:8004/v1/<span style="color: #8b7355;">\$</span>(<span style="color: #ff00ff;">tenant_id</span>)s
+--publicurl=http://172.16.0.254:8004/v1/%<span style="color: #8b7355;">\(</span>tenant_id<span style="color: #8b7355;">\)</span>s <span style="color: #8b7355;">\</span>
+--internalurl=http://172.16.0.254:8004/v1/%<span style="color: #8b7355;">\(</span>tenant_id<span style="color: #8b7355;">\)</span>s <span style="color: #8b7355;">\</span>
+--adminurl=http://172.16.0.254:8004/v1/%<span style="color: #8b7355;">\(</span>tenant_id<span style="color: #8b7355;">\)</span>s
 
 keystone service-create --name=heat-cfn --type=cloudformation --description=<span style="color: #8b7355;">"Heat CloudFormation API"</span>
 keystone endpoint-create <span style="color: #8b7355;">\</span>
@@ -1498,28 +1525,43 @@ keystone endpoint-create <span style="color: #8b7355;">\</span>
 </div>
 
 <div id="outline-container-10-8" class="outline-3">
-<h3 id="sec-10-8">创建和管理stacks</h3>
+<h3 id="sec-10-8">创建openrc</h3>
 <div class="outline-text-3" id="text-10-8">
 
-<p>从模板创建一个stack,其实官方已经提供很多模板，所以暂时先git下来做测试
-</p>
 
 
-<pre class="src src-sh">git clone https://github.com/openstack/heat-templates.git
+
+<pre class="src src-sh">cat &gt; /root/openrc &lt;&lt; _EOF_
+<span style="color: #ffa54f;">ENABLED_SERVICES+=,heat,h-api,h-api-cfn,h-api-cw,h-eng</span>
+<span style="color: #ffa54f;">CEILOMETER_BACKEND=mongo</span>
+<span style="color: #ffa54f;">_EOF_</span>
+<span style="color: #cd6600;">echo</span> <span style="color: #8b7355;">'source /root/openrc'</span> &gt;&gt; /root/.bashrc
+<span style="color: #cd6600;">source</span> /root/openrc
 </pre>
 
 <p>
-创建stack
-</p>
+配置了ENABLED_SERVICES才能用heat命令
+</p></div>
+
+</div>
+
+<div id="outline-container-10-9" class="outline-3">
+<h3 id="sec-10-9">创建和管理stacks</h3>
+<div class="outline-text-3" id="text-10-9">
 
 
-<pre class="src src-sh">heat stack-create mystack <span style="color: #8b7355;">\</span>
---template-file=/root/heat-templates/cfn/F18/WordPress_Single_Instance.template <span style="color: #8b7355;">\</span>
---parameters=<span style="color: #8b7355;">"InstanceType=m1.large;DBUsername=wordpress;DBPassword=wordpress;KeyName=HEAT_KEY;LinuxDistribution=F18"</span>
+
+
+<pre class="src src-sh">wget https://raw.github.com/openstack/heat-templates/master/cfn/F17/WordPress_Composed_Instances.template
+glance image-create --name F17-x86_64-cfntools --disk-format qcow2 --container-format bare --is-public True --copy-from http://fedorapeople.org/groups/heat/prebuilt-jeos-images/F17-x86_64-cfntools.qcow2
+nova keypair-add heat_key &gt; heat_key.priv
+chmod 600 heat_key.priv
+heat stack-create wordpress --template-file=WordPress_Composed_Instances.template --parameters=<span style="color: #8b7355;">"DBUsername=wp;DBPassword=wp;KeyName=userkey;LinuxDistribution=F17"</span>
+heat stack-list
 </pre>
 
 <p>
-具体参数请参与官方手册
+PS:对heat还没有研究，创建stack是网上找的
 </p></div>
 </div>
 
@@ -1559,7 +1601,8 @@ keystone endpoint-create <span style="color: #8b7355;">\</span>
 <h3 id="sec-11-2">创建数据库</h3>
 <div class="outline-text-3" id="text-11-2">
 
-
+<p>运行mongo命令报错couldn't connect to server 127.0.0.1:27017 at src/mongo/shell/mongo.js:145，运行mongod -dbpath=/data/db解决。
+</p>
 
 
 <pre class="src src-sh">mongo
@@ -1578,16 +1621,7 @@ roles: [ <span style="color: #8b7355;">"readWrite"</span>, <span style="color: #
 <h3 id="sec-11-3">修改配置文件</h3>
 <div class="outline-text-3" id="text-11-3">
 
-<p>生成token
-</p>
-
-
-<pre class="src src-sh">openssl rand -hex 10
-f81c8488ee940357e26c
-</pre>
-
-<p>
-/etc/ceilometer/ceilometer.conf
+<p>修改/etc/ceilometer/ceilometer.conf
 </p>
 
 
@@ -1599,7 +1633,7 @@ connection = mongodb://ceilometer:CEILOMETER_DBPASS@controller:27017/ceilometer
 [publisher_rpc]
 ...
 <span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">Secret value for signing metering messages (string value)</span>
-metering_secret = f81c8488ee940357e26c
+metering_secret = wchunx
 ...
 [keystone_authtoken]
 auth_host = 172.16.0.254
@@ -1663,20 +1697,50 @@ apt-get remove --purge openstack-dashboard-ubuntu-theme
 </pre>
 
 <p>
-编辑/etc/openstack<sub>dashboard</sub>/local/local<sub>settings</sub>.py设置
+编辑/etc/openstack_dashboard/local/local_settings.py设置
 </p>
 
 
 <pre class="src src-sh"><span style="color: #8b7355;">'enable_firewall'</span> = True
 </pre>
 
-</div>
+<p>
+重启apache2
+</p>
+
+
+<pre class="src src-sh">/etc/init.d/apache2 restart
+</pre>
+
+<p>
+浏览器访问192.168.150.9/horizon.
+</p></div>
 
 </div>
 
 <div id="outline-container-13" class="outline-2">
-<h2 id="sec-13">其他</h2>
+<h2 id="sec-13">参考资料</h2>
 <div class="outline-text-2" id="text-13">
+
+
+</div>
+
+<div id="outline-container-13-1" class="outline-3">
+<h3 id="sec-13-1">heat</h3>
+<div class="outline-text-3" id="text-13-1">
+
+<p><a href="http://openstack.redhat.com/Deploy_an_application_with_Heat">http://openstack.redhat.com/Deploy_an_application_with_Heat</a>
+<a href="https://answers.launchpad.net/heat/+question/238879">https://answers.launchpad.net/heat/+question/238879</a>
+<a href="http://digitalsanctum.com/2013/05/01/how-to-install-openstack-heat/">http://digitalsanctum.com/2013/05/01/how-to-install-openstack-heat/</a>
+<a href="http://docs.openstack.org/developer/heat/getting_started/on_devstack.html">http://docs.openstack.org/developer/heat/getting_started/on_devstack.html</a>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-14" class="outline-2">
+<h2 id="sec-14">其他</h2>
+<div class="outline-text-2" id="text-14">
 
 
 

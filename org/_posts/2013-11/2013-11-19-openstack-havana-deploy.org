@@ -11,10 +11,11 @@ icon: compass
 featured: false
 ---
 #+END_HTML
+#+OPTIONS: ^:{}
 * 部署环境
 64位ubuntu-12.04.3-server系统 \\
 双网卡
-+ 外网eth0 192.168.150.8/24
++ 外网eth0 192.168.150.9/24
 + 内网eth1 172.16.0.254/24
 双硬盘
 * 初始网卡配置
@@ -26,7 +27,7 @@ iface lo inet loopback
 
 auto eth0
 iface eth0 inet static
-address 192.168.150.8
+address 192.168.150.9
 netmask 255.255.255.0
 gateway 192.168.150.1
 dns-nameservers 8.8.8.8
@@ -36,9 +37,10 @@ iface eth1 inet static
         address 172.16.0.254
         netmask 255.255.255.0
 #+END_SRC
-
-#重启网络
+重启网络
+#+BEGIN_SRC sh
 /etc/init.d/networking restart
+#+END_SRC
 * 添加havana源
 #+BEGIN_SRC sh
 apt-get install python-software-properties
@@ -64,7 +66,9 @@ rabbitmqctl change_password guest NEW_PASS
 #+END_SRC
 * 安装和配置Keystone
 ** 安装
+#+BEGIN_SRC sh
 apt-get install -y keystone
+#+END_SRC
 ** 删除默认keystone的sqlite db 文件
 #+BEGIN_SRC sh
 rm -f /var/lib/keystone/keystone.db
@@ -72,24 +76,17 @@ rm -f /var/lib/keystone/keystone.db
 ** 创建数据库
 用户名和密码均为keystone
 #+BEGIN_SRC sh
-# mysql -u root -p
+# mysql -u root -p123456
 mysql> CREATE DATABASE keystone;
-mysql> GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'localhost' \
-IDENTIFIED BY 'keystone';
-mysql> GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'%' \
-IDENTIFIED BY 'keystone';
+mysql> GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'localhost' IDENTIFIED BY 'keystone';
+mysql> GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'%' IDENTIFIED BY 'keystone';
 #+END_SRC
 ** 修改配置文件
-*** 配置认证服务与其它服务的token认证
-openssk产生随机token
-#+BEGIN_SRC sh
-openssl rand -hex 10
-2c006f393f3775b503f4
-#+END_SRC
-修改/etc/keystone/keystone.conf,[DEFAULT]admin_token值替换为openssl产生的， 修改[sql]的connection.
+*** 修改/etc/keystone/keystone.conf
+修改[DEFAULT]admin_token值， 修改[sql]的connection.
 #+BEGIN_SRC sh
 [DEFAULT]
-admin_token = 2c006f393f3775b503f4
+admin_token = wchunx
 ...
 [sql]
 # The SQLAlchemy connection string used to connect to the database
@@ -104,7 +101,7 @@ keystone-manage db_sync
 ** 创建tenant、user、roles
 *** 首先创建两个环境变量
 #+BEGIN_SRC sh
-export OS_SERVICE_TOKEN=2c006f393f3775b503f4
+export OS_SERVICE_TOKEN=wchunx
 export OS_SERVICE_ENDPOINT=http://172.16.0.254:35357/v2.0
 #+END_SRC
 ***  创建admin和service两个租户
@@ -129,7 +126,8 @@ keystone user-role-add --user=admin --tenant=admin --role=admin
 #+BEGIN_SRC sh
 keystone service-create --name=keystone --type=identity --description="Keystone Identity Service"
 #+END_SRC
-创建endpoint
+记下server id,创建endpoint会用到。后面创建server和endpoint也是如此。\\
+创建endpoint,命令中的the_service_id_above用上步产生的server id替换。
 #+BEGIN_SRC sh
 keystone endpoint-create \
 --service-id=the_service_id_above \
@@ -150,12 +148,12 @@ export OS_PASSWORD=password
 export OS_TENANT_NAME=admin
 export OS_AUTH_URL=http://172.16.0.254:35357/v2.0
 _EOF_
-echo 'source /root/keystonerc >> /root/.bashrc'
+echo 'source /root/keystonerc' >> /root/.bashrc
 source /root/keystonerc
 #+END_SRC
 验证keystone是否正常
 #+BEGIN_SRC sh
-keystone token
+keystone token-get
 keystone user-list
 keystone role-list
 keystone tenant-list
@@ -173,7 +171,7 @@ rm -f /var/lib/glance/glance.sqlite
 ** 创建 glance 数据库
 用户名密码均为glance
 #+BEGIN_SRC sh
-mysql -u root -p
+mysql -u root -p123456
 mysql> CREATE DATABASE glance;
 mysql> GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'localhost' IDENTIFIED BY 'glance';
 mysql> GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'%' IDENTIFIED BY 'glance';
@@ -236,9 +234,7 @@ keystone user-role-add --user=glance --tenant=service --role=admin
 ** 创建service服务和endpoint
 #+BEGIN_SRC sh
 keystone service-create --name=glance --type=image --description="Glance Image Service"
-#+END_SRC
-记录下service id,下面创建endpoint要用到
-#+BEGIN_SRC sh
+
 keystone endpoint-create \
 --service-id=the_service_id_above \
 --publicurl=http://172.16.0.254:9292 \
@@ -282,13 +278,13 @@ rm -f /var/lib/nova/nova.sqlite
 #+END_SRC
 ** 创建数据库
 #+BEGIN_SRC sh
-mysql -u root -p
+mysql -u root -p123456
 mysql> CREATE DATABASE nova;
 mysql> GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'localhost' IDENTIFIED BY 'nova';
 mysql> GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'%' IDENTIFIED BY 'nova';
 #+END_SRC
 ** 修改配置文件
-修改/etc/nova/nova.conf
+修改/etc/nova/nova.conf，原有基础上添加
 #+BEGIN_SRC sh
 [DEFAULT]
 my_ip=192.168.150.8
@@ -299,6 +295,9 @@ auth_strategy=keystone
 rpc_backend = nova.rpc.impl_kombu
 rabbit_host = 172.16.0.254
 glance_host = 172.16.0.254
+
+neutron_metadata_proxy_shared_secret = wchunx
+service_neutron_metadata_proxy = true
 
 instance_usage_audit=True
 instance_usage_audit_period=hour
@@ -325,7 +324,7 @@ paste.filter_factory=keystoneclient.middleware.auth_token:filter_factory
 auth_host=172.16.0.254
 auth_port = 35357
 auth_protocol = http
-auth_url=http://172.16.0.254:5000
+auth_uri=http://172.16.0.254:5000
 admin_tenant_name=service
 admin_user=nova
 admin_password=nova
@@ -337,11 +336,8 @@ keystone user-role-add --user=nova --tenant=service --role=admin
 #+END_SRC
 ** 创建service服务和endpoint
 #+BEGIN_SRC sh
-keystone service-create --name=nova --type=compute \
---description="Nova Compute service"
-#+END_SRC
-记下service id
-#+BEGIN_SRC sh
+keystone service-create --name=nova --type=compute --description="Nova Compute service"
+
 keystone endpoint-create \
 --service-id=the_service_id_above \
 --publicurl=http://172.16.0.254:8774/v2/%\(tenant_id\)s \
@@ -368,7 +364,7 @@ apt-get install cinder-api cinder-scheduler
 #+END_SRC
 ** 创建数据库
 #+BEGIN_SRC sh
-mysql -u root -p
+mysql -u root -p123456
 mysql> CREATE DATABASE cinder;
 mysql> GRANT ALL PRIVILEGES ON cinder.* TO 'cinder'@'localhost' IDENTIFIED BY 'cinder';
 mysql> GRANT ALL PRIVILEGES ON cinder.* TO 'cinder'@'%' IDENTIFIED BY 'cinder';
@@ -448,7 +444,7 @@ cinder list
 * 安装和配置neutron
 ** 创建数据库
 #+BEGIN_SRC sh
-mysql -u root -p
+mysql -u root -p123456
 mysql> CREATE DATABASE neutron;
 mysql> GRANT ALL PRIVILEGES ON neutron.* TO 'neutron'@'localhost' IDENTIFIED BY 'neutron';
 mysql> GRANT ALL PRIVILEGES ON neutron.* TO 'neutron'@'%' IDENTIFIED BY 'neutron';
@@ -467,7 +463,9 @@ keystone endpoint-create \
 #+END_SRC
 ** 安装网络服务
 *** 安装neutron组件
-apt-get install neutron-server neutron-dhcp-agent neutron-plugin-openvswitch-agent neutron-l3-agent neutron-lbaas-agent
+#+BEGIN_SRC sh
+apt-get install neutron-server neutron-dhcp-agent  neutron-l3-agent neutron-lbaas-agent
+#+END_SRC
 *** 打开ip_forward
 编辑/etc/sysctl.conf
 #+BEGIN_SRC sh
@@ -507,7 +505,7 @@ admin_password = neutron
 [filter:authtoken]
 paste.filter_factory = keystoneclient.middleware.auth_token:filter_factory
 auth_host=172.16.0.254
-auth_url=http://172.16.0.254:5000
+auth_uri=http://172.16.0.254:5000
 admin_user=neutron
 admin_tenant_name=service
 admin_password=neutron
@@ -522,8 +520,23 @@ interface_driver = neutron.agent.linux.interface.OVSInterfaceDriver
 #+END_SRC
 编辑/etc/neutron/l3_agent.ini
 #+BEGIN_SRC sh
+auth_url = http://172.16.0.254:35357/v2.0
+admin_tenant_name = service
+admin_user = neutron
+admin_password = neutron
+metadata_ip = 172.16.0.254
 use_namespaces = True
 interface_driver = neutron.agent.linux.interface.OVSInterfaceDriver
+#+END_SRC
+编辑/etc/neutron/metadata_agent.ini
+#+BEGIN_SRC sh
+[DEFAULT]
+auth_url = http://172.16.0.254:5000/v2.0
+admin_tenant_name = service
+admin_user = neutron
+admin_password = neutron
+nova_metadata_ip = 172.16.0.254
+metadata_proxy_shared_secret = wchunx
 #+END_SRC
 编辑/etc/neutron/lbaas_agent.ini
 #+BEGIN_SRC sh
@@ -538,7 +551,9 @@ enabled = True
 #+END_SRC
 ** 安装ovs插件
 *** 安装
-apt-get install neutron-plugin-openvswitch-agent openvswitch-common openvswitch-datapath-dkms openvswitch-switch
+#+BEGIN_SRC sh
+apt-get install openvswitch-switch neutron-plugin-openvswitch neutron-plugin-openvswitch-agent  
+#+END_SRC
 *** 网络配置
 **** 建立网桥
 ovs-vsctl add-br br-int
@@ -592,11 +607,11 @@ cd /etc/init.d/; for i in $( ls neutron-* ); do sudo service $i restart; done
 * Orchestration Server(Heat)安装
 ** 安装
 #+BEGIN_SRC sh
-apt-get install heat-api heat-api-cfn heat-engine
+apt-get install heat-api heat-api-cfn heat-engine heat-api-cloudwatch
 #+END_SRC
 ** 创建数据库
 #+BEGIN_SRC sh
-mysql -u root -p
+mysql -u root -p123456
 mysql> CREATE DATABASE heat;
 mysql> GRANT ALL PRIVILEGES ON heat.* TO 'heat'@'localhost' IDENTIFIED BY 'heat';
 mysql> GRANT ALL PRIVILEGES ON heat.* TO 'heat'@'%' IDENTIFIED BY 'heat';
@@ -606,6 +621,8 @@ mysql> GRANT ALL PRIVILEGES ON heat.* TO 'heat'@'%' IDENTIFIED BY 'heat';
 #+BEGIN_SRC sh
 verbose = True
 log_dir=/var/log/heat
+rabbit_host = 172.16.0.254
+rabbit_password = guest
 [database]
 # The SQLAlchemy connection string used to connect to the database
 connection = mysql://heat:heat@172.16.0.254/heat
@@ -617,6 +634,7 @@ paste.filter_factory = heat.common.auth_token:filter_factory
 auth_host = 172.16.0.254
 auth_port = 35357
 auth_protocol = http
+auth_uri = http://172.16.0.254:35357/v2.0
 admin_tenant_name = service
 admin_user = heat
 admin_password = heat
@@ -635,9 +653,9 @@ keystone user-role-add --user=heat --tenant=service --role=admin
 keystone service-create --name=heat --type=orchestration --description="Heat Orchestration API"
 keystone endpoint-create \
 --service-id=the_service_id_above \
---publicurl=http://172.16.0.254:8004/v1/\$(tenant_id)s \
---internalurl=http://172.16.0.254:8004/v1/\$(tenant_id)s \
---adminurl=http://172.16.0.254:8004/v1/\$(tenant_id)s
+--publicurl=http://172.16.0.254:8004/v1/%\(tenant_id\)s \
+--internalurl=http://172.16.0.254:8004/v1/%\(tenant_id\)s \
+--adminurl=http://172.16.0.254:8004/v1/%\(tenant_id\)s
 
 keystone service-create --name=heat-cfn --type=cloudformation --description="Heat CloudFormation API"
 keystone endpoint-create \
@@ -650,18 +668,26 @@ keystone endpoint-create \
 #+BEGIN_SRC sh
 cd /etc/init.d/; for i in $( ls heat-* ); do sudo service $i restart; done
 #+END_SRC
+** 创建openrc
+#+BEGIN_SRC sh
+cat > /root/openrc << _EOF_
+ENABLED_SERVICES+=,heat,h-api,h-api-cfn,h-api-cw,h-eng
+CEILOMETER_BACKEND=mongo
+_EOF_
+echo 'source /root/openrc' >> /root/.bashrc
+source /root/openrc
+#+END_SRC
+配置了ENABLED_SERVICES才能用heat命令
 ** 创建和管理stacks
-从模板创建一个stack,其实官方已经提供很多模板，所以暂时先git下来做测试
 #+BEGIN_SRC sh
-git clone https://github.com/openstack/heat-templates.git
+wget https://raw.github.com/openstack/heat-templates/master/cfn/F17/WordPress_Composed_Instances.template
+glance image-create --name F17-x86_64-cfntools --disk-format qcow2 --container-format bare --is-public True --copy-from http://fedorapeople.org/groups/heat/prebuilt-jeos-images/F17-x86_64-cfntools.qcow2
+nova keypair-add heat_key > heat_key.priv
+chmod 600 heat_key.priv
+heat stack-create wordpress --template-file=WordPress_Composed_Instances.template --parameters="DBUsername=wp;DBPassword=wp;KeyName=userkey;LinuxDistribution=F17"
+heat stack-list
 #+END_SRC
-创建stack
-#+BEGIN_SRC sh
-heat stack-create mystack \
---template-file=/root/heat-templates/cfn/F18/WordPress_Single_Instance.template \
---parameters="InstanceType=m1.large;DBUsername=wordpress;DBPassword=wordpress;KeyName=HEAT_KEY;LinuxDistribution=F18"
-#+END_SRC
-具体参数请参与官方手册
+PS:对heat还没有研究，创建stack是网上找的
 * Metering/Monitoring Server（Ceilometer）安装
 ** 安装
 安装服务
@@ -673,6 +699,7 @@ apt-get install ceilometer-api ceilometer-collector ceilometer-agent-central pyt
 apt-get install mongodb
 #+END_SRC
 ** 创建数据库
+运行mongo命令报错couldn't connect to server 127.0.0.1:27017 at src/mongo/shell/mongo.js:145，运行mongod -dbpath=/data/db解决。
 #+BEGIN_SRC sh
 mongo
 > use ceilometer
@@ -682,12 +709,7 @@ roles: [ "readWrite", "dbAdmin" ]
 } )
 #+END_SRC
 ** 修改配置文件
-生成token
-#+BEGIN_SRC sh
-openssl rand -hex 10
-f81c8488ee940357e26c
-#+END_SRC
-/etc/ceilometer/ceilometer.conf
+修改/etc/ceilometer/ceilometer.conf
 #+BEGIN_SRC sh
 [database]
 ...
@@ -697,7 +719,7 @@ connection = mongodb://ceilometer:CEILOMETER_DBPASS@controller:27017/ceilometer
 [publisher_rpc]
 ...
 # Secret value for signing metering messages (string value)
-metering_secret = f81c8488ee940357e26c
+metering_secret = wchunx
 ...
 [keystone_authtoken]
 auth_host = 172.16.0.254
@@ -732,6 +754,17 @@ apt-get remove --purge openstack-dashboard-ubuntu-theme
 #+BEGIN_SRC sh
 'enable_firewall' = True
 #+END_SRC
+重启apache2
+#+BEGIN_SRC sh
+/etc/init.d/apache2 restart
+#+END_SRC
+浏览器访问192.168.150.9/horizon.
+* 参考资料
+** heat
+http://openstack.redhat.com/Deploy_an_application_with_Heat
+https://answers.launchpad.net/heat/+question/238879
+http://digitalsanctum.com/2013/05/01/how-to-install-openstack-heat/
+http://docs.openstack.org/developer/heat/getting_started/on_devstack.html
 * 其他
 
 
