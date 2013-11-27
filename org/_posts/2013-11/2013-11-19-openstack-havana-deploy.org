@@ -41,9 +41,6 @@ iface eth1 inet static
 /etc/init.d/networking restart
 * 添加havana源
 #+BEGIN_SRC sh
-#apt-get install ubuntu-cloud-keyring
-#echo deb http://ubuntu-cloud.archive.canonical.com/ubuntu precise-updates/havana main >> /etc/apt/sources.list.d/havana.list
-#echo deb http://ubuntu-cloud.archive.canonical.com/ubuntu precise-proposed/havana main >> /etc/apt/sources.list.d/havana.list
 apt-get install python-software-properties
 add-apt-repository cloud-archive:havana
 apt-get update && apt-get dist-upgrade
@@ -70,7 +67,7 @@ rabbitmqctl change_password guest NEW_PASS
 apt-get install -y keystone
 ** 删除默认keystone的sqlite db 文件
 #+BEGIN_SRC sh
-rm -f /var/lib/keystone/keystone.sqlite
+rm -f /var/lib/keystone/keystone.db
 #+END_SRC
 ** 创建数据库
 用户名和密码均为keystone
@@ -117,8 +114,7 @@ keystone tenant-create --name=service --description="Service Tenant"
 #+END_SRC
 *** 创建用户admin，密码password 
 #+BEGIN_SRC sh
-keystone user-create --name=admin --pass=password \
---email=admin@126.com
+keystone user-create --name=admin --pass=password --email=admin@126.com
 #+END_SRC
 *** 创建角色admin
 #+BEGIN_SRC sh
@@ -131,8 +127,7 @@ keystone user-role-add --user=admin --tenant=admin --role=admin
 ** 创建Services 及 API endpoints
 首先创建一个类型为identity的keystone服务，名称为keystone：
 #+BEGIN_SRC sh
-keystone service-create --name=keystone --type=identity \
---description="Keystone Identity Service"
+keystone service-create --name=keystone --type=identity --description="Keystone Identity Service"
 #+END_SRC
 创建endpoint
 #+BEGIN_SRC sh
@@ -149,13 +144,14 @@ unset OS_SERVICE_TOKEN OS_SERVICE_ENDPOINT
 #+END_SRC
 创建keystonerc文件(环境变量)
 #+BEGIN_SRC sh
-cat > keystonerc << _EOF_
-OS_USERNAME=admin
-OS_PASSWORD=password
-OS_TENANT_NAME=admin
-OS_AUTH_URL=http://172.16.0.254:35357/v2.0
+cat > /root/keystonerc << _EOF_
+export OS_USERNAME=admin
+export OS_PASSWORD=password
+export OS_TENANT_NAME=admin
+export OS_AUTH_URL=http://172.16.0.254:35357/v2.0
 _EOF_
-source keystonerc
+echo 'source /root/keystonerc >> /root/.bashrc'
+source /root/keystonerc
 #+END_SRC
 验证keystone是否正常
 #+BEGIN_SRC sh
@@ -179,10 +175,8 @@ rm -f /var/lib/glance/glance.sqlite
 #+BEGIN_SRC sh
 mysql -u root -p
 mysql> CREATE DATABASE glance;
-mysql> GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'localhost' \
-IDENTIFIED BY 'glance';
-mysql> GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'%' \
-IDENTIFIED BY 'glance';
+mysql> GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'localhost' IDENTIFIED BY 'glance';
+mysql> GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'%' IDENTIFIED BY 'glance';
 #+END_SRC
 ** 修改glance配置文件
 修改/etc/glance/glance-api.conf
@@ -236,14 +230,12 @@ glance-manage db_sync
 #+END_SRC
 ** 创建名为glance的认证用户
 #+BEGIN_SRC sh
-keystone user-create --name=glance --pass=glance \
---email=glance@126.com
+keystone user-create --name=glance --pass=glance --email=glance@126.com
 keystone user-role-add --user=glance --tenant=service --role=admin
 #+END_SRC
 ** 创建service服务和endpoint
 #+BEGIN_SRC sh
-keystone service-create --name=glance --type=image \
---description="Glance Image Service"
+keystone service-create --name=glance --type=image --description="Glance Image Service"
 #+END_SRC
 记录下service id,下面创建endpoint要用到
 #+BEGIN_SRC sh
@@ -261,8 +253,7 @@ service glance-api restart
 ** 上传镜像
 下载测试镜像
 #+BEGIN_SRC sh
-wget http://cdn.download.cirros-cloud.net/0.3.1/cirros-0.3.1-x86_64-
-disk.img
+wget http://cdn.download.cirros-cloud.net/0.3.1/cirros-0.3.1-x86_64-disk.img
 #+END_SRC
 上传
 #+BEGIN_SRC sh
@@ -275,27 +266,26 @@ glance image-list
 * 安装和配置nova
 ** 安装计算服务
 #+BEGIN_SRC sh
-apt-get install nova-novncproxy novnc nova-api \
+apt-get install nova-novncproxy novnc nova-api python-novaclient \
 nova-ajax-console-proxy nova-cert nova-conductor \
 nova-consoleauth nova-doc nova-scheduler
 apt-get install nova-compute-kvm python-guestfs
 #+END_SRC
+安装过程会提示你,选择”yes”即可。
 ** 修复guestfs的一个bug
 #+BEGIN_SRC sh
 chmod 0644 /boot/vmlinuz*
 #+END_SRC
 ** 删除默认nova的sqlite db文件
 #+BEGIN_SRC sh
-rm -f /var/lib/keystone/nova.sqlite
+rm -f /var/lib/nova/nova.sqlite
 #+END_SRC
 ** 创建数据库
 #+BEGIN_SRC sh
 mysql -u root -p
 mysql> CREATE DATABASE nova;
-mysql> GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'localhost' \
-IDENTIFIED BY 'nova';
-mysql> GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'%' \
-IDENTIFIED BY 'nova';
+mysql> GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'localhost' IDENTIFIED BY 'nova';
+mysql> GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'%' IDENTIFIED BY 'nova';
 #+END_SRC
 ** 修改配置文件
 修改/etc/nova/nova.conf
@@ -328,22 +318,21 @@ neutron_admin_auth_url=http://172.16.0.254:35357/v2.0
 firewall_driver=nova.virt.firewall.NoopFirewallDriver
 security_group_api=neutron
 #+END_SRC
-修该/etc/nova/api-paste.ini的[filter:authtoken]部分
+修改/etc/nova/api-paste.ini的[filter:authtoken]部分
 #+BEGIN_SRC sh
 [filter:authtoken]
 paste.filter_factory=keystoneclient.middleware.auth_token:filter_factory
 auth_host=172.16.0.254
 auth_port = 35357
 auth_protocol = http
-auth_uri=http://172.16.0.254:5000
+auth_url=http://172.16.0.254:5000
 admin_tenant_name=service
 admin_user=nova
 admin_password=nova
 #+END_SRC
 ** 创建用户与角色
 #+BEGIN_SRC sh
-keystone user-create --name=nova --pass=nova --email=nova@126.
-com
+keystone user-create --name=nova --pass=nova --email=nova@126.com
 keystone user-role-add --user=nova --tenant=service --role=admin
 #+END_SRC
 ** 创建service服务和endpoint
@@ -372,11 +361,6 @@ cd /etc/init.d/; for i in $( ls nova-* ); do sudo service $i restart; done
 #+BEGIN_SRC sh
 nova image-list
 #+END_SRC
-* 安装horizon
-#+BEGIN_SRC sh
-apt-get install memcached libapache2-mod-wsgi openstack-dashboard
-apt-get remove --purge openstack-dashboard-ubuntu-theme
-#+END_SRC
 * Block Storage (Cinder)安装
 ** 安装服务
 #+BEGIN_SRC sh
@@ -386,10 +370,8 @@ apt-get install cinder-api cinder-scheduler
 #+BEGIN_SRC sh
 mysql -u root -p
 mysql> CREATE DATABASE cinder;
-mysql> GRANT ALL PRIVILEGES ON cinder.* TO 'cinder'@'localhost' \
-IDENTIFIED BY 'cinder';
-mysql> GRANT ALL PRIVILEGES ON cinder.* TO 'cinder'@'%' \
-IDENTIFIED BY 'cinder';
+mysql> GRANT ALL PRIVILEGES ON cinder.* TO 'cinder'@'localhost' IDENTIFIED BY 'cinder';
+mysql> GRANT ALL PRIVILEGES ON cinder.* TO 'cinder'@'%' IDENTIFIED BY 'cinder';
 #+END_SRC
 ** 建立一个逻辑卷卷组 cinder-volumes
 创建一个普通分区，我这里用的sdb，创建了一个主分区，大小为所有空间
@@ -436,18 +418,17 @@ admin_password = cinder
 #+END_SRC
 ** 创建用户，角色，服务和endpoint
 #+BEGIN_SRC sh
-keystone user-create --name=cinder --pass=cinder --
-email=cinder@126.com
+keystone user-create --name=cinder --pass=cinder --email=cinder@126.com
 keystone user-role-add --user=cinder --tenant=service --role=admin
-keystone service-create --name=cinder --type=volume \
---description="Cinder Volume Service"
+
+keystone service-create --name=cinder --type=volume --description="Cinder Volume Service"
 keystone endpoint-create \
 --service-id=the_service_id_above \
 --publicurl=http://172.16.0.254:8776/v1/%\(tenant_id\)s \
 --internalurl=http://172.16.0.254:8776/v1/%\(tenant_id\)s \
 --adminurl=http://172.16.0.254:8776/v1/%\(tenant_id\)s
-keystone service-create --name=cinder --type=volumev2 \
---description="Cinder Volume Service V2"
+
+keystone service-create --name=cinder --type=volumev2 --description="Cinder Volume Service V2"
 keystone endpoint-create \
 --service-id=the_service_id_above \
 --publicurl=http://172.16.0.254:8776/v2/%\(tenant_id\)s \
@@ -469,18 +450,15 @@ cinder list
 #+BEGIN_SRC sh
 mysql -u root -p
 mysql> CREATE DATABASE neutron;
-mysql> GRANT ALL PRIVILEGES ON neutron.* TO 'neutron'@'localhost' \
-IDENTIFIED BY 'neutron';
-mysql> GRANT ALL PRIVILEGES ON neutron.* TO 'neutron'@'%' \
-IDENTIFIED BY 'neutron';
+mysql> GRANT ALL PRIVILEGES ON neutron.* TO 'neutron'@'localhost' IDENTIFIED BY 'neutron';
+mysql> GRANT ALL PRIVILEGES ON neutron.* TO 'neutron'@'%' IDENTIFIED BY 'neutron';
 #+END_SRC
 ** 创建用户，服务和endpoint
 #+BEGIN_SRC sh
-keystone user-create --name=neutron --pass=neutron --
-email=neutron@126.com
+keystone user-create --name=neutron --pass=neutron --email=neutron@126.com
 keystone user-role-add --user=neutron --tenant=service --role=admin
-keystone service-create --name=neutron --type=network \
---description="OpenStack Networking Service"
+
+keystone service-create --name=neutron --type=network --description="OpenStack Networking Service"
 keystone endpoint-create \
 --service-id the_service_id_above \
 --publicurl http://172.16.0.254:9696 \
@@ -489,8 +467,7 @@ keystone endpoint-create \
 #+END_SRC
 ** 安装网络服务
 *** 安装neutron组件
-apt-get install neutron-server neutron-dhcp-agent neutron-plugin-
-openvswitch-agent neutron-l3-agent
+apt-get install neutron-server neutron-dhcp-agent neutron-plugin-openvswitch-agent neutron-l3-agent neutron-lbaas-agent
 *** 打开ip_forward
 编辑/etc/sysctl.conf
 #+BEGIN_SRC sh
@@ -501,7 +478,7 @@ net.ipv4.conf.default.rp_filter=0
 重启网络
 #+BEGIN_SRC sh
 sysctl -p
-service networking restart
+/etc/init.d/networking restart
 #+END_SRC
 *** 编辑配置文件
 编辑/etc/neutron/neutron.conf 
@@ -512,10 +489,13 @@ verbose = True
 [database]
 connection = mysql://neutron:neutron@172.16.0.254/neutron
 core_plugin = neutron.plugins.openvswitch.ovs_neutron_plugin.OVSNeutronPluginV2
+service_plugins = neutron.plugins.services.agent_loadbalancer.plugin.LoadBalancerPlugin
+service_plugins = neutron.services.firewall.fwaas_plugin.FirewallPlugin
+
 [keystone_authtoken]
 auth_host = 172.16.0.254
 auth_port = 35357
-auth_url = http://controller:35357/v2.0
+auth_url = http://172.16.0.254:35357/v2.0
 auth_strategy = keystone
 auth_protocol = http
 admin_tenant_name = service
@@ -535,6 +515,8 @@ admin_password=neutron
 编辑/etc/neutron/dhcp_agent.ini
 #+BEGIN_SRC sh
 dhcp_driver = neutron.agent.linux.dhcp.Dnsmasq
+ovs_use_veth = True
+enable_isolated_metadata = True
 use_namespaces = True
 interface_driver = neutron.agent.linux.interface.OVSInterfaceDriver
 #+END_SRC
@@ -543,9 +525,20 @@ interface_driver = neutron.agent.linux.interface.OVSInterfaceDriver
 use_namespaces = True
 interface_driver = neutron.agent.linux.interface.OVSInterfaceDriver
 #+END_SRC
+编辑/etc/neutron/lbaas_agent.ini
+#+BEGIN_SRC sh
+interface_driver = neutron.agent.linux.interface.OVSInterfaceDriver
+device_driver = neutron.services.loadbalancer.drivers.haproxy.namespace_driver.HaproxyNSDriver
+#+END_SRC
+创建/etc/neutron/fwaas_driver.ini
+#+BEGIN_SRC sh
+[fwaas]
+driver = neutron.services.firewall.drivers.linux.iptables_fwaas.IptablesFwaasDriver
+enabled = True
+#+END_SRC
 ** 安装ovs插件
 *** 安装
-apt-get install neutron-plugin-openvswitch-agent openvswitch-switch
+apt-get install neutron-plugin-openvswitch-agent openvswitch-common openvswitch-datapath-dkms openvswitch-switch
 *** 网络配置
 **** 建立网桥
 ovs-vsctl add-br br-int
@@ -605,10 +598,8 @@ apt-get install heat-api heat-api-cfn heat-engine
 #+BEGIN_SRC sh
 mysql -u root -p
 mysql> CREATE DATABASE heat;
-mysql> GRANT ALL PRIVILEGES ON heat.* TO 'heat'@'localhost' \
-IDENTIFIED BY 'heat';
-mysql> GRANT ALL PRIVILEGES ON heat.* TO 'heat'@'%' \
-IDENTIFIED BY 'heat';
+mysql> GRANT ALL PRIVILEGES ON heat.* TO 'heat'@'localhost' IDENTIFIED BY 'heat';
+mysql> GRANT ALL PRIVILEGES ON heat.* TO 'heat'@'%' IDENTIFIED BY 'heat';
 #+END_SRC
 ** 编辑配置文件
 /etc/heat/heat.conf
@@ -636,21 +627,19 @@ heat-manage db_sync
 #+END_SRC
 ** 创建用户和角色
 #+BEGIN_SRC sh
-keystone user-create --name=heat --pass=heat --email=heat@126.
-com
+keystone user-create --name=heat --pass=heat --email=heat@126.com
 keystone user-role-add --user=heat --tenant=service --role=admin
 #+END_SRC
 ** 创建服务和endpoint
 #+BEGIN_SRC sh
-keystone service-create --name=heat --type=orchestration \
---description="Heat Orchestration API"
+keystone service-create --name=heat --type=orchestration --description="Heat Orchestration API"
 keystone endpoint-create \
 --service-id=the_service_id_above \
 --publicurl=http://172.16.0.254:8004/v1/\$(tenant_id)s \
 --internalurl=http://172.16.0.254:8004/v1/\$(tenant_id)s \
 --adminurl=http://172.16.0.254:8004/v1/\$(tenant_id)s
-keystone service-create --name=heat-cfn --type=cloudformation \
---description="Heat CloudFormation API"
+
+keystone service-create --name=heat-cfn --type=cloudformation --description="Heat CloudFormation API"
 keystone endpoint-create \
 --service-id=the_service_id_above \
 --publicurl=http://172.16.0.254:8000/v1 \
@@ -677,8 +666,7 @@ heat stack-create mystack \
 ** 安装
 安装服务
 #+BEGIN_SRC sh
-apt-get install ceilometer-api ceilometer-collector ceilometer-agent-
-central python-ceilometerclient ceilometer-agent-compute
+apt-get install ceilometer-api ceilometer-collector ceilometer-agent-central python-ceilometerclient ceilometer-agent-compute
 #+END_SRC
 安装MongoDB Orchestration 服务使用数据库来存储信息，此示例使用MongoDB数据库
 #+BEGIN_SRC sh
@@ -721,11 +709,10 @@ admin_password = ceilometer
 #+END_SRC
 ** 创建用户，角色，服务和endpoint
 #+BEGIN_SRC sh
-keystone user-create --name=ceilometer --pass=CEILOMETER_PASS --
-email=ceilometer@126.com
+keystone user-create --name=ceilometer --pass=CEILOMETER_PASS --email=ceilometer@126.com
 keystone user-role-add --user=ceilometer --tenant=service --role=admin
-keystone service-create --name=ceilometer --type=metering \
---description="Ceilometer Metering Service"
+
+keystone service-create --name=ceilometer --type=metering --description="Ceilometer Metering Service"
 keystone endpoint-create \
 --service-id=the_service_id_above \
 --publicurl=http://172.16.0.254:8777/ \
@@ -735,6 +722,15 @@ keystone endpoint-create \
 ** 重启服务
 #+BEGIN_SRC sh
 cd /etc/init.d/; for i in $( ls ceilometer-* ); do sudo service $i restart; done
+#+END_SRC
+* 安装horizon
+#+BEGIN_SRC sh
+apt-get install memcached libapache2-mod-wsgi openstack-dashboard
+apt-get remove --purge openstack-dashboard-ubuntu-theme
+#+END_SRC
+编辑/etc/openstack_dashboard/local/local_settings.py设置
+#+BEGIN_SRC sh
+'enable_firewall' = True
 #+END_SRC
 * 其他
 
