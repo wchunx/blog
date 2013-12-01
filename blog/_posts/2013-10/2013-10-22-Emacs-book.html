@@ -14,14 +14,16 @@ featured: false
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#sec-1">1 Emacs杂记</a>
+<li><a href="#sec-1">1 为什么选择Emacs</a></li>
+<li><a href="#sec-2">2 org-mode写jekyll代码高亮的问题</a>
 <ul>
-<li><a href="#sec-1-1">1.1 为什么选择Emacs</a></li>
-<li><a href="#sec-1-2">1.2 org-mode写jekyll代码高亮的问题</a>
-<ul>
-<li><a href="#sec-1-2-1">1.2.1 参考</a></li>
+<li><a href="#sec-2-1">2.1 参考</a></li>
 </ul>
 </li>
+<li><a href="#sec-3">3 安装和使用ecb</a></li>
+<li><a href="#sec-4">4 使用问题</a>
+<ul>
+<li><a href="#sec-4-1">4.1 flet和labels的warning</a></li>
 </ul>
 </li>
 </ul>
@@ -29,24 +31,17 @@ featured: false
 </div>
 
 <div id="outline-container-1" class="outline-2">
-<h2 id="sec-1">Emacs杂记</h2>
+<h2 id="sec-1">为什么选择Emacs</h2>
 <div class="outline-text-2" id="text-1">
-
-
-</div>
-
-<div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1">为什么选择Emacs</h3>
-<div class="outline-text-3" id="text-1-1">
 
 <p>因为好奇开始学习和折腾Emacs，慢慢习惯，现在已经舍不得了，最然现在还只是个初学者，传说的神奇还没有深切体会，但会继续学下去的。
 </p></div>
 
 </div>
 
-<div id="outline-container-1-2" class="outline-3">
-<h3 id="sec-1-2">org-mode写jekyll代码高亮的问题</h3>
-<div class="outline-text-3" id="text-1-2">
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">org-mode写jekyll代码高亮的问题</h2>
+<div class="outline-text-2" id="text-2">
 
 <p>为了使输出的代码高亮，在.emacs中设置(setq org-export-htmlize-output-type 'inline-css) ，对于htmlize，这个变量如果设为css,则需要
 下载一个css文件（比如 orgmode.org网站的css文件）才能着色，选择inline-css则依据emacs当前外观主题，下面为org-publish，添加defadvice，使得发布博客时使用whiteboard风格。
@@ -72,9 +67,9 @@ htmlize."
 
 </div>
 
-<div id="outline-container-1-2-1" class="outline-4">
-<h4 id="sec-1-2-1">参考</h4>
-<div class="outline-text-4" id="text-1-2-1">
+<div id="outline-container-2-1" class="outline-3">
+<h3 id="sec-2-1">参考</h3>
+<div class="outline-text-3" id="text-2-1">
 
 <p><a href="http://ar.newsmth.net/thread-8fac5033e0ec5a-1.html">org-mode 中引用代码片段时语法着色的问题</a>
 </p>
@@ -82,5 +77,69 @@ htmlize."
 <a href="http://fasheng.github.io/blog/2013-10-06-change-code-color-style-when-publish-org-mode-to-html.html">设置org-mode导出为html时的代码高亮风格</a>
 </p></div>
 </div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3">安装和使用ecb</h2>
+<div class="outline-text-2" id="text-3">
+
+<p>ecb是emacs中的代码浏览工具，依赖cedet。之前写过一篇[安装cedet和ecb][/emacs/2013/10/19/Emacs-cedet-ecb/index.html]的文章，手动安装的cedet和ecb。
+</p>
+<p>
+<a href="http://alexott.blogspot.de/2012/06/ecb-fresh-emacscedet.html">这篇文章</a> 作者对ecb做了些改动，我clone下来试用发现跟Emacs24.3.1内置的cedet兼容良好。省去了手动安装cedet的过程，而且感觉emacs启动也快了些。下面是安装过程：
+</p>
+
+
+<pre class="example">cd ~/.emacs.d/plugins/
+git clone https://github.com/alexott/ecb/
+</pre>
+
+<p>
+init.el中关于ecb的配置
+</p>
+
+
+<pre class="example">;;ecb
+(add-to-list 'load-path "~/.emacs.d/plugins/ecb")
+(require 'ecb)
+(setq stack-trace-on-error nil)
+;;鼠标支持：Emacs中执行“M-x ecb-customize-most-important”，找到“Ecb Primary Secondary Mouse Buttons”选项，将其设为“Primary: mouse-1, secondary: mouse-2”，并且&gt;以“Save for Future Sessions”保存。
+;;自动启动ecb
+;; (setq ecb-auto-activate t)
+;;F7:打开ecb
+(global-set-key  [(f7)] 'ecb-activate)
+;;F8:关闭ecb
+(global-set-key  [(f8)] 'ecb-deactivate)
+;;关闭ecb启动窗口
+(setq ecb-tip-of-the-day nil)
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4">使用问题</h2>
+<div class="outline-text-2" id="text-4">
+
+
+</div>
+
+<div id="outline-container-4-1" class="outline-3">
+<h3 id="sec-4-1">flet和labels的warning</h3>
+<div class="outline-text-3" id="text-4-1">
+
+<p>装完auto-compute，启动emacs总会出下面两条warning
+</p>
+
+
+<pre class="example">`flet' is an obsolete macro (as of 24.3); use either `cl-flet' or `cl-letf'.
+`labels' is an obsolete macro (as of 24.3); use `cl-labels' instead.
+</pre>
+
+<p>
+<a href="http://ergoemacs.org/emacs/emacs_24_common_lisp_package_name_change.html">这里</a> 有点介绍.
+</p></div>
 </div>
 </div>

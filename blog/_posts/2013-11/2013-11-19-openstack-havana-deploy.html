@@ -162,7 +162,7 @@ featured: false
 </p>
 
 
-<pre class="src src-sh"><span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">cat /etc/network/interfaces</span>
+<pre class="example"># cat /etc/network/interfaces
 auto lo
 iface lo inet loopback
 
@@ -184,7 +184,7 @@ iface eth1 inet static
 </p>
 
 
-<pre class="src src-sh">/etc/init.d/networking restart
+<pre class="example">/etc/init.d/networking restart
 </pre>
 
 </div>
@@ -198,7 +198,7 @@ iface eth1 inet static
 
 
 
-<pre class="src src-sh">apt-get install python-software-properties
+<pre class="example">apt-get install python-software-properties
 add-apt-repository cloud-archive:havana
 apt-get update &amp;&amp; apt-get dist-upgrade
 </pre>
@@ -214,13 +214,13 @@ apt-get update &amp;&amp; apt-get dist-upgrade
 
 
 
-<pre class="src src-sh"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#35774;&#32622;mysql root&#29992;&#25143;&#23494;&#30721;&#20026;123456</span>
-<span style="color: #cd6600;">echo</span> mysql-server-5.5 mysql-server/root_password password 123456 | debconf-set-selections
-<span style="color: #cd6600;">echo</span> mysql-server-5.5 mysql-server/root_password_again password 123456 | debconf-set-selections
+<pre class="example">#设置mysql root用户密码为123456
+echo mysql-server-5.5 mysql-server/root_password password 123456 | debconf-set-selections
+echo mysql-server-5.5 mysql-server/root_password_again password 123456 | debconf-set-selections
 apt-get -y install mysql-server python-mysqldb
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#20801;&#35768;&#22806;&#37096;&#35775;&#38382;mysql</span>
-sed -i -e  <span style="color: #8b7355;">"s/^\(bind-address\s*=\).*/\1 0.0.0.0/"</span> /etc/mysql/my.cnf
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#37325;&#21551;mysql&#26381;&#21153;</span>
+#允许外部访问mysql
+sed -i -e  "s/^\(bind-address\s*=\).*/\1 0.0.0.0/" /etc/mysql/my.cnf
+#重启mysql服务
 /etc/init.d/mysql restart
 apt-get -y install rabbitmq-server
 </pre>
@@ -231,7 +231,7 @@ rabbitmq-server默认会创建一个用户，用户名密码均为guest，并允
 </p>
 
 
-<pre class="src src-sh">rabbitmqctl change_password guest NEW_PASS
+<pre class="example">rabbitmqctl change_password guest NEW_PASS
 </pre>
 
 </div>
@@ -252,7 +252,7 @@ rabbitmq-server默认会创建一个用户，用户名密码均为guest，并允
 
 
 
-<pre class="src src-sh">apt-get install -y keystone
+<pre class="example">apt-get install -y keystone
 </pre>
 
 </div>
@@ -266,7 +266,7 @@ rabbitmq-server默认会创建一个用户，用户名密码均为guest，并允
 
 
 
-<pre class="src src-sh">rm -f /var/lib/keystone/keystone.db
+<pre class="example">rm -f /var/lib/keystone/keystone.db
 </pre>
 
 </div>
@@ -281,10 +281,10 @@ rabbitmq-server默认会创建一个用户，用户名密码均为guest，并允
 </p>
 
 
-<pre class="src src-sh"><span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">mysql -u root -p123456</span>
+<pre class="example"># mysql -u root -p123456
 mysql&gt; CREATE DATABASE keystone;
-mysql&gt; GRANT ALL PRIVILEGES ON keystone.* TO <span style="color: #8b7355;">'keystone'</span>@<span style="color: #8b7355;">'localhost'</span> IDENTIFIED BY <span style="color: #8b7355;">'keystone'</span>;
-mysql&gt; GRANT ALL PRIVILEGES ON keystone.* TO <span style="color: #8b7355;">'keystone'</span>@<span style="color: #8b7355;">'%'</span> IDENTIFIED BY <span style="color: #8b7355;">'keystone'</span>;
+mysql&gt; GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'localhost' IDENTIFIED BY 'keystone';
+mysql&gt; GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'%' IDENTIFIED BY 'keystone';
 </pre>
 
 </div>
@@ -306,11 +306,11 @@ mysql&gt; GRANT ALL PRIVILEGES ON keystone.* TO <span style="color: #8b7355;">'k
 </p>
 
 
-<pre class="src src-sh">[DEFAULT]
+<pre class="example">[DEFAULT]
 admin_token = wchunx
 ...
 [sql]
-<span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">The SQLAlchemy connection string used to connect to the database</span>
+# The SQLAlchemy connection string used to connect to the database
 connection = mysql://keystone:keystone@172.16.0.254/keystone
 ...
 </pre>
@@ -326,7 +326,7 @@ connection = mysql://keystone:keystone@172.16.0.254/keystone
 
 
 
-<pre class="src src-sh">keystone-manage db_sync
+<pre class="example">keystone-manage db_sync
 /etc/init.d/keystone restart
 </pre>
 
@@ -349,8 +349,8 @@ connection = mysql://keystone:keystone@172.16.0.254/keystone
 
 
 
-<pre class="src src-sh"><span style="color: #cd6600;">export</span> <span style="color: #2e8b57;">OS_SERVICE_TOKEN</span>=wchunx
-<span style="color: #cd6600;">export</span> <span style="color: #2e8b57;">OS_SERVICE_ENDPOINT</span>=http://172.16.0.254:35357/v2.0
+<pre class="example">export OS_SERVICE_TOKEN=wchunx
+export OS_SERVICE_ENDPOINT=http://172.16.0.254:35357/v2.0
 </pre>
 
 </div>
@@ -364,8 +364,8 @@ connection = mysql://keystone:keystone@172.16.0.254/keystone
 
 
 
-<pre class="src src-sh">keystone tenant-create --name=admin --description=<span style="color: #8b7355;">"Admin Tenant"</span>
-keystone tenant-create --name=service --description=<span style="color: #8b7355;">"Service Tenant"</span>
+<pre class="example">keystone tenant-create --name=admin --description="Admin Tenant"
+keystone tenant-create --name=service --description="Service Tenant"
 </pre>
 
 </div>
@@ -379,7 +379,7 @@ keystone tenant-create --name=service --description=<span style="color: #8b7355;
 
 
 
-<pre class="src src-sh">keystone user-create --name=admin --pass=password --email=admin@126.com
+<pre class="example">keystone user-create --name=admin --pass=password --email=admin@126.com
 </pre>
 
 </div>
@@ -393,7 +393,7 @@ keystone tenant-create --name=service --description=<span style="color: #8b7355;
 
 
 
-<pre class="src src-sh">keystone role-create --name=admin
+<pre class="example">keystone role-create --name=admin
 </pre>
 
 </div>
@@ -407,7 +407,7 @@ keystone tenant-create --name=service --description=<span style="color: #8b7355;
 
 
 
-<pre class="src src-sh">keystone user-role-add --user=admin --tenant=admin --role=admin
+<pre class="example">keystone user-role-add --user=admin --tenant=admin --role=admin
 </pre>
 
 </div>
@@ -423,7 +423,7 @@ keystone tenant-create --name=service --description=<span style="color: #8b7355;
 </p>
 
 
-<pre class="src src-sh">keystone service-create --name=keystone --type=identity --description=<span style="color: #8b7355;">"Keystone Identity Service"</span>
+<pre class="example">keystone service-create --name=keystone --type=identity --description="Keystone Identity Service"
 </pre>
 
 <p>
@@ -432,10 +432,10 @@ keystone tenant-create --name=service --description=<span style="color: #8b7355;
 </p>
 
 
-<pre class="src src-sh">keystone endpoint-create <span style="color: #8b7355;">\</span>
---service-id=the_service_id_above <span style="color: #8b7355;">\</span>
---publicurl=http://172.16.0.254:5000/v2.0 <span style="color: #8b7355;">\</span>
---internalurl=http://172.16.0.254:5000/v2.0 <span style="color: #8b7355;">\</span>
+<pre class="example">keystone endpoint-create \
+--service-id=the_service_id_above \
+--publicurl=http://172.16.0.254:5000/v2.0 \
+--internalurl=http://172.16.0.254:5000/v2.0 \
 --adminurl=http://172.16.0.254:35357/v2.0
 </pre>
 
@@ -451,7 +451,7 @@ keystone tenant-create --name=service --description=<span style="color: #8b7355;
 </p>
 
 
-<pre class="src src-sh"><span style="color: #cd6600;">unset</span> OS_SERVICE_TOKEN OS_SERVICE_ENDPOINT
+<pre class="example">unset OS_SERVICE_TOKEN OS_SERVICE_ENDPOINT
 </pre>
 
 <p>
@@ -459,14 +459,14 @@ keystone tenant-create --name=service --description=<span style="color: #8b7355;
 </p>
 
 
-<pre class="src src-sh">cat &gt; /root/keystonerc &lt;&lt; _EOF_
-<span style="color: #ffa54f;">export OS_USERNAME=admin</span>
-<span style="color: #ffa54f;">export OS_PASSWORD=password</span>
-<span style="color: #ffa54f;">export OS_TENANT_NAME=admin</span>
-<span style="color: #ffa54f;">export OS_AUTH_URL=http://172.16.0.254:35357/v2.0</span>
-<span style="color: #ffa54f;">_EOF_</span>
-<span style="color: #cd6600;">echo</span> <span style="color: #8b7355;">'source /root/keystonerc'</span> &gt;&gt; /root/.bashrc
-<span style="color: #cd6600;">source</span> /root/keystonerc
+<pre class="example">cat &gt; /root/keystonerc &lt;&lt; _EOF_
+export OS_USERNAME=admin
+export OS_PASSWORD=password
+export OS_TENANT_NAME=admin
+export OS_AUTH_URL=http://172.16.0.254:35357/v2.0
+_EOF_
+echo 'source /root/keystonerc' &gt;&gt; /root/.bashrc
+source /root/keystonerc
 </pre>
 
 <p>
@@ -474,7 +474,7 @@ keystone tenant-create --name=service --description=<span style="color: #8b7355;
 </p>
 
 
-<pre class="src src-sh">keystone token-get
+<pre class="example">keystone token-get
 keystone user-list
 keystone role-list
 keystone tenant-list
@@ -500,7 +500,7 @@ keystone endpoint-list
 
 
 
-<pre class="src src-sh">apt-get install glance
+<pre class="example">apt-get install glance
 </pre>
 
 <p>
@@ -508,7 +508,7 @@ keystone endpoint-list
 </p>
 
 
-<pre class="src src-sh">rm -f /var/lib/glance/glance.sqlite
+<pre class="example">rm -f /var/lib/glance/glance.sqlite
 </pre>
 
 </div>
@@ -523,10 +523,10 @@ keystone endpoint-list
 </p>
 
 
-<pre class="src src-sh">mysql -u root -p123456
+<pre class="example">mysql -u root -p123456
 mysql&gt; CREATE DATABASE glance;
-mysql&gt; GRANT ALL PRIVILEGES ON glance.* TO <span style="color: #8b7355;">'glance'</span>@<span style="color: #8b7355;">'localhost'</span> IDENTIFIED BY <span style="color: #8b7355;">'glance'</span>;
-mysql&gt; GRANT ALL PRIVILEGES ON glance.* TO <span style="color: #8b7355;">'glance'</span>@<span style="color: #8b7355;">'%'</span> IDENTIFIED BY <span style="color: #8b7355;">'glance'</span>;
+mysql&gt; GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'localhost' IDENTIFIED BY 'glance';
+mysql&gt; GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'%' IDENTIFIED BY 'glance';
 </pre>
 
 </div>
@@ -541,7 +541,7 @@ mysql&gt; GRANT ALL PRIVILEGES ON glance.* TO <span style="color: #8b7355;">'gla
 </p>
 
 
-<pre class="src src-sh">verbose = True
+<pre class="example">verbose = True
 debug = True
 sql_connection = mysql://glance:glance@172.16.0.254/glance
 [keystone_authtoken]
@@ -559,7 +559,7 @@ notifier_strategy = rabbit
 </p>
 
 
-<pre class="src src-sh">verbose = True
+<pre class="example">verbose = True
 debug = True
 sql_connection = mysql://glance:glance@172.16.0.254/glance
 [keystone_authtoken]
@@ -576,12 +576,12 @@ admin_password = glance
 </p>
 
 
-<pre class="src src-sh">[filter:authtoken]
+<pre class="example">[filter:authtoken]
 paste.filter_factory=keystoneclient.middleware.auth_token:filter_factory
-<span style="color: #2e8b57;">auth_host</span>=172.16.0.254
-<span style="color: #2e8b57;">admin_user</span>=glance
-<span style="color: #2e8b57;">admin_tenant_name</span>=service
-<span style="color: #2e8b57;">admin_password</span>=glance
+auth_host=172.16.0.254
+admin_user=glance
+admin_tenant_name=service
+admin_password=glance
 </pre>
 
 <p>
@@ -589,12 +589,12 @@ paste.filter_factory=keystoneclient.middleware.auth_token:filter_factory
 </p>
 
 
-<pre class="src src-sh">[filter:authtoken]
+<pre class="example">[filter:authtoken]
 paste.filter_factory=keystoneclient.middleware.auth_token:filter_factory
-<span style="color: #2e8b57;">auth_host</span>=172.16.0.254
-<span style="color: #2e8b57;">admin_user</span>=glance
-<span style="color: #2e8b57;">admin_tenant_name</span>=service
-<span style="color: #2e8b57;">admin_password</span>=glance
+auth_host=172.16.0.254
+admin_user=glance
+admin_tenant_name=service
+admin_password=glance
 </pre>
 
 </div>
@@ -608,7 +608,7 @@ paste.filter_factory=keystoneclient.middleware.auth_token:filter_factory
 
 
 
-<pre class="src src-sh">glance-manage db_sync
+<pre class="example">glance-manage db_sync
 </pre>
 
 </div>
@@ -622,7 +622,7 @@ paste.filter_factory=keystoneclient.middleware.auth_token:filter_factory
 
 
 
-<pre class="src src-sh">keystone user-create --name=glance --pass=glance --email=glance@126.com
+<pre class="example">keystone user-create --name=glance --pass=glance --email=glance@126.com
 keystone user-role-add --user=glance --tenant=service --role=admin
 </pre>
 
@@ -637,12 +637,12 @@ keystone user-role-add --user=glance --tenant=service --role=admin
 
 
 
-<pre class="src src-sh">keystone service-create --name=glance --type=image --description=<span style="color: #8b7355;">"Glance Image Service"</span>
+<pre class="example">keystone service-create --name=glance --type=image --description="Glance Image Service"
 
-keystone endpoint-create <span style="color: #8b7355;">\</span>
---service-id=the_service_id_above <span style="color: #8b7355;">\</span>
---publicurl=http://172.16.0.254:9292 <span style="color: #8b7355;">\</span>
---internalurl=http://172.16.0.254:9292 <span style="color: #8b7355;">\</span>
+keystone endpoint-create \
+--service-id=the_service_id_above \
+--publicurl=http://172.16.0.254:9292 \
+--internalurl=http://172.16.0.254:9292 \
 --adminurl=http://172.16.0.254:9292
 </pre>
 
@@ -657,7 +657,7 @@ keystone endpoint-create <span style="color: #8b7355;">\</span>
 
 
 
-<pre class="src src-sh">service glance-registry restart
+<pre class="example">service glance-registry restart
 service glance-api restart
 </pre>
 
@@ -673,7 +673,7 @@ service glance-api restart
 </p>
 
 
-<pre class="src src-sh">wget http://cdn.download.cirros-cloud.net/0.3.1/cirros-0.3.1-x86_64-disk.img
+<pre class="example">wget http://cdn.download.cirros-cloud.net/0.3.1/cirros-0.3.1-x86_64-disk.img
 </pre>
 
 <p>
@@ -681,7 +681,7 @@ service glance-api restart
 </p>
 
 
-<pre class="src src-sh">glance image-create --name=<span style="color: #8b7355;">'cirros'</span> --is-public true --container-format bare --disk-format qcow2 &lt; ./cirros-0.3.0-x86_64-disk.img
+<pre class="example">glance image-create --name='cirros' --is-public true --container-format bare --disk-format qcow2 &lt; ./cirros-0.3.0-x86_64-disk.img
 </pre>
 
 <p>
@@ -689,7 +689,7 @@ service glance-api restart
 </p>
 
 
-<pre class="src src-sh">glance image-list
+<pre class="example">glance image-list
 </pre>
 
 </div>
@@ -711,8 +711,8 @@ service glance-api restart
 
 
 
-<pre class="src src-sh">apt-get install nova-novncproxy novnc nova-api python-novaclient <span style="color: #8b7355;">\</span>
-nova-ajax-console-proxy nova-cert nova-conductor <span style="color: #8b7355;">\</span>
+<pre class="example">apt-get install nova-novncproxy novnc nova-api python-novaclient \
+nova-ajax-console-proxy nova-cert nova-conductor \
 nova-consoleauth nova-doc nova-scheduler
 apt-get install nova-compute-kvm python-guestfs
 </pre>
@@ -730,7 +730,7 @@ apt-get install nova-compute-kvm python-guestfs
 
 
 
-<pre class="src src-sh">chmod 0644 /boot/vmlinuz*
+<pre class="example">chmod 0644 /boot/vmlinuz*
 </pre>
 
 </div>
@@ -744,7 +744,7 @@ apt-get install nova-compute-kvm python-guestfs
 
 
 
-<pre class="src src-sh">rm -f /var/lib/nova/nova.sqlite
+<pre class="example">rm -f /var/lib/nova/nova.sqlite
 </pre>
 
 </div>
@@ -758,10 +758,10 @@ apt-get install nova-compute-kvm python-guestfs
 
 
 
-<pre class="src src-sh">mysql -u root -p123456
+<pre class="example">mysql -u root -p123456
 mysql&gt; CREATE DATABASE nova;
-mysql&gt; GRANT ALL PRIVILEGES ON nova.* TO <span style="color: #8b7355;">'nova'</span>@<span style="color: #8b7355;">'localhost'</span> IDENTIFIED BY <span style="color: #8b7355;">'nova'</span>;
-mysql&gt; GRANT ALL PRIVILEGES ON nova.* TO <span style="color: #8b7355;">'nova'</span>@<span style="color: #8b7355;">'%'</span> IDENTIFIED BY <span style="color: #8b7355;">'nova'</span>;
+mysql&gt; GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'localhost' IDENTIFIED BY 'nova';
+mysql&gt; GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'%' IDENTIFIED BY 'nova';
 </pre>
 
 </div>
@@ -776,12 +776,12 @@ mysql&gt; GRANT ALL PRIVILEGES ON nova.* TO <span style="color: #8b7355;">'nova'
 </p>
 
 
-<pre class="src src-sh">[DEFAULT]
-<span style="color: #2e8b57;">my_ip</span>=192.168.150.8
-<span style="color: #2e8b57;">vncserver_listen</span>=0.0.0.0
-<span style="color: #2e8b57;">vncserver_proxyclient_address</span>=172.16.0.254
-<span style="color: #2e8b57;">novncproxy_base_url</span>=http://192.168.150.8:6080/vnc_auto.html
-<span style="color: #2e8b57;">auth_strategy</span>=keystone
+<pre class="example">[DEFAULT]
+my_ip=192.168.150.8
+vncserver_listen=0.0.0.0
+vncserver_proxyclient_address=172.16.0.254
+novncproxy_base_url=http://192.168.150.8:6080/vnc_auto.html
+auth_strategy=keystone
 rpc_backend = nova.rpc.impl_kombu
 rabbit_host = 172.16.0.254
 glance_host = 172.16.0.254
@@ -789,23 +789,23 @@ glance_host = 172.16.0.254
 neutron_metadata_proxy_shared_secret = wchunx
 service_neutron_metadata_proxy = true
 
-<span style="color: #2e8b57;">instance_usage_audit</span>=True
-<span style="color: #2e8b57;">instance_usage_audit_period</span>=hour
-<span style="color: #2e8b57;">notify_on_state_change</span>=vm_and_task_state
-<span style="color: #2e8b57;">notification_driver</span>=nova.openstack.common.notifier.rpc_notifier
-<span style="color: #2e8b57;">notification_driver</span>=ceilometer.compute.nova_notifier
+instance_usage_audit=True
+instance_usage_audit_period=hour
+notify_on_state_change=vm_and_task_state
+notification_driver=nova.openstack.common.notifier.rpc_notifier
+notification_driver=ceilometer.compute.nova_notifier
 [database]
 connection = mysql://nova:nova@172.16.0.254/nova
 
-<span style="color: #2e8b57;">network_api_class</span>=nova.network.neutronv2.api.API
-<span style="color: #2e8b57;">neutron_url</span>=http://172.16.0.254:9696
-<span style="color: #2e8b57;">neutron_auth_strategy</span>=keystone
-<span style="color: #2e8b57;">neutron_admin_tenant_name</span>=service
-<span style="color: #2e8b57;">neutron_admin_username</span>=neutron
-<span style="color: #2e8b57;">neutron_admin_password</span>=neutron
-<span style="color: #2e8b57;">neutron_admin_auth_url</span>=http://172.16.0.254:35357/v2.0
-<span style="color: #2e8b57;">firewall_driver</span>=nova.virt.firewall.NoopFirewallDriver
-<span style="color: #2e8b57;">security_group_api</span>=neutron
+network_api_class=nova.network.neutronv2.api.API
+neutron_url=http://172.16.0.254:9696
+neutron_auth_strategy=keystone
+neutron_admin_tenant_name=service
+neutron_admin_username=neutron
+neutron_admin_password=neutron
+neutron_admin_auth_url=http://172.16.0.254:35357/v2.0
+firewall_driver=nova.virt.firewall.NoopFirewallDriver
+security_group_api=neutron
 </pre>
 
 <p>
@@ -813,15 +813,15 @@ connection = mysql://nova:nova@172.16.0.254/nova
 </p>
 
 
-<pre class="src src-sh">[filter:authtoken]
+<pre class="example">[filter:authtoken]
 paste.filter_factory=keystoneclient.middleware.auth_token:filter_factory
-<span style="color: #2e8b57;">auth_host</span>=172.16.0.254
+auth_host=172.16.0.254
 auth_port = 35357
 auth_protocol = http
-<span style="color: #2e8b57;">auth_uri</span>=http://172.16.0.254:5000
-<span style="color: #2e8b57;">admin_tenant_name</span>=service
-<span style="color: #2e8b57;">admin_user</span>=nova
-<span style="color: #2e8b57;">admin_password</span>=nova
+auth_uri=http://172.16.0.254:5000
+admin_tenant_name=service
+admin_user=nova
+admin_password=nova
 </pre>
 
 </div>
@@ -835,7 +835,7 @@ auth_protocol = http
 
 
 
-<pre class="src src-sh">keystone user-create --name=nova --pass=nova --email=nova@126.com
+<pre class="example">keystone user-create --name=nova --pass=nova --email=nova@126.com
 keystone user-role-add --user=nova --tenant=service --role=admin
 </pre>
 
@@ -850,13 +850,13 @@ keystone user-role-add --user=nova --tenant=service --role=admin
 
 
 
-<pre class="src src-sh">keystone service-create --name=nova --type=compute --description=<span style="color: #8b7355;">"Nova Compute service"</span>
+<pre class="example">keystone service-create --name=nova --type=compute --description="Nova Compute service"
 
-keystone endpoint-create <span style="color: #8b7355;">\</span>
---service-id=the_service_id_above <span style="color: #8b7355;">\</span>
---publicurl=http://172.16.0.254:8774/v2/%<span style="color: #8b7355;">\(</span>tenant_id<span style="color: #8b7355;">\)</span>s <span style="color: #8b7355;">\</span>
---internalurl=http://172.16.0.254:8774/v2/%<span style="color: #8b7355;">\(</span>tenant_id<span style="color: #8b7355;">\)</span>s <span style="color: #8b7355;">\</span>
---adminurl=http://172.16.0.254:8774/v2/%<span style="color: #8b7355;">\(</span>tenant_id<span style="color: #8b7355;">\)</span>s
+keystone endpoint-create \
+--service-id=the_service_id_above \
+--publicurl=http://172.16.0.254:8774/v2/%\(tenant_id\)s \
+--internalurl=http://172.16.0.254:8774/v2/%\(tenant_id\)s \
+--adminurl=http://172.16.0.254:8774/v2/%\(tenant_id\)s
 </pre>
 
 </div>
@@ -871,7 +871,7 @@ keystone endpoint-create <span style="color: #8b7355;">\</span>
 </p>
 
 
-<pre class="src src-sh">nova-manage db sync
+<pre class="example">nova-manage db sync
 </pre>
 
 <p>
@@ -879,7 +879,7 @@ keystone endpoint-create <span style="color: #8b7355;">\</span>
 </p>
 
 
-<pre class="src src-sh"><span style="color: #cd6600;">cd</span> /etc/init.d/; <span style="color: #1c86ee;">for</span> i<span style="color: #1c86ee;"> in</span> $( ls nova-* ); <span style="color: #1c86ee;">do</span> sudo service $<span style="color: #2e8b57;">i</span> restart; <span style="color: #1c86ee;">done</span>
+<pre class="example">cd /etc/init.d/; for i in $( ls nova-* ); do sudo service $i restart; done
 </pre>
 
 <p>
@@ -887,7 +887,7 @@ keystone endpoint-create <span style="color: #8b7355;">\</span>
 </p>
 
 
-<pre class="src src-sh">nova image-list
+<pre class="example">nova image-list
 </pre>
 
 </div>
@@ -909,7 +909,7 @@ keystone endpoint-create <span style="color: #8b7355;">\</span>
 
 
 
-<pre class="src src-sh">apt-get install cinder-api cinder-scheduler
+<pre class="example">apt-get install cinder-api cinder-scheduler
 </pre>
 
 </div>
@@ -923,10 +923,10 @@ keystone endpoint-create <span style="color: #8b7355;">\</span>
 
 
 
-<pre class="src src-sh">mysql -u root -p123456
+<pre class="example">mysql -u root -p123456
 mysql&gt; CREATE DATABASE cinder;
-mysql&gt; GRANT ALL PRIVILEGES ON cinder.* TO <span style="color: #8b7355;">'cinder'</span>@<span style="color: #8b7355;">'localhost'</span> IDENTIFIED BY <span style="color: #8b7355;">'cinder'</span>;
-mysql&gt; GRANT ALL PRIVILEGES ON cinder.* TO <span style="color: #8b7355;">'cinder'</span>@<span style="color: #8b7355;">'%'</span> IDENTIFIED BY <span style="color: #8b7355;">'cinder'</span>;
+mysql&gt; GRANT ALL PRIVILEGES ON cinder.* TO 'cinder'@'localhost' IDENTIFIED BY 'cinder';
+mysql&gt; GRANT ALL PRIVILEGES ON cinder.* TO 'cinder'@'%' IDENTIFIED BY 'cinder';
 </pre>
 
 </div>
@@ -941,8 +941,8 @@ mysql&gt; GRANT ALL PRIVILEGES ON cinder.* TO <span style="color: #8b7355;">'cin
 </p>
 
 
-<pre class="src src-sh">apt-get install cinder-volume lvm2
-<span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">fdisk /dev/sdb</span>
+<pre class="example">apt-get install cinder-volume lvm2
+# fdisk /dev/sdb
 n
 p
 1
@@ -951,10 +951,10 @@ Enter
 t
 8e
 w
-<span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">pvcreate /dev/sdb1</span>
-<span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">vgcreate cinder-volumes /dev/sdb1</span>
-<span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">vgs</span>
-  VG             <span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">PV #LV #SN Attr   VSize   VFree</span>
+# pvcreate /dev/sdb1
+# vgcreate cinder-volumes /dev/sdb1
+# vgs
+  VG             #PV #LV #SN Attr   VSize   VFree
   cinder-volumes   1   0   0 wz--n- 150.00g 150.00g
   localhost        1   2   0 wz--n- 279.12g  12.00m
 </pre>
@@ -971,10 +971,10 @@ w
 </p>
 
 
-<pre class="src src-sh">[database]
+<pre class="example">[database]
 ...
-<span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">The SQLAlchemy connection string used to connect to the</span>
-<span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">database (string value)</span>
+# The SQLAlchemy connection string used to connect to the
+# database (string value)
 connection = mysql://cinder:cinder@172.16.0.254/cinder
 ...
 notification_driver = cinder.openstack.common.notifier.rabbit_notifier
@@ -986,9 +986,9 @@ control_exchange = cinder
 </p>
 
 
-<pre class="src src-sh">[filter:authtoken]
+<pre class="example">[filter:authtoken]
 paste.filter_factory=keystoneclient.middleware.auth_token:filter_factory
-<span style="color: #2e8b57;">auth_host</span>=172.16.0.254
+auth_host=172.16.0.254
 auth_port = 35357
 auth_protocol = http
 admin_tenant_name = service
@@ -1007,22 +1007,22 @@ admin_password = cinder
 
 
 
-<pre class="src src-sh">keystone user-create --name=cinder --pass=cinder --email=cinder@126.com
+<pre class="example">keystone user-create --name=cinder --pass=cinder --email=cinder@126.com
 keystone user-role-add --user=cinder --tenant=service --role=admin
 
-keystone service-create --name=cinder --type=volume --description=<span style="color: #8b7355;">"Cinder Volume Service"</span>
-keystone endpoint-create <span style="color: #8b7355;">\</span>
---service-id=the_service_id_above <span style="color: #8b7355;">\</span>
---publicurl=http://172.16.0.254:8776/v1/%<span style="color: #8b7355;">\(</span>tenant_id<span style="color: #8b7355;">\)</span>s <span style="color: #8b7355;">\</span>
---internalurl=http://172.16.0.254:8776/v1/%<span style="color: #8b7355;">\(</span>tenant_id<span style="color: #8b7355;">\)</span>s <span style="color: #8b7355;">\</span>
---adminurl=http://172.16.0.254:8776/v1/%<span style="color: #8b7355;">\(</span>tenant_id<span style="color: #8b7355;">\)</span>s
+keystone service-create --name=cinder --type=volume --description="Cinder Volume Service"
+keystone endpoint-create \
+--service-id=the_service_id_above \
+--publicurl=http://172.16.0.254:8776/v1/%\(tenant_id\)s \
+--internalurl=http://172.16.0.254:8776/v1/%\(tenant_id\)s \
+--adminurl=http://172.16.0.254:8776/v1/%\(tenant_id\)s
 
-keystone service-create --name=cinder --type=volumev2 --description=<span style="color: #8b7355;">"Cinder Volume Service V2"</span>
-keystone endpoint-create <span style="color: #8b7355;">\</span>
---service-id=the_service_id_above <span style="color: #8b7355;">\</span>
---publicurl=http://172.16.0.254:8776/v2/%<span style="color: #8b7355;">\(</span>tenant_id<span style="color: #8b7355;">\)</span>s <span style="color: #8b7355;">\</span>
---internalurl=http://172.16.0.254:8776/v2/%<span style="color: #8b7355;">\(</span>tenant_id<span style="color: #8b7355;">\)</span>s <span style="color: #8b7355;">\</span>
---adminurl=http://172.16.0.254:8776/v2/%<span style="color: #8b7355;">\(</span>tenant_id<span style="color: #8b7355;">\)</span>s
+keystone service-create --name=cinder --type=volumev2 --description="Cinder Volume Service V2"
+keystone endpoint-create \
+--service-id=the_service_id_above \
+--publicurl=http://172.16.0.254:8776/v2/%\(tenant_id\)s \
+--internalurl=http://172.16.0.254:8776/v2/%\(tenant_id\)s \
+--adminurl=http://172.16.0.254:8776/v2/%\(tenant_id\)s
 </pre>
 
 </div>
@@ -1036,7 +1036,7 @@ keystone endpoint-create <span style="color: #8b7355;">\</span>
 
 
 
-<pre class="src src-sh">cinder-manage db sync
+<pre class="example">cinder-manage db sync
 service cinder-scheduler restart
 service cinder-api restart
 </pre>
@@ -1052,7 +1052,7 @@ service cinder-api restart
 
 
 
-<pre class="src src-sh">cinder list
+<pre class="example">cinder list
 </pre>
 
 </div>
@@ -1074,10 +1074,10 @@ service cinder-api restart
 
 
 
-<pre class="src src-sh">mysql -u root -p123456
+<pre class="example">mysql -u root -p123456
 mysql&gt; CREATE DATABASE neutron;
-mysql&gt; GRANT ALL PRIVILEGES ON neutron.* TO <span style="color: #8b7355;">'neutron'</span>@<span style="color: #8b7355;">'localhost'</span> IDENTIFIED BY <span style="color: #8b7355;">'neutron'</span>;
-mysql&gt; GRANT ALL PRIVILEGES ON neutron.* TO <span style="color: #8b7355;">'neutron'</span>@<span style="color: #8b7355;">'%'</span> IDENTIFIED BY <span style="color: #8b7355;">'neutron'</span>;
+mysql&gt; GRANT ALL PRIVILEGES ON neutron.* TO 'neutron'@'localhost' IDENTIFIED BY 'neutron';
+mysql&gt; GRANT ALL PRIVILEGES ON neutron.* TO 'neutron'@'%' IDENTIFIED BY 'neutron';
 </pre>
 
 </div>
@@ -1091,14 +1091,14 @@ mysql&gt; GRANT ALL PRIVILEGES ON neutron.* TO <span style="color: #8b7355;">'ne
 
 
 
-<pre class="src src-sh">keystone user-create --name=neutron --pass=neutron --email=neutron@126.com
+<pre class="example">keystone user-create --name=neutron --pass=neutron --email=neutron@126.com
 keystone user-role-add --user=neutron --tenant=service --role=admin
 
-keystone service-create --name=neutron --type=network --description=<span style="color: #8b7355;">"OpenStack Networking Service"</span>
-keystone endpoint-create <span style="color: #8b7355;">\</span>
---service-id the_service_id_above <span style="color: #8b7355;">\</span>
---publicurl http://172.16.0.254:9696 <span style="color: #8b7355;">\</span>
---adminurl http://172.16.0.254:9696 <span style="color: #8b7355;">\</span>
+keystone service-create --name=neutron --type=network --description="OpenStack Networking Service"
+keystone endpoint-create \
+--service-id the_service_id_above \
+--publicurl http://172.16.0.254:9696 \
+--adminurl http://172.16.0.254:9696 \
 --internalurl http://172.16.0.254:9696
 </pre>
 
@@ -1120,7 +1120,7 @@ keystone endpoint-create <span style="color: #8b7355;">\</span>
 
 
 
-<pre class="src src-sh">apt-get install neutron-server neutron-dhcp-agent  neutron-l3-agent neutron-lbaas-agent
+<pre class="example">apt-get install neutron-server neutron-dhcp-agent  neutron-l3-agent neutron-lbaas-agent
 </pre>
 
 </div>
@@ -1135,7 +1135,7 @@ keystone endpoint-create <span style="color: #8b7355;">\</span>
 </p>
 
 
-<pre class="src src-sh">net.ipv4.ip_forward=1
+<pre class="example">net.ipv4.ip_forward=1
 net.ipv4.conf.all.rp_filter=0
 net.ipv4.conf.default.rp_filter=0
 </pre>
@@ -1145,7 +1145,7 @@ net.ipv4.conf.default.rp_filter=0
 </p>
 
 
-<pre class="src src-sh">sysctl -p
+<pre class="example">sysctl -p
 /etc/init.d/networking restart
 </pre>
 
@@ -1161,7 +1161,7 @@ net.ipv4.conf.default.rp_filter=0
 </p>
 
 
-<pre class="src src-sh">[DEFAULT]
+<pre class="example">[DEFAULT]
 debug = True
 verbose = True
 [database]
@@ -1186,13 +1186,13 @@ admin_password = neutron
 </p>
 
 
-<pre class="src src-sh">[filter:authtoken]
+<pre class="example">[filter:authtoken]
 paste.filter_factory = keystoneclient.middleware.auth_token:filter_factory
-<span style="color: #2e8b57;">auth_host</span>=172.16.0.254
-<span style="color: #2e8b57;">auth_uri</span>=http://172.16.0.254:5000
-<span style="color: #2e8b57;">admin_user</span>=neutron
-<span style="color: #2e8b57;">admin_tenant_name</span>=service
-<span style="color: #2e8b57;">admin_password</span>=neutron
+auth_host=172.16.0.254
+auth_uri=http://172.16.0.254:5000
+admin_user=neutron
+admin_tenant_name=service
+admin_password=neutron
 </pre>
 
 <p>
@@ -1200,7 +1200,7 @@ paste.filter_factory = keystoneclient.middleware.auth_token:filter_factory
 </p>
 
 
-<pre class="src src-sh">dhcp_driver = neutron.agent.linux.dhcp.Dnsmasq
+<pre class="example">dhcp_driver = neutron.agent.linux.dhcp.Dnsmasq
 ovs_use_veth = True
 enable_isolated_metadata = True
 use_namespaces = True
@@ -1212,7 +1212,7 @@ interface_driver = neutron.agent.linux.interface.OVSInterfaceDriver
 </p>
 
 
-<pre class="src src-sh">auth_url = http://172.16.0.254:35357/v2.0
+<pre class="example">auth_url = http://172.16.0.254:35357/v2.0
 admin_tenant_name = service
 admin_user = neutron
 admin_password = neutron
@@ -1226,7 +1226,7 @@ interface_driver = neutron.agent.linux.interface.OVSInterfaceDriver
 </p>
 
 
-<pre class="src src-sh">[DEFAULT]
+<pre class="example">[DEFAULT]
 auth_url = http://172.16.0.254:5000/v2.0
 admin_tenant_name = service
 admin_user = neutron
@@ -1240,7 +1240,7 @@ metadata_proxy_shared_secret = wchunx
 </p>
 
 
-<pre class="src src-sh">interface_driver = neutron.agent.linux.interface.OVSInterfaceDriver
+<pre class="example">interface_driver = neutron.agent.linux.interface.OVSInterfaceDriver
 device_driver = neutron.services.loadbalancer.drivers.haproxy.namespace_driver.HaproxyNSDriver
 </pre>
 
@@ -1249,7 +1249,7 @@ device_driver = neutron.services.loadbalancer.drivers.haproxy.namespace_driver.H
 </p>
 
 
-<pre class="src src-sh">[fwaas]
+<pre class="example">[fwaas]
 driver = neutron.services.firewall.drivers.linux.iptables_fwaas.IptablesFwaasDriver
 enabled = True
 </pre>
@@ -1273,7 +1273,7 @@ enabled = True
 
 
 
-<pre class="src src-sh">apt-get install openvswitch-switch neutron-plugin-openvswitch neutron-plugin-openvswitch-agent  
+<pre class="example">apt-get install openvswitch-switch neutron-plugin-openvswitch neutron-plugin-openvswitch-agent  
 </pre>
 
 </div>
@@ -1305,7 +1305,7 @@ ovs-vsctl add-port br-ex eth0
 
 
 
-<pre class="src src-sh">auto lo
+<pre class="example">auto lo
 iface lo inet loopback
 
 auto eth1
@@ -1315,8 +1315,8 @@ iface eth0 inet static
 
 auto eth0
 iface eth0 inet manual
-        up ifconfig $<span style="color: #2e8b57;">IFACE</span> 0.0.0.0 up
-        down ifconfig $<span style="color: #2e8b57;">IFACE</span> down
+        up ifconfig $IFACE 0.0.0.0 up
+        down ifconfig $IFACE down
 
 auto br-ex
 iface br-ex inet static
@@ -1331,7 +1331,7 @@ iface br-ex inet static
 </p>
 
 
-<pre class="src src-sh">ifconfig eth0 0
+<pre class="example">ifconfig eth0 0
 /etc/init.d/networking restart
 </pre>
 
@@ -1348,8 +1348,8 @@ iface br-ex inet static
 </p>
 
 
-<pre class="src src-sh">[securitygroup]
-<span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">Firewall driver for realizing neutron security group function.</span>
+<pre class="example">[securitygroup]
+# Firewall driver for realizing neutron security group function.
 firewall_driver = neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver
 [ovs]
 tenant_network_type = gre
@@ -1372,7 +1372,7 @@ local_ip = 172.16.0.254
 
 
 
-<pre class="src src-sh"><span style="color: #cd6600;">cd</span> /etc/init.d/; <span style="color: #1c86ee;">for</span> i<span style="color: #1c86ee;"> in</span> $( ls neutron-* ); <span style="color: #1c86ee;">do</span> sudo service $<span style="color: #2e8b57;">i</span> restart; <span style="color: #1c86ee;">done</span>
+<pre class="example">cd /etc/init.d/; for i in $( ls neutron-* ); do sudo service $i restart; done
 </pre>
 
 </div>
@@ -1394,7 +1394,7 @@ local_ip = 172.16.0.254
 
 
 
-<pre class="src src-sh">apt-get install heat-api heat-api-cfn heat-engine heat-api-cloudwatch
+<pre class="example">apt-get install heat-api heat-api-cfn heat-engine heat-api-cloudwatch
 </pre>
 
 </div>
@@ -1408,10 +1408,10 @@ local_ip = 172.16.0.254
 
 
 
-<pre class="src src-sh">mysql -u root -p123456
+<pre class="example">mysql -u root -p123456
 mysql&gt; CREATE DATABASE heat;
-mysql&gt; GRANT ALL PRIVILEGES ON heat.* TO <span style="color: #8b7355;">'heat'</span>@<span style="color: #8b7355;">'localhost'</span> IDENTIFIED BY <span style="color: #8b7355;">'heat'</span>;
-mysql&gt; GRANT ALL PRIVILEGES ON heat.* TO <span style="color: #8b7355;">'heat'</span>@<span style="color: #8b7355;">'%'</span> IDENTIFIED BY <span style="color: #8b7355;">'heat'</span>;
+mysql&gt; GRANT ALL PRIVILEGES ON heat.* TO 'heat'@'localhost' IDENTIFIED BY 'heat';
+mysql&gt; GRANT ALL PRIVILEGES ON heat.* TO 'heat'@'%' IDENTIFIED BY 'heat';
 </pre>
 
 </div>
@@ -1426,12 +1426,12 @@ mysql&gt; GRANT ALL PRIVILEGES ON heat.* TO <span style="color: #8b7355;">'heat'
 </p>
 
 
-<pre class="src src-sh">verbose = True
-<span style="color: #2e8b57;">log_dir</span>=/var/log/heat
+<pre class="example">verbose = True
+log_dir=/var/log/heat
 rabbit_host = 172.16.0.254
 rabbit_password = guest
 [database]
-<span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">The SQLAlchemy connection string used to connect to the database</span>
+# The SQLAlchemy connection string used to connect to the database
 connection = mysql://heat:heat@172.16.0.254/heat
 </pre>
 
@@ -1440,7 +1440,7 @@ connection = mysql://heat:heat@172.16.0.254/heat
 </p>
 
 
-<pre class="src src-sh">[filter:authtoken]
+<pre class="example">[filter:authtoken]
 paste.filter_factory = heat.common.auth_token:filter_factory
 auth_host = 172.16.0.254
 auth_port = 35357
@@ -1462,7 +1462,7 @@ admin_password = heat
 
 
 
-<pre class="src src-sh">heat-manage db_sync
+<pre class="example">heat-manage db_sync
 </pre>
 
 </div>
@@ -1476,7 +1476,7 @@ admin_password = heat
 
 
 
-<pre class="src src-sh">keystone user-create --name=heat --pass=heat --email=heat@126.com
+<pre class="example">keystone user-create --name=heat --pass=heat --email=heat@126.com
 keystone user-role-add --user=heat --tenant=service --role=admin
 </pre>
 
@@ -1491,18 +1491,18 @@ keystone user-role-add --user=heat --tenant=service --role=admin
 
 
 
-<pre class="src src-sh">keystone service-create --name=heat --type=orchestration --description=<span style="color: #8b7355;">"Heat Orchestration API"</span>
-keystone endpoint-create <span style="color: #8b7355;">\</span>
---service-id=the_service_id_above <span style="color: #8b7355;">\</span>
---publicurl=http://172.16.0.254:8004/v1/%<span style="color: #8b7355;">\(</span>tenant_id<span style="color: #8b7355;">\)</span>s <span style="color: #8b7355;">\</span>
---internalurl=http://172.16.0.254:8004/v1/%<span style="color: #8b7355;">\(</span>tenant_id<span style="color: #8b7355;">\)</span>s <span style="color: #8b7355;">\</span>
---adminurl=http://172.16.0.254:8004/v1/%<span style="color: #8b7355;">\(</span>tenant_id<span style="color: #8b7355;">\)</span>s
+<pre class="example">keystone service-create --name=heat --type=orchestration --description="Heat Orchestration API"
+keystone endpoint-create \
+--service-id=the_service_id_above \
+--publicurl=http://172.16.0.254:8004/v1/%\(tenant_id\)s \
+--internalurl=http://172.16.0.254:8004/v1/%\(tenant_id\)s \
+--adminurl=http://172.16.0.254:8004/v1/%\(tenant_id\)s
 
-keystone service-create --name=heat-cfn --type=cloudformation --description=<span style="color: #8b7355;">"Heat CloudFormation API"</span>
-keystone endpoint-create <span style="color: #8b7355;">\</span>
---service-id=the_service_id_above <span style="color: #8b7355;">\</span>
---publicurl=http://172.16.0.254:8000/v1 <span style="color: #8b7355;">\</span>
---internalurl=http://172.16.0.254:8000/v1 <span style="color: #8b7355;">\</span>
+keystone service-create --name=heat-cfn --type=cloudformation --description="Heat CloudFormation API"
+keystone endpoint-create \
+--service-id=the_service_id_above \
+--publicurl=http://172.16.0.254:8000/v1 \
+--internalurl=http://172.16.0.254:8000/v1 \
 --adminurl=http://172.16.0.254:8000/v1
 </pre>
 
@@ -1517,7 +1517,7 @@ keystone endpoint-create <span style="color: #8b7355;">\</span>
 
 
 
-<pre class="src src-sh"><span style="color: #cd6600;">cd</span> /etc/init.d/; <span style="color: #1c86ee;">for</span> i<span style="color: #1c86ee;"> in</span> $( ls heat-* ); <span style="color: #1c86ee;">do</span> sudo service $<span style="color: #2e8b57;">i</span> restart; <span style="color: #1c86ee;">done</span>
+<pre class="example">cd /etc/init.d/; for i in $( ls heat-* ); do sudo service $i restart; done
 </pre>
 
 </div>
@@ -1531,12 +1531,12 @@ keystone endpoint-create <span style="color: #8b7355;">\</span>
 
 
 
-<pre class="src src-sh">cat &gt; /root/openrc &lt;&lt; _EOF_
-<span style="color: #ffa54f;">ENABLED_SERVICES+=,heat,h-api,h-api-cfn,h-api-cw,h-eng</span>
-<span style="color: #ffa54f;">CEILOMETER_BACKEND=mongo</span>
-<span style="color: #ffa54f;">_EOF_</span>
-<span style="color: #cd6600;">echo</span> <span style="color: #8b7355;">'source /root/openrc'</span> &gt;&gt; /root/.bashrc
-<span style="color: #cd6600;">source</span> /root/openrc
+<pre class="example">cat &gt; /root/openrc &lt;&lt; _EOF_
+ENABLED_SERVICES+=,heat,h-api,h-api-cfn,h-api-cw,h-eng
+CEILOMETER_BACKEND=mongo
+_EOF_
+echo 'source /root/openrc' &gt;&gt; /root/.bashrc
+source /root/openrc
 </pre>
 
 <p>
@@ -1552,11 +1552,11 @@ keystone endpoint-create <span style="color: #8b7355;">\</span>
 
 
 
-<pre class="src src-sh">wget https://raw.github.com/openstack/heat-templates/master/cfn/F17/WordPress_Composed_Instances.template
+<pre class="example">wget https://raw.github.com/openstack/heat-templates/master/cfn/F17/WordPress_Composed_Instances.template
 glance image-create --name F17-x86_64-cfntools --disk-format qcow2 --container-format bare --is-public True --copy-from http://fedorapeople.org/groups/heat/prebuilt-jeos-images/F17-x86_64-cfntools.qcow2
 nova keypair-add heat_key &gt; heat_key.priv
 chmod 600 heat_key.priv
-heat stack-create wordpress --template-file=WordPress_Composed_Instances.template --parameters=<span style="color: #8b7355;">"DBUsername=wp;DBPassword=wp;KeyName=userkey;LinuxDistribution=F17"</span>
+heat stack-create wordpress --template-file=WordPress_Composed_Instances.template --parameters="DBUsername=wp;DBPassword=wp;KeyName=userkey;LinuxDistribution=F17"
 heat stack-list
 </pre>
 
@@ -1582,7 +1582,7 @@ PS:对heat还没有研究，创建stack是网上找的
 </p>
 
 
-<pre class="src src-sh">apt-get install ceilometer-api ceilometer-collector ceilometer-agent-central python-ceilometerclient ceilometer-agent-compute
+<pre class="example">apt-get install ceilometer-api ceilometer-collector ceilometer-agent-central python-ceilometerclient ceilometer-agent-compute
 </pre>
 
 <p>
@@ -1590,7 +1590,7 @@ PS:对heat还没有研究，创建stack是网上找的
 </p>
 
 
-<pre class="src src-sh">apt-get install mongodb
+<pre class="example">apt-get install mongodb
 </pre>
 
 </div>
@@ -1605,11 +1605,11 @@ PS:对heat还没有研究，创建stack是网上找的
 </p>
 
 
-<pre class="src src-sh">mongo
+<pre class="example">mongo
 &gt; use ceilometer
-&gt; db.addUser( { user: <span style="color: #8b7355;">"ceilometer"</span>,
-<span style="color: #cd6600;">pwd</span>: <span style="color: #8b7355;">"ceilometer"</span>,
-roles: [ <span style="color: #8b7355;">"readWrite"</span>, <span style="color: #8b7355;">"dbAdmin"</span> ]
+&gt; db.addUser( { user: "ceilometer",
+pwd: "ceilometer",
+roles: [ "readWrite", "dbAdmin" ]
 } )
 </pre>
 
@@ -1625,14 +1625,14 @@ roles: [ <span style="color: #8b7355;">"readWrite"</span>, <span style="color: #
 </p>
 
 
-<pre class="src src-sh">[database]
+<pre class="example">[database]
 ...
-<span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">The SQLAlchemy connection string used to connect to the</span>
-<span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">database (string value)</span>
+# The SQLAlchemy connection string used to connect to the
+# database (string value)
 connection = mongodb://ceilometer:CEILOMETER_DBPASS@controller:27017/ceilometer
 [publisher_rpc]
 ...
-<span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">Secret value for signing metering messages (string value)</span>
+# Secret value for signing metering messages (string value)
 metering_secret = wchunx
 ...
 [keystone_authtoken]
@@ -1655,14 +1655,14 @@ admin_password = ceilometer
 
 
 
-<pre class="src src-sh">keystone user-create --name=ceilometer --pass=CEILOMETER_PASS --email=ceilometer@126.com
+<pre class="example">keystone user-create --name=ceilometer --pass=CEILOMETER_PASS --email=ceilometer@126.com
 keystone user-role-add --user=ceilometer --tenant=service --role=admin
 
-keystone service-create --name=ceilometer --type=metering --description=<span style="color: #8b7355;">"Ceilometer Metering Service"</span>
-keystone endpoint-create <span style="color: #8b7355;">\</span>
---service-id=the_service_id_above <span style="color: #8b7355;">\</span>
---publicurl=http://172.16.0.254:8777/ <span style="color: #8b7355;">\</span>
---internalurl=http://172.16.0.254:8777/ <span style="color: #8b7355;">\</span>
+keystone service-create --name=ceilometer --type=metering --description="Ceilometer Metering Service"
+keystone endpoint-create \
+--service-id=the_service_id_above \
+--publicurl=http://172.16.0.254:8777/ \
+--internalurl=http://172.16.0.254:8777/ \
 --adminurl=http://172.16.254:8777/
 </pre>
 
@@ -1677,7 +1677,7 @@ keystone endpoint-create <span style="color: #8b7355;">\</span>
 
 
 
-<pre class="src src-sh"><span style="color: #cd6600;">cd</span> /etc/init.d/; <span style="color: #1c86ee;">for</span> i<span style="color: #1c86ee;"> in</span> $( ls ceilometer-* ); <span style="color: #1c86ee;">do</span> sudo service $<span style="color: #2e8b57;">i</span> restart; <span style="color: #1c86ee;">done</span>
+<pre class="example">cd /etc/init.d/; for i in $( ls ceilometer-* ); do sudo service $i restart; done
 </pre>
 
 </div>
@@ -1692,7 +1692,7 @@ keystone endpoint-create <span style="color: #8b7355;">\</span>
 
 
 
-<pre class="src src-sh">apt-get install memcached libapache2-mod-wsgi openstack-dashboard
+<pre class="example">apt-get install memcached libapache2-mod-wsgi openstack-dashboard
 apt-get remove --purge openstack-dashboard-ubuntu-theme
 </pre>
 
@@ -1701,7 +1701,7 @@ apt-get remove --purge openstack-dashboard-ubuntu-theme
 </p>
 
 
-<pre class="src src-sh"><span style="color: #8b7355;">'enable_firewall'</span> = True
+<pre class="example">'enable_firewall' = True
 </pre>
 
 <p>
@@ -1709,7 +1709,7 @@ apt-get remove --purge openstack-dashboard-ubuntu-theme
 </p>
 
 
-<pre class="src src-sh">/etc/init.d/apache2 restart
+<pre class="example">/etc/init.d/apache2 restart
 </pre>
 
 <p>

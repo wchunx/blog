@@ -126,6 +126,8 @@ xcscope沿用了Emacs23的xcscope.el,yasnippet直接从ELPA安装即可。
 (setq ac-fuzzy-enable t)
 #+END_SRC
 ** 参考资料
+[[http://www.logilab.org/blogentry/173886][Emacs turned into a IDE with CEDET]]
+
 [[http://www.latelee.org/embedded-linux/64-learning-elinux-4-my-emacs-i.htmlhttp://www.latelee.org/embedded-linux/64-learning-elinux-4-my-emacs-i.html][嵌入式之行(4)：我的emacs(上)]]
 
 [[http://blog.csdn.net/winterttr/article/details/7524336][emacs中使用auto-complete的详细设置]]
