@@ -13,6 +13,45 @@ featured: false
 #+END_HTML
 * 为什么选择Emacs
 因为好奇开始学习和折腾Emacs，慢慢习惯，现在已经舍不得了，最然现在还只是个初学者，传说的神奇还没有深切体会，但会继续学下去的。
+* 安装Emacs24.3.1
+** 卸载Emacs23
+之前用的Emacs是Ubuntu12.04系统apt-get下来的，要安装Emacs24.3.1需要先卸载掉。
+#+BEGIN_SRC sh
+sudo apt-get purge emacs23* emacs23-bin-common* emacs23-common* emacsen-common && sudo apt-get autoremove
+#+END_SRC
+** 安装Emacs24.3.1
+用相对比较便捷的PPA方式安装
+#+BEGIN_SRC sh
+sudo add-apt-repository ppa:cassou/emacs
+sudo apt-get update
+sudo apt-get install emacs24 emacs24-el emacs24-common-non-dfsg
+#+END_SRC
+** 参考资料
+[[http://www.masteringemacs.org/articles/2013/03/11/whats-new-emacs-24-3/][What’s New in Emacs 24.3]]
+** 相关问题
+安装Emacs24后，继续使用以前Emacs23的.emacs出现了点问题，记录如下
+
+1.安装ELPA包管理器并安装扩展，Emacs启动报错“cannot open load file” for ~/.emacs.d/elpa/archives/-pkg
+
+解决办法：touch ~/.emacs.d/elpa/archives/-pkg
+
+2.启动Emacs报错Symbol's function definition is void: loop
+
+解决办法：.emacs添加 (require 'cl) 
+
+3.Emacs23中去掉工具栏菜单栏和滚动条的配置
+#+BEGIN_SRC elisp
+(tool-bar-mode nil)  
+(menu-bar-mode nil)  
+(scroll-bar-mode nil)  
+#+END_SRC
+Emacs24中上面的设置是无效的，需要改为
+#+BEGIN_SRC elisp
+(tool-bar-mode 0)  
+(menu-bar-mode 0)  
+(scroll-bar-mode 0)  
+#+END_SRC
+
 * org-mode写jekyll代码高亮的问题
 为了使输出的代码高亮，在.emacs中设置(setq org-export-htmlize-output-type 'inline-css) ，对于htmlize，这个变量如果设为css,则需要
 下载一个css文件（比如 orgmode.org网站的css文件）才能着色，选择inline-css则依据emacs当前外观主题，下面为org-publish，添加defadvice，使得发布博客时使用whiteboard风格。
@@ -46,6 +85,12 @@ git clone https://github.com/alexott/ecb/
 #+END_SRC
 init.el中关于ecb的配置
 #+BEGIN_SRC sh
+;;cedet
+(require 'semantic)
+(require 'semantic/sb)
+(require 'srecode)
+(global-ede-mode 1)
+(semantic-mode 1)
 ;;ecb
 (add-to-list 'load-path "~/.emacs.d/plugins/ecb")
 (require 'ecb)
@@ -60,6 +105,14 @@ init.el中关于ecb的配置
 ;;关闭ecb启动窗口
 (setq ecb-tip-of-the-day nil)
 #+END_SRC
+** 参考资料
+关于内置cedet的配置这几篇介绍不错 \\
+http://stackoverflow.com/questions/8038114/emacs-24-builtin-cedet-function-highlight \\
+http://www.cnblogs.com/zfreay#sec-2.2 \\
+http://emacser.com/built-in-cedet.htm
+cedet的详细说明 \\
+http://cxwangyi.wordpress.com/2010/08/21/using-cedet-with-emacs/ \\
+http://alexott.net/en/writings/emacs-devenv/EmacsCedet.html
 * 使用问题
 ** flet和labels的warning
 装完auto-compute，启动emacs总会出下面两条warning
