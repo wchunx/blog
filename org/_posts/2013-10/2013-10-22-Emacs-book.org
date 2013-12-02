@@ -110,6 +110,7 @@ init.el中关于ecb的配置
 http://stackoverflow.com/questions/8038114/emacs-24-builtin-cedet-function-highlight \\
 http://www.cnblogs.com/zfreay#sec-2.2 \\
 http://emacser.com/built-in-cedet.htm
+
 cedet的详细说明 \\
 http://cxwangyi.wordpress.com/2010/08/21/using-cedet-with-emacs/ \\
 http://alexott.net/en/writings/emacs-devenv/EmacsCedet.html
