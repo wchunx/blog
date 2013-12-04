@@ -52,7 +52,7 @@ apt-get update && apt-get dist-upgrade
 #设置mysql root用户密码为123456
 echo mysql-server-5.5 mysql-server/root_password password 123456 | debconf-set-selections
 echo mysql-server-5.5 mysql-server/root_password_again password 123456 | debconf-set-selections
-apt-get -y install mysql-server python-mysqldb
+apt-get install mysql-server python-mysqldb
 #允许外部访问mysql
 sed -i -e  "s/^\(bind-address\s*=\).*/\1 0.0.0.0/" /etc/mysql/my.cnf
 #重启mysql服务
@@ -67,7 +67,7 @@ rabbitmqctl change_password guest NEW_PASS
 * 安装和配置Keystone
 ** 安装
 #+BEGIN_SRC sh
-apt-get install -y keystone
+apt-get install keystone
 #+END_SRC
 ** 删除默认keystone的sqlite db 文件
 #+BEGIN_SRC sh
@@ -76,7 +76,7 @@ rm -f /var/lib/keystone/keystone.db
 ** 创建数据库
 用户名和密码均为keystone
 #+BEGIN_SRC sh
-# mysql -u root -p123456
+mysql -u root -p123456
 mysql> CREATE DATABASE keystone;
 mysql> GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'localhost' IDENTIFIED BY 'keystone';
 mysql> GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'%' IDENTIFIED BY 'keystone';
@@ -556,9 +556,11 @@ apt-get install openvswitch-switch neutron-plugin-openvswitch neutron-plugin-ope
 #+END_SRC
 *** 网络配置
 **** 建立网桥
+#+BEGIN_SRC sh
 ovs-vsctl add-br br-int
 ovs-vsctl add-br br-ex
 ovs-vsctl add-port br-ex eth0
+#+END_SRC
 **** 编辑配置/etc/network/interfaces
 #+BEGIN_SRC sh
 auto lo

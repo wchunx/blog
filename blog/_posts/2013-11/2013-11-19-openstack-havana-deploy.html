@@ -217,7 +217,7 @@ apt-get update &amp;&amp; apt-get dist-upgrade
 <pre class="example">#设置mysql root用户密码为123456
 echo mysql-server-5.5 mysql-server/root_password password 123456 | debconf-set-selections
 echo mysql-server-5.5 mysql-server/root_password_again password 123456 | debconf-set-selections
-apt-get -y install mysql-server python-mysqldb
+apt-get install mysql-server python-mysqldb
 #允许外部访问mysql
 sed -i -e  "s/^\(bind-address\s*=\).*/\1 0.0.0.0/" /etc/mysql/my.cnf
 #重启mysql服务
@@ -252,7 +252,7 @@ rabbitmq-server默认会创建一个用户，用户名密码均为guest，并允
 
 
 
-<pre class="example">apt-get install -y keystone
+<pre class="example">apt-get install keystone
 </pre>
 
 </div>
@@ -281,7 +281,7 @@ rabbitmq-server默认会创建一个用户，用户名密码均为guest，并允
 </p>
 
 
-<pre class="example"># mysql -u root -p123456
+<pre class="example">mysql -u root -p123456
 mysql&gt; CREATE DATABASE keystone;
 mysql&gt; GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'localhost' IDENTIFIED BY 'keystone';
 mysql&gt; GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'%' IDENTIFIED BY 'keystone';
@@ -1291,10 +1291,15 @@ enabled = True
 <h5 id="sec-9-4-2-1">建立网桥</h5>
 <div class="outline-text-5" id="text-9-4-2-1">
 
-<p>ovs-vsctl add-br br-int
+
+
+
+<pre class="example">ovs-vsctl add-br br-int
 ovs-vsctl add-br br-ex
 ovs-vsctl add-port br-ex eth0
-</p></div>
+</pre>
+
+</div>
 
 </div>
 
