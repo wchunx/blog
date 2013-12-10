@@ -76,7 +76,7 @@ htmlize."
 
 [[http://fasheng.github.io/blog/2013-10-06-change-code-color-style-when-publish-org-mode-to-html.html][设置org-mode导出为html时的代码高亮风格]]
 * 安装和使用ecb
-ecb是emacs中的代码浏览工具，依赖cedet。之前写过一篇[[/emacs/2013/10/19/Emacs-cedet-ecb/index.html][安装cedet和ecb]]的文章，手动安装的cedet和ecb。
+ecb是emacs中的代码浏览工具，依赖cedet。之前写过一篇[[http://localhost:4000/emacs/2013/10/19/Emacs-cedet-ecb/][ 安装cedet和ecb]]的文章，手动安装的cedet和ecb。
 
 [[http://alexott.blogspot.de/2012/06/ecb-fresh-emacscedet.html][这篇文章]] 作者对ecb做了些改动，我clone下来试用发现跟Emacs24.3.1内置的cedet兼容良好。省去了手动安装cedet的过程，而且感觉emacs启动也快了些。下面是安装过程：
 #+BEGIN_SRC sh
@@ -128,13 +128,13 @@ http://alexott.net/en/writings/emacs-devenv/EmacsCedet.html
 4. 看完最大化的窗口内容后,undo最大化操作,重新回到早先的多个小窗口模式以便继续纵览全局
 ** 将子窗口自动编号,然后按M-0…9跳转(最爱)
 安装[[https://github.com/nschum/window-numbering.el][window-numbering.el]] ,然后在.emacs中添加以下代码,
-#+BEGIN_SRC 
+#+BEGIN_SRC sh
 (require 'window-numbering)
 (window-numbering-mode 1)
 #+END_SRC
 ** undo/redo之前的窗口操作
 使用winer-mode,默认C-c <left>和C-c <right>来对窗口布局实现undo/redo, .emacs中添加
-#+BEGIN_SRC 
+#+BEGIN_SRC sh
 (winner-mode t)
 #+END_SRC
 ** 光标移动到下一窗口(常用)

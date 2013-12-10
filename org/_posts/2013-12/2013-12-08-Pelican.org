@@ -11,7 +11,9 @@ icon: globe
 featured: false
 ---
 #+END_HTML
-偶然看到Pelican这个博客框架，暂时记录下
+
+#+OPTIONS: ^:{}
+偶然看到Pelican这个博客框架，暂时记录下 \\
 [[https://github.com/novapost/pelican_novapost][漂亮blog]] \\
 [[http://www.ian-barton.com/posts/2013/Apr/06/blogging-with-emacs-org-mode-and-pelican/][blogging-with-emacs-org-mode-and-pelican]] \\
 [[http://jdreaver.com/emacs-org-pelican.html][Configuring Emacs Org Mode with Pelican]] \\

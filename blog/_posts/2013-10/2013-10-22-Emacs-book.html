@@ -30,12 +30,36 @@ featured: false
 </li>
 <li><a href="#sec-4">4 安装和使用ecb</a>
 <ul>
-<li><a href="#sec-4-1">4.1 参考资料</a></li>
+<li><a href="#sec-4-1">4.1 ecb布局</a></li>
+<li><a href="#sec-4-2">4.2 参考资料</a></li>
 </ul>
 </li>
-<li><a href="#sec-5">5 使用问题</a>
+<li><a href="#sec-5">5 Emacs多窗口操作</a>
 <ul>
-<li><a href="#sec-5-1">5.1 flet和labels的warning</a></li>
+<li><a href="#sec-5-1">5.1 典型的工作流</a></li>
+<li><a href="#sec-5-2">5.2 将子窗口自动编号,然后按M-0…9跳转(最爱)</a></li>
+<li><a href="#sec-5-3">5.3 undo/redo之前的窗口操作</a></li>
+<li><a href="#sec-5-4">5.4 光标移动到下一窗口(常用)</a></li>
+<li><a href="#sec-5-5">5.5 水平/垂直切分当前窗口(常用)</a></li>
+<li><a href="#sec-5-6">5.6 将当前子窗口最大化(常用)</a></li>
+<li><a href="#sec-5-7">5.7 删除当前子窗口(偶尔用)</a></li>
+<li><a href="#sec-5-8">5.8 移动光标到上下左右的窗口(基本不用)</a></li>
+<li><a href="#sec-5-9">5.9 存储/载入窗口布局到register(基本不用)</a>
+<ul>
+<li><a href="#sec-5-9-1">5.9.1 参考资料</a></li>
+</ul></li>
+</ul>
+</li>
+<li><a href="#sec-6">6 Python环境配置</a>
+<ul>
+<li><a href="#sec-6-1">6.1 参考资料</a></li>
+</ul>
+</li>
+<li><a href="#sec-7">7 GTD</a></li>
+<li><a href="#sec-8">8 Emacs配置参考</a></li>
+<li><a href="#sec-9">9 使用问题</a>
+<ul>
+<li><a href="#sec-9-1">9.1 flet和labels的warning</a></li>
 </ul>
 </li>
 </ul>
@@ -188,7 +212,7 @@ htmlize."
 <h2 id="sec-4">安装和使用ecb</h2>
 <div class="outline-text-2" id="text-4">
 
-<p>ecb是emacs中的代码浏览工具，依赖cedet。之前写过一篇<a href="file:///emacs/2013/10/19/Emacs-cedet-ecb/index.html">安装cedet和ecb</a>的文章，手动安装的cedet和ecb。
+<p>ecb是emacs中的代码浏览工具，依赖cedet。之前写过一篇<a href="http://localhost:4000/emacs/2013/10/19/Emacs-cedet-ecb/"> 安装cedet和ecb</a>的文章，手动安装的cedet和ecb。
 </p>
 <p>
 <a href="http://alexott.blogspot.de/2012/06/ecb-fresh-emacscedet.html">这篇文章</a> 作者对ecb做了些改动，我clone下来试用发现跟Emacs24.3.1内置的cedet兼容良好。省去了手动安装cedet的过程，而且感觉emacs启动也快了些。下面是安装过程：
@@ -229,8 +253,18 @@ init.el中关于ecb的配置
 </div>
 
 <div id="outline-container-4-1" class="outline-3">
-<h3 id="sec-4-1">参考资料</h3>
+<h3 id="sec-4-1">ecb布局</h3>
 <div class="outline-text-3" id="text-4-1">
+
+<p><a href="http://blog.yxwang.me/2010/02/bind-cscope-to-ecb/">ecb和cscope的结合使用</a> <br/>
+<a href="http://utkarshsengar.com/2011/06/emacs-python/">My emacs setup for python dev</a> <br/>
+</p></div>
+
+</div>
+
+<div id="outline-container-4-2" class="outline-3">
+<h3 id="sec-4-2">参考资料</h3>
+<div class="outline-text-3" id="text-4-2">
 
 <p>关于内置cedet的配置这几篇介绍不错 <br/>
 <a href="http://stackoverflow.com/questions/8038114/emacs-24-builtin-cedet-function-highlight">http://stackoverflow.com/questions/8038114/emacs-24-builtin-cedet-function-highlight</a> <br/>
@@ -241,21 +275,192 @@ init.el中关于ecb的配置
 cedet的详细说明 <br/>
 <a href="http://cxwangyi.wordpress.com/2010/08/21/using-cedet-with-emacs/">http://cxwangyi.wordpress.com/2010/08/21/using-cedet-with-emacs/</a> <br/>
 <a href="http://alexott.net/en/writings/emacs-devenv/EmacsCedet.html">http://alexott.net/en/writings/emacs-devenv/EmacsCedet.html</a>
+</p>
+<p>
+<a href="http://jinganglang777.blog.163.com/blog/static/790854972012127104446221/">让Emacs功能强于Source Insight</a> <br/>
+<a href="http://www.wolinlabs.com/blog/emacs.global.speedbar.html">Code Browsing with Emacs, GLOBAL, and Speedbar</a>
 </p></div>
 </div>
 
 </div>
 
 <div id="outline-container-5" class="outline-2">
-<h2 id="sec-5">使用问题</h2>
+<h2 id="sec-5">Emacs多窗口操作</h2>
 <div class="outline-text-2" id="text-5">
 
 
 </div>
 
 <div id="outline-container-5-1" class="outline-3">
-<h3 id="sec-5-1">flet和labels的warning</h3>
+<h3 id="sec-5-1">典型的工作流</h3>
 <div class="outline-text-3" id="text-5-1">
+
+<ol>
+<li>在两个子窗口中对比文件内容
+</li>
+<li>打开更多的窗口以参考其他信息.
+</li>
+<li>对某个窗口内容比较有兴趣,跳转到该窗口,将该窗口最大化
+</li>
+<li>看完最大化的窗口内容后,undo最大化操作,重新回到早先的多个小窗口模式以便继续纵览全局
+</li>
+</ol>
+
+</div>
+
+</div>
+
+<div id="outline-container-5-2" class="outline-3">
+<h3 id="sec-5-2">将子窗口自动编号,然后按M-0…9跳转(最爱)</h3>
+<div class="outline-text-3" id="text-5-2">
+
+<p>安装<a href="https://github.com/nschum/window-numbering.el">window-numbering.el</a> ,然后在.emacs中添加以下代码,
+</p>
+
+
+<pre class="example">(require 'window-numbering)
+(window-numbering-mode 1)
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-5-3" class="outline-3">
+<h3 id="sec-5-3">undo/redo之前的窗口操作</h3>
+<div class="outline-text-3" id="text-5-3">
+
+<p>使用winer-mode,默认C-c &lt;left&gt;和C-c &lt;right&gt;来对窗口布局实现undo/redo, .emacs中添加
+</p>
+
+
+<pre class="example">(winner-mode t)
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-5-4" class="outline-3">
+<h3 id="sec-5-4">光标移动到下一窗口(常用)</h3>
+<div class="outline-text-3" id="text-5-4">
+
+<p>M-x other-window,快捷键是`C-x o`.
+</p></div>
+
+</div>
+
+<div id="outline-container-5-5" class="outline-3">
+<h3 id="sec-5-5">水平/垂直切分当前窗口(常用)</h3>
+<div class="outline-text-3" id="text-5-5">
+
+<p>快捷键C-x 2/3
+</p></div>
+
+</div>
+
+<div id="outline-container-5-6" class="outline-3">
+<h3 id="sec-5-6">将当前子窗口最大化(常用)</h3>
+<div class="outline-text-3" id="text-5-6">
+
+<p>M-x delete-other-windows,快捷键`C-x 1`.
+</p></div>
+
+</div>
+
+<div id="outline-container-5-7" class="outline-3">
+<h3 id="sec-5-7">删除当前子窗口(偶尔用)</h3>
+<div class="outline-text-3" id="text-5-7">
+
+<p>M-x delete-window,快捷键`C-x 0`.
+</p></div>
+
+</div>
+
+<div id="outline-container-5-8" class="outline-3">
+<h3 id="sec-5-8">移动光标到上下左右的窗口(基本不用)</h3>
+<div class="outline-text-3" id="text-5-8">
+
+<p>因我较喜欢vi快捷键,所以我安装了Evil Mode.快捷键和Vi一样.C-w h/j/k/l移动至各方向的子窗口.
+</p></div>
+
+</div>
+
+<div id="outline-container-5-9" class="outline-3">
+<h3 id="sec-5-9">存储/载入窗口布局到register(基本不用)</h3>
+<div class="outline-text-3" id="text-5-9">
+
+<p>`C-x r w &lt;register&gt;`存储,`C-x r j &lt;register&gt;`载入.
+</p>
+</div>
+
+<div id="outline-container-5-9-1" class="outline-4">
+<h4 id="sec-5-9-1">参考资料</h4>
+<div class="outline-text-4" id="text-5-9-1">
+
+<p><a href="http://blog.csdn.net/redguardtoo/article/details/7768233">Emacs中的完美多窗口操作 </a>
+</p>
+<p>
+<a href="http://www.cnblogs.com/bamanzi/archive/2011/08/20/some-emacs-window-utils.html">Emacs窗口管理几个好东东</a>
+</p></div>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-6" class="outline-2">
+<h2 id="sec-6">Python环境配置</h2>
+<div class="outline-text-2" id="text-6">
+
+
+</div>
+
+<div id="outline-container-6-1" class="outline-3">
+<h3 id="sec-6-1">参考资料</h3>
+<div class="outline-text-3" id="text-6-1">
+
+<p><a href="http://tkf.github.io/emacs-jedi/">主要参考1</a> <br/>
+<a href="http://caisah.info/emacs-for-python/">主要参考2</a> <br/>
+<a href="https://code.djangoproject.com/wiki/Emacs">django配置</a> <br/>
+<a href="http://jack-kelly.com/setting_up_emacs_for_python_development">Setting up Emacs for Python development </a> <br/>
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-7" class="outline-2">
+<h2 id="sec-7"><a href="http://cnlox.is-programmer.com/posts/10354.html">GTD</a></h2>
+<div class="outline-text-2" id="text-7">
+
+</div>
+
+</div>
+
+<div id="outline-container-8" class="outline-2">
+<h2 id="sec-8">Emacs配置参考</h2>
+<div class="outline-text-2" id="text-8">
+
+<p><a href="http://www.cinsk.org/emacs/emacs-artist.html">Emacs画图Artist Mode</a> <br/>
+<a href="http://lifegoo.pluskid.org/wiki/Emacs.html">星黎殿</a> <br/>
+<a href="http://forum.ubuntu.org.cn/viewtopic.php?t=136768">emacs推广，配置详细介绍</a> <br/>
+<a href="http://blog.csdn.net/jinzhuojun/article/details/1786451">程序员的emacs配置大全(cedet+ecb+cscope+gdb-ui)-jzj </a>
+</p>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-9" class="outline-2">
+<h2 id="sec-9">使用问题</h2>
+<div class="outline-text-2" id="text-9">
+
+
+</div>
+
+<div id="outline-container-9-1" class="outline-3">
+<h3 id="sec-9-1">flet和labels的warning</h3>
+<div class="outline-text-3" id="text-9-1">
 
 <p>装完auto-compute，启动emacs总会出下面两条warning
 </p>
