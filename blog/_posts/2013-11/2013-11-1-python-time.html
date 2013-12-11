@@ -14,42 +14,53 @@ featured: false
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#sec-1">1 简单获取当前时间</a></li>
-<li><a href="#sec-2">2 获取时间戳</a>
+<li><a href="#sec-1">1 time模块</a>
 <ul>
-<li><a href="#sec-2-1">2.1 获取时间戳time.time()</a></li>
-<li><a href="#sec-2-2">2.2 格式化时间戳</a></li>
-<li><a href="#sec-2-3">2.3 strftime(format[,tuple])</a></li>
-<li><a href="#sec-2-4">2.4 strftime常用日期格式</a></li>
+<li><a href="#sec-1-1">1.1 简单获取当前时间</a></li>
+<li><a href="#sec-1-2">1.2 获取时间戳</a>
+<ul>
+<li><a href="#sec-1-2-1">1.2.1 获取时间戳time.time()</a></li>
+<li><a href="#sec-1-2-2">1.2.2 格式化时间戳</a></li>
+<li><a href="#sec-1-2-3">1.2.3 strftime(format[,tuple])</a></li>
+</ul></li>
 </ul>
 </li>
-<li><a href="#sec-3">3 参考资料</a></li>
+<li><a href="#sec-2">2 datetime模块</a></li>
+<li><a href="#sec-3">3 常用日期格式</a></li>
+<li><a href="#sec-4">4 参考资料</a></li>
 </ul>
 </div>
 </div>
 
 <div id="outline-container-1" class="outline-2">
-<h2 id="sec-1">简单获取当前时间</h2>
+<h2 id="sec-1">time模块</h2>
 <div class="outline-text-2" id="text-1">
+
+
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">简单获取当前时间</h3>
+<div class="outline-text-3" id="text-1-1">
 
 <p>使用下面的命令即可获取当前时间
 </p>
 
 
-<pre class="example">import time
-time.strftime('%c')
-'Fri Nov  1 10:06:20 2013'
+<pre class="src src-python"><span style="color: #859900;">import</span> time
+time.strftime(<span style="color: #2aa198;">'%c'</span>)
+<span style="color: #2aa198;">'Fri Nov  1 10:06:20 2013'</span>
 </pre>
 
 </div>
 
 </div>
 
-<div id="outline-container-2" class="outline-2">
-<h2 id="sec-2">获取时间戳</h2>
-<div class="outline-text-2" id="text-2">
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">获取时间戳</h3>
+<div class="outline-text-3" id="text-1-2">
 
-<p>Python获取时间的相关信息使用time模块。要获取当前时间，需先取得当前时间的时间戳，
+<p>Python获取时间的相关信息可以使用time模块。要获取当前时间，需先取得当前时间的时间戳，
 </p>
 <p>
 *时间戳*是自1970年1月1日（00:00:00 GMT）至当前时间的总秒数。它也被称为Unix时间戳（Unix Timestamp）。
@@ -57,16 +68,16 @@ time.strftime('%c')
 
 </div>
 
-<div id="outline-container-2-1" class="outline-3">
-<h3 id="sec-2-1">获取时间戳time.time()</h3>
-<div class="outline-text-3" id="text-2-1">
+<div id="outline-container-1-2-1" class="outline-4">
+<h4 id="sec-1-2-1">获取时间戳time.time()</h4>
+<div class="outline-text-4" id="text-1-2-1">
 
 
 
 
-<pre class="example">import time
-print time.time()
-#输出的结果是：
+<pre class="src src-python"><span style="color: #859900;">import</span> time
+<span style="color: #859900;">print</span> time.time()
+<span style="color: #586e75; font-style: italic;">#</span><span style="color: #586e75; font-style: italic;">&#36755;&#20986;&#30340;&#32467;&#26524;&#26159;&#65306;</span>
 1383271867.539839
 </pre>
 
@@ -74,31 +85,31 @@ print time.time()
 
 </div>
 
-<div id="outline-container-2-2" class="outline-3">
-<h3 id="sec-2-2">格式化时间戳</h3>
-<div class="outline-text-3" id="text-2-2">
+<div id="outline-container-1-2-2" class="outline-4">
+<h4 id="sec-1-2-2">格式化时间戳</h4>
+<div class="outline-text-4" id="text-1-2-2">
 
 <p>但是这样是一连串的数字不是我们想要的结果，我们可以利用time模块的格式化时间的方法来处理:
 </p>
 
 
-<pre class="example">time.localtime(time.time())
-#用time.localtime()方法，作用是格式化时间戳为本地的时间。
-#输出的结果是：
+<pre class="src src-python">time.localtime(time.time())
+<span style="color: #586e75; font-style: italic;">#</span><span style="color: #586e75; font-style: italic;">&#29992;time.localtime()&#26041;&#27861;&#65292;&#20316;&#29992;&#26159;&#26684;&#24335;&#21270;&#26102;&#38388;&#25139;&#20026;&#26412;&#22320;&#30340;&#26102;&#38388;&#12290;</span>
+<span style="color: #586e75; font-style: italic;">#</span><span style="color: #586e75; font-style: italic;">&#36755;&#20986;&#30340;&#32467;&#26524;&#26159;&#65306;</span>
 time.struct_time(tm_year=2013, tm_mon=11, tm_mday=1, tm_hour=10, tm_min=11, tm_sec=15, tm_wday=4, tm_yday=305, tm_isdst=0)
-#最后用time.strftime()方法，把刚才的一大串信息格式化成我们想要的东西，
-time.strftime('%Y-%m-%d',time.localtime(time.time()))
-#现在的结果是：
-'2013-11-01'
+<span style="color: #586e75; font-style: italic;">#</span><span style="color: #586e75; font-style: italic;">&#26368;&#21518;&#29992;time.strftime()&#26041;&#27861;&#65292;&#25226;&#21018;&#25165;&#30340;&#19968;&#22823;&#20018;&#20449;&#24687;&#26684;&#24335;&#21270;&#25104;&#25105;&#20204;&#24819;&#35201;&#30340;&#19996;&#35199;&#65292;</span>
+time.strftime(<span style="color: #2aa198;">'%Y-%m-%d'</span>,time.localtime(time.time()))
+<span style="color: #586e75; font-style: italic;">#</span><span style="color: #586e75; font-style: italic;">&#29616;&#22312;&#30340;&#32467;&#26524;&#26159;&#65306;</span>
+<span style="color: #2aa198;">'2013-11-01'</span>
 </pre>
 
 </div>
 
 </div>
 
-<div id="outline-container-2-3" class="outline-3">
-<h3 id="sec-2-3">strftime(format[,tuple])</h3>
-<div class="outline-text-3" id="text-2-3">
+<div id="outline-container-1-2-3" class="outline-4">
+<h4 id="sec-1-2-3">strftime(format[,tuple])</h4>
+<div class="outline-text-4" id="text-1-2-3">
 
 <p>将指定的struct<sub>time</sub>(默认为当前时间)，根据指定的格式化字符串输出
 </p>
@@ -110,19 +121,38 @@ time.strftime('%Y-%m-%d',time.localtime(time.time()))
 </p>
 
 
-<pre class="example">import time
+<pre class="src src-python"><span style="color: #859900;">import</span> time
 time.strftime()
-time.strftime('%Y-%m-%d')
-'2013-11-01'
+time.strftime(<span style="color: #2aa198;">'%Y-%m-%d'</span>)
+<span style="color: #2aa198;">'2013-11-01'</span>
+</pre>
+
+</div>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">datetime模块</h2>
+<div class="outline-text-2" id="text-2">
+
+
+
+
+<pre class="src src-python"><span style="color: #859900;">import</span> datetime
+<span style="color: #586e75; font-style: italic;">#</span><span style="color: #586e75; font-style: italic;">&#33719;&#21462;&#24403;&#21069;&#26102;&#38388;&#65292;&#26684;&#24335;&#21270;&#36755;&#20986;</span>
+datetime.datetime.now().strftime(<span style="color: #2aa198;">'%Y-%m-%d %H:%M:%S'</span> )
+<span style="color: #2aa198;">'2013-12-11 11:01:31'</span>
 </pre>
 
 </div>
 
 </div>
 
-<div id="outline-container-2-4" class="outline-3">
-<h3 id="sec-2-4">strftime常用日期格式</h3>
-<div class="outline-text-3" id="text-2-4">
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3">常用日期格式</h2>
+<div class="outline-text-2" id="text-3">
 
 <ul>
 <li>%y 两位数的年份表示，不带世纪（00-99）
@@ -174,22 +204,20 @@ time.strftime('%Y-%m-%d')
 </li>
 <li>%z,%Z 当前时区的名称(+0800,CST)
 </li>
-<li>%% %号本身 
+<li>%% %号本身
 </li>
 </ul>
 
 </div>
-</div>
 
 </div>
 
-<div id="outline-container-3" class="outline-2">
-<h2 id="sec-3">参考资料</h2>
-<div class="outline-text-2" id="text-3">
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4">参考资料</h2>
+<div class="outline-text-2" id="text-4">
 
-<p><a href="http://www.cnblogs.com/wanpython/archive/2010/08/07/1794598.html">python 获取当前时间</a>
-</p>
-<p>
-<a href="http://blog.chinaunix.net/uid-16539-id-2741508.html">Python 常用函数time.strftime()简介</a>
+<p><a href="http://www.cnblogs.com/wanpython/archive/2010/08/07/1794598.html">python 获取当前时间</a> <br/>
+<a href="http://blog.chinaunix.net/uid-16539-id-2741508.html">Python 常用函数time.strftime()简介</a> <br/>
+<a href="http://mint-green.diandian.com/post/2011-09-09/4892024">python datetime笔记</a>
 </p></div>
 </div>

@@ -162,7 +162,7 @@ keystone endpoint-list
 * 安装和配置glance
 ** 安装
 #+BEGIN_SRC sh
-apt-get install glance
+apt-get install glance python-glanceclient
 #+END_SRC
 删除 glance sqlite 文件：
 #+BEGIN_SRC sh
@@ -436,6 +436,8 @@ keystone endpoint-create \
 cinder-manage db sync
 service cinder-scheduler restart
 service cinder-api restart
+service cinder-volume restart
+service tgt restart
 #+END_SRC
 ** 检查
 #+BEGIN_SRC sh
@@ -610,6 +612,10 @@ cd /etc/init.d/; for i in $( ls neutron-* ); do sudo service $i restart; done
 ** 安装
 #+BEGIN_SRC sh
 apt-get install heat-api heat-api-cfn heat-engine heat-api-cloudwatch
+#+END_SRC
+** 删除默认heat的sqlite db 文件
+#+BEGIN_SRC sh
+rm -f /var/lib/heat/heat.sqlite
 #+END_SRC
 ** 创建数据库
 #+BEGIN_SRC sh
