@@ -23,12 +23,15 @@ featured: false
 </li>
 <li><a href="#sec-2">2 用Emacs写jekyll博客</a>
 <ul>
-<li><a href="#sec-2-1">2.1 org-jekyll-mode介绍</a></li>
-<li><a href="#sec-2-2">2.2 org-jekyll-mode的使用方法</a>
+<li><a href="#sec-2-1">2.1 org-jekyll-mode</a>
 <ul>
-<li><a href="#sec-2-2-1">2.2.1 发布当前文件</a></li>
-<li><a href="#sec-2-2-2">2.2.2 快捷键</a></li>
-</ul></li>
+<li><a href="#sec-2-1-1">2.1.1 org-jekyll-mode介绍</a></li>
+<li><a href="#sec-2-1-2">2.1.2 org-jekyll-mode的使用方法</a></li>
+<li><a href="#sec-2-1-3">2.1.3 发布当前文件</a></li>
+<li><a href="#sec-2-1-4">2.1.4 快捷键</a></li>
+</ul>
+</li>
+<li><a href="#sec-2-2">2.2 org-mode自带的发布功能</a></li>
 </ul>
 </li>
 <li><a href="#sec-3">3 参考资料</a></li>
@@ -50,17 +53,17 @@ featured: false
 
 
 
-<pre class="src src-sh"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#23433;&#35013;ruby</span>
+<pre class="src src-sh"><span style="color: #586e75; font-style: italic;">#</span><span style="color: #586e75; font-style: italic;">&#23433;&#35013;ruby</span>
 sudo apt-get install ruby1.9.1-dev
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#22312;&#22269;&#20869;&#21487;&#33021;Ruby&#30340;Gem sources&#24456;&#24930;&#65292;&#22312;install jekyll&#21069;&#21487;&#20197;&#25191;&#34892;&#19979;&#38754;&#20004;&#20010;&#21629;&#20196;</span>
+<span style="color: #586e75; font-style: italic;">#</span><span style="color: #586e75; font-style: italic;">&#22312;&#22269;&#20869;&#21487;&#33021;Ruby&#30340;Gem sources&#24456;&#24930;&#65292;&#22312;install jekyll&#21069;&#21487;&#20197;&#25191;&#34892;&#19979;&#38754;&#20004;&#20010;&#21629;&#20196;</span>
 &#26367;&#25442;gem sources&#20026;&#28120;&#23453;&#30340;gem&#38236;&#20687;&#12290;&#20294;&#25105;&#27809;&#26377;&#25442;&#65292;&#23433;&#35013;&#20063;&#26159;&#27809;&#38382;&#39064;&#30340;
 gem sources -r http://rubygems.org/
 gem sources -a http://ruby.taobao.org/
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#23433;&#35013;jekyll</span>
+<span style="color: #586e75; font-style: italic;">#</span><span style="color: #586e75; font-style: italic;">&#23433;&#35013;jekyll</span>
 sudo gem install jekyll
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#23433;&#35013;rdiscount</span>
+<span style="color: #586e75; font-style: italic;">#</span><span style="color: #586e75; font-style: italic;">&#23433;&#35013;rdiscount</span>
 sudo gem install rdiscount
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#26597;&#30475;jekyll&#29256;&#26412;</span>
+<span style="color: #586e75; font-style: italic;">#</span><span style="color: #586e75; font-style: italic;">&#26597;&#30475;jekyll&#29256;&#26412;</span>
 jekyll -v
 jekyll 1.2.1
 </pre>
@@ -110,14 +113,21 @@ jekyll serve
 <h2 id="sec-2">用Emacs写jekyll博客</h2>
 <div class="outline-text-2" id="text-2">
 
+
+</div>
+
+<div id="outline-container-2-1" class="outline-3">
+<h3 id="sec-2-1">org-jekyll-mode</h3>
+<div class="outline-text-3" id="text-2-1">
+
 <p>jekyll默认是将Markdown文档转换为静态网页，本身是不支持对org-mode的文件进行转换。但有一个
 开源项目<a href="https://github.com/jsuper/org-jekyll-mode">org-jeky-mode</a> 它可以将org文档自动转换为html并放到jekyll的_posts目录下。
 </p>
 </div>
 
-<div id="outline-container-2-1" class="outline-3">
-<h3 id="sec-2-1">org-jekyll-mode介绍</h3>
-<div class="outline-text-3" id="text-2-1">
+<div id="outline-container-2-1-1" class="outline-4">
+<h4 id="sec-2-1-1">org-jekyll-mode介绍</h4>
+<div class="outline-text-4" id="text-2-1-1">
 
 <p>org-jekyll-mode是一个emacs的插件，能够帮助用户使用org-mode来编写jekyll的博客文章,使用
 org-jekyll-mode既可以快速创建类似jekyll博客文章命名格式的org-mode文件，也能够创建一个文
@@ -135,11 +145,11 @@ matter keywords。不过，如果需要在org-mode文件中使用的话，这些
 
 </div>
 
-<div id="outline-container-2-2" class="outline-3">
-<h3 id="sec-2-2">org-jekyll-mode的使用方法</h3>
-<div class="outline-text-3" id="text-2-2">
+<div id="outline-container-2-1-2" class="outline-4">
+<h4 id="sec-2-1-2">org-jekyll-mode的使用方法</h4>
+<div class="outline-text-4" id="text-2-1-2">
 
-<p>org-jekyll-mode使用非常简单，只需要将其最新的代码克隆到本机，在.emacs里面添加如下代码:
+<p>Emacs24.3.1自带的org-mode使用org-jekyll-mode有问题，安装org-8.2发现可以。org-jekyll-mode使用非常简单，只需要将其最新的代码克隆到本机，在.emacs里面添加如下代码:
 </p>
 
 
@@ -172,21 +182,22 @@ matter keywords。不过，如果需要在org-mode文件中使用的话，这些
 <p>
 这个变量指定了你在org-mode项目目录下，用于存放静态文件，如：图片、css等文件的目录名。
 默认是你的org-mode项目的根目录。
-</p>
+</p></div>
+
 </div>
 
-<div id="outline-container-2-2-1" class="outline-4">
-<h4 id="sec-2-2-1">发布当前文件</h4>
-<div class="outline-text-4" id="text-2-2-1">
+<div id="outline-container-2-1-3" class="outline-4">
+<h4 id="sec-2-1-3">发布当前文件</h4>
+<div class="outline-text-4" id="text-2-1-3">
 
 <p>org文件编辑完后只需执行M-x org-jekyll/publish-project即完成发布。
 </p></div>
 
 </div>
 
-<div id="outline-container-2-2-2" class="outline-4">
-<h4 id="sec-2-2-2">快捷键</h4>
-<div class="outline-text-4" id="text-2-2-2">
+<div id="outline-container-2-1-4" class="outline-4">
+<h4 id="sec-2-1-4">快捷键</h4>
+<div class="outline-text-4" id="text-2-1-4">
 
 <p><b>[C-c C-n]</b> 创建一个新的org-mode文件，但是其文件名并不会带上时间戳。如果需要将在某一个子目录
 下创建该文件，只需要在目录名和文件名之间使用斜杠分开即可，如：2013/hello-world 就会在
@@ -199,6 +210,64 @@ org-mode-project-root下，如果没有2013目录，则创建，否则在2013目
 <b>[C-c C-p]</b> 发布当前文件
 </p></div>
 </div>
+
+</div>
+
+<div id="outline-container-2-2" class="outline-3">
+<h3 id="sec-2-2">org-mode自带的发布功能</h3>
+<div class="outline-text-3" id="text-2-2">
+
+<p>在init.el中添加
+</p>
+
+
+<pre class="src src-elisp">(<span style="color: #859900;">require</span> '<span style="color: #2aa198;">org-publish</span>)
+(setq org-publish-project-alist
+      '(
+        (<span style="color: #2aa198;">"org-wchunx"</span>
+         <span style="color: #586e75; font-style: italic;">;; </span><span style="color: #586e75; font-style: italic;">Path to your org files.</span>
+         <span style="color: #859900;">:base-directory</span> <span style="color: #2aa198;">"~/Myblog/org/"</span>
+         <span style="color: #859900;">:base-extension</span> <span style="color: #2aa198;">"org"</span>
+         <span style="color: #586e75; font-style: italic;">;; </span><span style="color: #586e75; font-style: italic;">Path to your Jekyll project.</span>
+         <span style="color: #859900;">:publishing-directory</span> <span style="color: #2aa198;">"~/Myblog/blog"</span>
+         <span style="color: #859900;">:recursive</span> t
+         <span style="color: #859900;">:publishing-function</span> org-publish-org-to-html
+         <span style="color: #859900;">:headline-levels</span> 4
+         <span style="color: #859900;">:html-extension</span> <span style="color: #2aa198;">"html"</span>
+         <span style="color: #859900;">:body-only</span> t <span style="color: #586e75; font-style: italic;">;; </span><span style="color: #586e75; font-style: italic;">Only export section between &lt;body&gt; &lt;/body&gt;</span>
+         )
+        (<span style="color: #2aa198;">"org-static-wchunx"</span>
+         <span style="color: #859900;">:base-directory</span> <span style="color: #2aa198;">"~/Myblog/org/"</span>
+         <span style="color: #859900;">:base-extension</span> <span style="color: #2aa198;">"css</span><span style="color: #b58900; font-weight: bold;">\\</span><span style="color: #cb4b16; font-weight: bold;">|</span><span style="color: #2aa198;">js</span><span style="color: #b58900; font-weight: bold;">\\</span><span style="color: #cb4b16; font-weight: bold;">|</span><span style="color: #2aa198;">png</span><span style="color: #b58900; font-weight: bold;">\\</span><span style="color: #cb4b16; font-weight: bold;">|</span><span style="color: #2aa198;">jpg</span><span style="color: #b58900; font-weight: bold;">\\</span><span style="color: #cb4b16; font-weight: bold;">|</span><span style="color: #2aa198;">gif</span><span style="color: #b58900; font-weight: bold;">\\</span><span style="color: #cb4b16; font-weight: bold;">|</span><span style="color: #2aa198;">pdf</span><span style="color: #b58900; font-weight: bold;">\\</span><span style="color: #cb4b16; font-weight: bold;">|</span><span style="color: #2aa198;">mp3</span><span style="color: #b58900; font-weight: bold;">\\</span><span style="color: #cb4b16; font-weight: bold;">|</span><span style="color: #2aa198;">ogg</span><span style="color: #b58900; font-weight: bold;">\\</span><span style="color: #cb4b16; font-weight: bold;">|</span><span style="color: #2aa198;">swf</span><span style="color: #b58900; font-weight: bold;">\\</span><span style="color: #cb4b16; font-weight: bold;">|</span><span style="color: #2aa198;">php"</span>
+         <span style="color: #859900;">:publishing-directory</span> <span style="color: #2aa198;">"~/Myblog/blog"</span>
+         <span style="color: #859900;">:recursive</span> t
+         <span style="color: #859900;">:publishing-function</span> org-publish-attachment
+         )
+        (<span style="color: #2aa198;">"blog-wchunx"</span> <span style="color: #859900;">:components</span> (<span style="color: #2aa198;">"org-wchunx"</span> <span style="color: #2aa198;">"org-static-wchunx"</span>))
+        ))
+
+(setq org-export-htmlize-output-type 'inline-css)
+(<span style="color: #859900;">defadvice</span> <span style="color: #268bd2;">org-publish</span> (around fsh-org-publish-advice
+                                        (project <span style="color: #b58900;">&amp;optional</span> force async) activate)
+  <span style="color: #2aa198; font-style: italic;">"Change theme before publishing, for getting a good html code highlight style through</span>
+<span style="color: #2aa198; font-style: italic;">htmlize."</span>
+  (<span style="color: #859900;">let</span> ((thems custom-enabled-themes))
+      (<span style="color: #859900;">dolist</span> (theme thems)
+        (disable-theme theme))
+      (load-theme 'whiteboard)
+      ad-do-it
+      (disable-theme 'whiteboard)
+      (<span style="color: #859900;">dolist</span> (theme thems)
+        (enable-theme theme))
+      ))
+</pre>
+
+<p>
+代码第一部份是发布配置，(该配置针对Emacs23.3.1自带的org-mode,如果使用org-8.2,org-publish-org-to-html需替换为org-html-publish-to-html),第二部分指定发布时的代码使用whiteboard主题。
+</p>
+<p>
+org文档放在Myblog/org/_posts目录下，使用M-x org-publish-project命令,指定blog-wchunx,发布到Myblog/blog/_posts目录。
+</p></div>
 </div>
 
 </div>

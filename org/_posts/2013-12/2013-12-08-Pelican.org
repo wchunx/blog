@@ -18,3 +18,4 @@ featured: false
 [[http://www.ian-barton.com/posts/2013/Apr/06/blogging-with-emacs-org-mode-and-pelican/][blogging-with-emacs-org-mode-and-pelican]] \\
 [[http://jdreaver.com/emacs-org-pelican.html][Configuring Emacs Org Mode with Pelican]] \\
 [[http://www.dongxf.com/3_Build_Personal_Blog_With_Pelican_And_GitHub_Pages.html][用 Pelican 和 GitHub Pages 搭建免费的个人博客]]
+test

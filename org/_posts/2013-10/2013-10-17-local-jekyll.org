@@ -50,9 +50,10 @@ jekyll serve
 在网上看到好的jekyll博客，就到github上搜索，直接clone下来，做些修改就可以用作自己的框架，
 更可以学习。
 * 用Emacs写jekyll博客
+** org-jekyll-mode
 jekyll默认是将Markdown文档转换为静态网页，本身是不支持对org-mode的文件进行转换。但有一个
 开源项目[[https://github.com/jsuper/org-jekyll-mode][org-jeky-mode]] 它可以将org文档自动转换为html并放到jekyll的_posts目录下。
-** org-jekyll-mode介绍
+*** org-jekyll-mode介绍
 org-jekyll-mode是一个emacs的插件，能够帮助用户使用org-mode来编写jekyll的博客文章,使用
 org-jekyll-mode既可以快速创建类似jekyll博客文章命名格式的org-mode文件，也能够创建一个文
 件名不带时间前缀的文件。
@@ -64,8 +65,8 @@ org-mode文件的文件名是不带时间戳前缀的，那么org-jekyll-mode在
 org-mode文件中控制最终导出文件的yaml font matter，目前包含了所有jekyll支持的yaml front
 matter keywords。不过，如果需要在org-mode文件中使用的话，这些关键字前面都需要加上#+YAML/
 前缀。同时keyword最好大写。
-** org-jekyll-mode的使用方法
-org-jekyll-mode使用非常简单，只需要将其最新的代码克隆到本机，在.emacs里面添加如下代码:
+*** org-jekyll-mode的使用方法
+Emacs24.3.1自带的org-mode使用org-jekyll-mode有问题，安装org-8.2发现可以。org-jekyll-mode使用非常简单，只需要将其最新的代码克隆到本机，在.emacs里面添加如下代码:
 #+BEGIN_EXAMPLE Lisp
 ;org-jekyll
 (add-to-list 'load-path "~/.emacs.d/plugins/org-jekyll-mode")
@@ -98,6 +99,52 @@ org-mode-project-root下，如果没有2013目录，则创建，否则在2013目
 *[C-c C-d]* 功能跟C-c C-n一样，不过这个快捷键创建的文件会带上时间 戳，也就是标准的jekyll post文件名格式。
 
 *[C-c C-p]* 发布当前文件
+** org-mode自带的发布功能
+在init.el中添加
+#+BEGIN_SRC elisp
+(require 'org-publish)
+(setq org-publish-project-alist
+      '(
+        ("org-wchunx"
+         ;; Path to your org files.
+         :base-directory "~/Myblog/org/"
+         :base-extension "org"
+         ;; Path to your Jekyll project.
+         :publishing-directory "~/Myblog/blog"
+         :recursive t
+         :publishing-function org-publish-org-to-html
+         :headline-levels 4
+         :html-extension "html"
+         :body-only t ;; Only export section between <body> </body>
+         )
+        ("org-static-wchunx"
+         :base-directory "~/Myblog/org/"
+         :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|php"
+         :publishing-directory "~/Myblog/blog"
+         :recursive t
+         :publishing-function org-publish-attachment
+         )
+        ("blog-wchunx" :components ("org-wchunx" "org-static-wchunx"))
+        ))
+
+(setq org-export-htmlize-output-type 'inline-css)
+(defadvice org-publish (around fsh-org-publish-advice
+                                        (project &optional force async) activate)
+  "Change theme before publishing, for getting a good html code highlight style through
+htmlize."
+  (let ((thems custom-enabled-themes))
+      (dolist (theme thems)
+        (disable-theme theme))
+      (load-theme 'whiteboard)
+      ad-do-it
+      (disable-theme 'whiteboard)
+      (dolist (theme thems)
+        (enable-theme theme))
+      ))
+#+END_SRC
+代码第一部份是发布配置，(该配置针对Emacs23.3.1自带的org-mode,如果使用org-8.2,org-publish-org-to-html需替换为org-html-publish-to-html),第二部分指定发布时的代码使用whiteboard主题。
+
+org文档放在Myblog/org/_posts目录下，使用M-x org-publish-project命令,指定blog-wchunx,发布到Myblog/blog/_posts目录。
 * 参考资料
 [[http://www.soimort.org/posts/157/][soimort]]
 
