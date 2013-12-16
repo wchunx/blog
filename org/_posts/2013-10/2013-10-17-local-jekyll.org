@@ -161,3 +161,5 @@ org文档放在Myblog/org/_posts目录下，使用M-x org-publish-project命令,
 [[http://wenshanren.org/?p=327][Emacs：在 org-mode 中插入源代码块]]
 
 [[http://www.cnblogs.com/holbrook/archive/2012/04/12/2444992.html][Emacs学习笔记(9):org-mode，最好的文档编辑利器，没有之一]]
+
+[[http://blog.javachen.com/post/2013/08/31/my-jekyll-config/][自定义功能]]
