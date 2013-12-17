@@ -1,0 +1,197 @@
+---
+layout: post
+keywords: 
+description: 
+title: Mysql常用名录 
+categories: [数据库]
+tags: [mysql]
+group: archive
+icon: globe
+featured: false
+---
+
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 连接</a></li>
+<li><a href="#sec-2">2 大小写问题</a></li>
+<li><a href="#sec-3">3 修改密码</a>
+<ul>
+<li><a href="#sec-3-1">3.1 终端修改</a></li>
+<li><a href="#sec-3-2">3.2 mysql命令行中修改密码</a></li>
+</ul>
+</li>
+<li><a href="#sec-4">4 忘记root密码解决办法</a>
+<ul>
+<li><a href="#sec-4-1">4.1 修改mysql登录设置</a></li>
+<li><a href="#sec-4-2">4.2 重启mysql</a></li>
+<li><a href="#sec-4-3">4.3 登录mysql修改密码</a></li>
+<li><a href="#sec-4-4">4.4 将mysql登录设置修改回来</a></li>
+</ul>
+</li>
+<li><a href="#sec-5">5 参考</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">连接</h2>
+<div class="outline-text-2" id="text-1">
+
+
+
+
+<pre class="src src-sh"><span style="color: #586e75; font-style: italic;">#</span><span style="color: #586e75; font-style: italic;">&#38656;&#23433;&#35013;mysql-client</span>
+mysql -h&#20027;&#26426;&#22320;&#22336; -u&#29992;&#25143;&#21517; -p&#23494;&#30721;
+<span style="color: #586e75; font-style: italic;">#</span><span style="color: #586e75; font-style: italic;">&#25110;&#32773;</span>
+mysql -u &#29992;&#25143;&#21517; -p <span style="color: #586e75; font-style: italic;">#</span><span style="color: #586e75; font-style: italic;">&#22238;&#36710;&#21518;&#36755;&#20837;&#23494;&#30721;</span>
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">大小写问题</h2>
+<div class="outline-text-2" id="text-2">
+
+<p>sql语句命令不区别大小写的。一些人习惯把关键词大写出来显示，方便阅读
+</p><ol>
+<li>mysql在linux下数据库名、表名、列名、别名大小写规则如下
+<ul>
+<li>数据库名与表名是严格区分大小写的
+</li>
+<li>表的别名是严格区分大小写的
+</li>
+<li>列名与列的别名在所有的情况下均是忽略大小写的
+</li>
+<li>变量名严格区分大小写
+</li>
+</ul>
+
+</li>
+<li>mysql在windows下都不区分大小写
+</li>
+</ol>
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3">修改密码</h2>
+<div class="outline-text-2" id="text-3">
+
+
+</div>
+
+<div id="outline-container-3-1" class="outline-3">
+<h3 id="sec-3-1">终端修改</h3>
+<div class="outline-text-3" id="text-3-1">
+
+<p>刚装好mysql，root用户没有密码
+</p>
+
+
+<pre class="src src-sh"><span style="color: #586e75; font-style: italic;">#</span><span style="color: #586e75; font-style: italic;">&#21021;&#22987;&#35774;&#23494;&#30721;</span>
+mysqladmin -uroot password 123456
+<span style="color: #586e75; font-style: italic;">#</span><span style="color: #586e75; font-style: italic;">&#25913;&#23494;</span>
+mysqladmin -uroot -p&#26087;&#23494;&#30721; password <span style="color: #586e75; font-style: italic;">#</span><span style="color: #586e75; font-style: italic;">&#22238;&#36710;&#36755;&#20837;&#26032;&#23494;&#30721;</span>
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-3-2" class="outline-3">
+<h3 id="sec-3-2">mysql命令行中修改密码</h3>
+<div class="outline-text-3" id="text-3-2">
+
+
+
+
+<pre class="src src-sh">mysql&gt; UPDATE mysql.user SET <span style="color: #268bd2;">password</span>=PASSWORD(<span style="color: #2aa198;">'&#26032;&#23494;&#30721;'</span>) WHERE <span style="color: #268bd2;">User</span>=&#8217;root&#8217;;
+mysql&gt; FLUSH PRIVILEGES;
+</pre>
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4">忘记root密码解决办法</h2>
+<div class="outline-text-2" id="text-4">
+
+
+</div>
+
+<div id="outline-container-4-1" class="outline-3">
+<h3 id="sec-4-1">修改mysql登录设置</h3>
+<div class="outline-text-3" id="text-4-1">
+
+<p>修改/etc/mysql/my.cnf,[mysqld]的段中加上一句：skip-grant-tables，例如：
+</p>
+
+
+<pre class="src src-sh">[mysqld]
+<span style="color: #268bd2;">datadir</span>=/var/lib/mysql
+<span style="color: #268bd2;">socket</span>=/var/lib/mysql/mysql.sock
+skip-grant-tables 
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-4-2" class="outline-3">
+<h3 id="sec-4-2">重启mysql</h3>
+<div class="outline-text-3" id="text-4-2">
+
+
+
+
+<pre class="src src-sh">/etc/init.d/mysql restart
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-4-3" class="outline-3">
+<h3 id="sec-4-3">登录mysql修改密码</h3>
+<div class="outline-text-3" id="text-4-3">
+
+<p>这时候登录mysql已经不需要密码了，修改密码即可。
+</p>
+
+
+<pre class="src src-sh">mysql&gt; UPDATE mysql.user SET <span style="color: #268bd2;">password</span>=PASSWORD(<span style="color: #2aa198;">'123456'</span>) WHERE <span style="color: #268bd2;">User</span>=&#8217;root&#8217;;
+mysql&gt; FLUSH PRIVILEGES;
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-4-4" class="outline-3">
+<h3 id="sec-4-4">将mysql登录设置修改回来</h3>
+<div class="outline-text-3" id="text-4-4">
+
+<p>去掉my.cnf添加的skip-grant-tables，重启mysql
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-5" class="outline-2">
+<h2 id="sec-5">参考</h2>
+<div class="outline-text-2" id="text-5">
+
+<p><a href="http://www.cnblogs.com/jyginger/archive/2011/04/27/2030017.html">修改mysql用户密码</a>
+</p></div>
+</div>

@@ -1,0 +1,69 @@
+#+BEGIN_HTML
+---
+layout: post
+keywords: 
+description: 
+title: Mysql常用名录 
+categories: [数据库]
+tags: [mysql]
+group: archive
+icon: globe
+featured: false
+---
+#+END_HTML
+
+#+OPTIONS: ^:{}
+* 连接
+#+BEGIN_SRC sh
+#需安装mysql-client
+mysql -h主机地址 -u用户名 -p密码
+#或者
+mysql -u 用户名 -p #回车后输入密码
+#+END_SRC
+* 大小写问题
+sql语句命令不区别大小写的。一些人习惯把关键词大写出来显示，方便阅读
+1. mysql在linux下数据库名、表名、列名、别名大小写规则如下
+    + 数据库名与表名是严格区分大小写的
+    + 表的别名是严格区分大小写的
+    + 列名与列的别名在所有的情况下均是忽略大小写的
+    + 变量名严格区分大小写
+2. mysql在windows下都不区分大小写
+   
+
+* 修改密码
+** 终端修改
+刚装好mysql，root用户没有密码
+#+BEGIN_SRC sh
+#初始设密码
+mysqladmin -uroot password 123456
+#改密
+mysqladmin -uroot -p旧密码 password #回车输入新密码
+#+END_SRC
+** mysql命令行中修改密码
+#+BEGIN_SRC sh
+mysql> UPDATE mysql.user SET password=PASSWORD('新密码') WHERE User=’root’;
+mysql> FLUSH PRIVILEGES;
+#+END_SRC
+* 忘记root密码解决办法
+** 修改mysql登录设置
+修改/etc/mysql/my.cnf,[mysqld]的段中加上一句：skip-grant-tables，例如：
+#+BEGIN_SRC sh
+[mysqld]
+datadir=/var/lib/mysql
+socket=/var/lib/mysql/mysql.sock
+skip-grant-tables 
+#+END_SRC
+** 重启mysql
+#+BEGIN_SRC sh
+/etc/init.d/mysql restart
+#+END_SRC
+** 登录mysql修改密码
+这时候登录mysql已经不需要密码了，修改密码即可。
+#+BEGIN_SRC sh
+mysql> UPDATE mysql.user SET password=PASSWORD('123456') WHERE User=’root’;
+mysql> FLUSH PRIVILEGES;
+#+END_SRC
+** 将mysql登录设置修改回来
+去掉my.cnf添加的skip-grant-tables，重启mysql
+* 参考
+[[http://www.cnblogs.com/jyginger/archive/2011/04/27/2030017.html][修改mysql用户密码]]
