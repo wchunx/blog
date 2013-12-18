@@ -22,3 +22,11 @@ vim  firefox git
 emacs24 nutstore goagent idea jekyll
 ** soft center
 flash plugins
+* 输入法
+ibus-rime输入法
+#+BEGIN_SRC sh
+sudo add-apt-repository ppa:lotem/rime
+sudo apt-get update
+sudo apt-get install ibus-rime
+#+END_SRC
+装完后，桌面右上角重启下输入法，添加rime。
