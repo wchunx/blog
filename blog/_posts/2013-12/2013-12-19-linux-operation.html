@@ -1,0 +1,133 @@
+---
+layout: post
+keywords: 
+description: 
+title: linux常用操作 
+categories: [linux]
+tags: [linux]
+group: archive
+icon: globe
+featured: false
+---
+
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 自动挂载windows分区</a>
+<ul>
+<li><a href="#sec-1-1">1.1 /etc/fstab</a></li>
+<li><a href="#sec-1-2">1.2 开机脚本/etc/rc.loacl</a></li>
+</ul>
+</li>
+<li><a href="#sec-2">2 TCP和UDP测试命令</a>
+<ul>
+<li><a href="#sec-2-1">2.1 TCP</a></li>
+<li><a href="#sec-2-2">2.2 UDP</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">自动挂载windows分区</h2>
+<div class="outline-text-2" id="text-1">
+
+<p>通过fdisk -l查看到C盘，D盘和E盘对应的设备分别是/dev/sda1,/dev/sda5和/dev/sda6,
+</p>
+<p>
+创建挂载目录
+</p>
+
+
+<pre class="example">mkdir /home/wchunx/Windows/C
+mkdir /home/wchunx/Windows/D
+mkdir /home/wchunx/Windows/E
+</pre>
+
+<p>
+目标是将C盘，D盘和E盘分别挂载到这三个目录。可以用两种方法自动挂载。
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">/etc/fstab</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>修改/etc/fstab，最后加上下面的三句
+</p>
+
+
+<pre class="example">/dev/sda1   /home/wchunx/Windows/C  ntfs    defaults    0   0
+/dev/sda5   /home/wchunx/Windows/D  ntfs    defaults    0   0
+/dev/sda6   /home/wchunx/Windows/E  ntfs    defaults    0   0
+</pre>
+
+<p>
+其中第一部分如/dev/sda1即为设备，也就是Windows分区，第二部分为挂载点，第三部分是Windows分区的文件系统格式，如果是Fat文件系统，这里需要改为vfat，第四部分是一些参数，defaults包括auto等（auto即表示自动挂载），第五部分表示备份，第六部分 表示执行fsck即硬盘检查。
+</p>
+<p>
+保存该文件，执行：
+</p>
+
+
+<pre class="example">mount -a
+</pre>
+
+<p>
+看是否写错，注意，如果写错，将导致系统无法开机！然后保存重启机器就会自动挂载了。
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">开机脚本/etc/rc.loacl</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>exit 0前加下面三句
+</p>
+
+
+<pre class="example">mount -t ntfs /dev/sda1 /home/wchunx/Windows/C
+mount -t ntfs /dev/sda5 /home/wchunx/Windows/D
+mount -t ntfs /dev/sda6 /home/wchunx/Windows/E
+</pre>
+
+<p>
+保存文件，重启机器实现自动挂载.
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">TCP和UDP测试命令</h2>
+<div class="outline-text-2" id="text-2">
+
+<p>两台机器192.168.2.32和192.168.2.33
+</p>
+</div>
+
+<div id="outline-container-2-1" class="outline-3">
+<h3 id="sec-2-1">TCP</h3>
+<div class="outline-text-3" id="text-2-1">
+
+<p>在192.168.2.34上： nc -l 1234 <br/>
+在192.168.2.33上： nc 192.168.2.34 1234 <br/>
+默认是tcp协议,这样，双方就可以相互交流了。使用ctrl+C(或D）退出
+</p></div>
+
+</div>
+
+<div id="outline-container-2-2" class="outline-3">
+<h3 id="sec-2-2">UDP</h3>
+<div class="outline-text-3" id="text-2-2">
+
+<p>在192.168.2.34上： nc -u -l 1234 <br/>
+在192.168.2.33上： nc -u  192.168.2.34 1234 <br/>
+加上-u参数 意味着是udp协议
+</p></div>
+</div>
+</div>

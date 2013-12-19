@@ -1,0 +1,57 @@
+#+BEGIN_HTML
+---
+layout: post
+keywords: 
+description: 
+title: linux常用操作 
+categories: [linux]
+tags: [linux]
+group: archive
+icon: globe
+featured: false
+---
+#+END_HTML
+
+#+OPTIONS: ^:{}
+* 自动挂载windows分区
+通过fdisk -l查看到C盘，D盘和E盘对应的设备分别是/dev/sda1,/dev/sda5和/dev/sda6,
+
+创建挂载目录
+#+BEGIN_SRC sh
+mkdir /home/wchunx/Windows/C
+mkdir /home/wchunx/Windows/D
+mkdir /home/wchunx/Windows/E
+#+END_SRC
+目标是将C盘，D盘和E盘分别挂载到这三个目录。可以用两种方法自动挂载。
+** /etc/fstab
+修改/etc/fstab，最后加上下面的三句
+#+BEGIN_SRC sh
+/dev/sda1   /home/wchunx/Windows/C  ntfs    defaults    0   0
+/dev/sda5   /home/wchunx/Windows/D  ntfs    defaults    0   0
+/dev/sda6   /home/wchunx/Windows/E  ntfs    defaults    0   0
+#+END_SRC
+其中第一部分如/dev/sda1即为设备，也就是Windows分区，第二部分为挂载点，第三部分是Windows分区的文件系统格式，如果是Fat文件系统，这里需要改为vfat，第四部分是一些参数，defaults包括auto等（auto即表示自动挂载），第五部分表示备份，第六部分 表示执行fsck即硬盘检查。
+
+保存该文件，执行：
+#+BEGIN_SRC sh
+mount -a
+#+END_SRC
+看是否写错，注意，如果写错，将导致系统无法开机！然后保存重启机器就会自动挂载了。
+** 开机脚本/etc/rc.loacl
+exit 0前加下面三句
+#+BEGIN_SRC sh
+mount -t ntfs /dev/sda1 /home/wchunx/Windows/C
+mount -t ntfs /dev/sda5 /home/wchunx/Windows/D
+mount -t ntfs /dev/sda6 /home/wchunx/Windows/E
+#+END_SRC
+保存文件，重启机器实现自动挂载.
+* TCP和UDP测试命令
+两台机器192.168.2.32和192.168.2.33
+** TCP
+在192.168.2.34上： nc -l 1234 \\
+在192.168.2.33上： nc 192.168.2.34 1234 \\
+默认是tcp协议,这样，双方就可以相互交流了。使用ctrl+C(或D）退出
+** UDP
+在192.168.2.34上： nc -u -l 1234 \\
+在192.168.2.33上： nc -u  192.168.2.34 1234 \\
+加上-u参数 意味着是udp协议
