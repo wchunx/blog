@@ -30,3 +30,10 @@ sudo apt-get update
 sudo apt-get install ibus-rime
 #+END_SRC
 装完后，桌面右上角重启下输入法，添加rime。
+* 图形化svn工具Rabbitvcs
+#+BEGIN_SRC sh
+sudo add-apt-repository ppa:rabbitvcs/ppa
+sudo apt-get update
+sudo apt-get install rabbitvcs-core rabbitvcs-nautilus3 rabbitvcs-gedit rabbitvcs-cli
+#+END_SRC
+注销或重启，在文件夹和文件夹内点击鼠标右键就用RabbitVCS操作工具了.elementary os默认的Pantheon Files文件管理器看不到svn的文件夹标记，右键菜单也没有svn的快捷操作，终端启动nautilus文件管理器即可。

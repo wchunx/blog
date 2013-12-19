@@ -20,12 +20,37 @@ git config http.proxy http://127.0.0.1:8087/
 git config http.sslVerify false
 #+END_SRC
 之后在push就可以了。
+** 克隆仓库的单个分支
+git clone -b <branch> <remote_repo> 
+** git使用ssh密钥
+git默认使用https协议，每次pull, push都要输入密码，比较麻烦,可以选择git协议，然后使用ssh密钥。这样可以省去每次都输密码。
+*** 生成密钥对
+#+BEGIN_SRC sh
+$ssh-keygen -t rsa
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/wchunx/.ssh/id_rsa): [回车]
+Enter passphrase (empty for no passphrase): [第一次输入密码]
+Enter same passphrase again: [重复密码]
+Your identification has been saved in /home/wchunx/.ssh/id_rsa.
+Your public key has been saved in /home/wchunx/.ssh/id_rsa.pub.
+#+END_SRC
+*** 添加密钥到github账户
+登陆github帐户。然后 Account Settings -> 左栏点击 SSH Keys -> 点击 Add SSH key,复制~/.ssh/id_rsa.pub的公钥内容，粘贴进“Key”文本域内。title域，随便填一个都行。点击Add key。
+*** 验证key是否正常使用
+#+BEGIN_SRC sh
+ssh -T git@github.com
+#看到下面类似内容，表示ok
+Hi wchunx! You've successfully authenticated, but GitHub does not provide shell access.
+#+END_SRC
+*** 修改本地的ssh remote url. 不用https协议，改用git协议
+#+BEGIN_SRC sh
+git remote set-url emacs git@github.com:wchunx/.emacs.d.git 
+#+END_SRC
+*** 参考
+[[http://blog.csdn.net/benweizhu/article/details/8492968][git使用ssh密钥]]
 ** 参考资料
 [[http://cloudaice.com/use-git/][use git]]
 
-话说这人博客风格我挺喜欢，回头fork
-** 克隆仓库的单个分支
-git clone -b <branch> <remote_repo> 
 * 常见错误
 ** error: RPC failed; result=55, HTTP code = 0
 git push 提交的时候出现错误

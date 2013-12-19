@@ -23,6 +23,7 @@ featured: false
 </ul>
 </li>
 <li><a href="#sec-3">3 输入法</a></li>
+<li><a href="#sec-4">4 图形化svn工具Rabbitvcs</a></li>
 </ul>
 </div>
 </div>
@@ -34,7 +35,7 @@ featured: false
 
 
 
-<pre class="src src-sh">sudo apt-get update
+<pre class="example">sudo apt-get update
 </pre>
 
 </div>
@@ -84,12 +85,30 @@ featured: false
 </p>
 
 
-<pre class="src src-sh">sudo add-apt-repository ppa:lotem/rime
+<pre class="example">sudo add-apt-repository ppa:lotem/rime
 sudo apt-get update
 sudo apt-get install ibus-rime
 </pre>
 
 <p>
 装完后，桌面右上角重启下输入法，添加rime。
+</p></div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4">图形化svn工具Rabbitvcs</h2>
+<div class="outline-text-2" id="text-4">
+
+
+
+
+<pre class="example">sudo add-apt-repository ppa:rabbitvcs/ppa
+sudo apt-get update
+sudo apt-get install rabbitvcs-core rabbitvcs-nautilus3 rabbitvcs-gedit rabbitvcs-cli
+</pre>
+
+<p>
+注销或重启，在文件夹和文件夹内点击鼠标右键就用RabbitVCS操作工具了.elementary os默认的Pantheon Files文件管理器看不到svn的文件夹标记，右键菜单也没有svn的快捷操作，终端启动nautilus文件管理器即可。
 </p></div>
 </div>
