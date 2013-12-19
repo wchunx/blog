@@ -1,1 +1,1 @@
-My local blog
+My local jekyll blog
