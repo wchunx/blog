@@ -774,5 +774,3 @@ https://answers.launchpad.net/heat/+question/238879
 http://digitalsanctum.com/2013/05/01/how-to-install-openstack-heat/
 http://docs.openstack.org/developer/heat/getting_started/on_devstack.html
 * 其他
-
-
