@@ -24,6 +24,13 @@ featured: false
 </li>
 <li><a href="#sec-3">3 输入法</a></li>
 <li><a href="#sec-4">4 图形化svn工具Rabbitvcs</a></li>
+<li><a href="#sec-5">5 elementary 安装tweak</a></li>
+<li><a href="#sec-6">6 elementary中plank替换为Docky</a>
+<ul>
+<li><a href="#sec-6-1">6.1 参考</a></li>
+</ul>
+</li>
+<li><a href="#sec-7">7 elementary字体</a></li>
 </ul>
 </div>
 </div>
@@ -111,4 +118,63 @@ sudo apt-get install rabbitvcs-core rabbitvcs-nautilus3 rabbitvcs-gedit rabbitvc
 <p>
 注销或重启，在文件夹和文件夹内点击鼠标右键就用RabbitVCS操作工具了.elementary os默认的Pantheon Files文件管理器看不到svn的文件夹标记，右键菜单也没有svn的快捷操作，终端启动nautilus文件管理器即可。
 </p></div>
+
+</div>
+
+<div id="outline-container-5" class="outline-2">
+<h2 id="sec-5">elementary 安装tweak</h2>
+<div class="outline-text-2" id="text-5">
+
+
+
+
+<pre class="example">sudo add-apt-repository ppa:versable/elementary-update
+sudo apt-get update
+sudo apt-get install elementary-tweaks
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-6" class="outline-2">
+<h2 id="sec-6">elementary中plank替换为Docky</h2>
+<div class="outline-text-2" id="text-6">
+
+<ol>
+<li>Sotware Center下载Docky和dconf editor
+</li>
+<li>打开dconf editor,左侧进入org&gt;pantheon&gt;cerbere，右侧monitored-processes的值由 ['wingpanel', 'plank', 'slingshot-launcher &ndash;silent'] 改为 ['wingpanel', 'slingshot-launcher &ndash;silent']
+
+</li>
+<li>重启机器，代开Docky即可。
+</li>
+</ol>
+
+
+</div>
+
+<div id="outline-container-6-1" class="outline-3">
+<h3 id="sec-6-1">参考</h3>
+<div class="outline-text-3" id="text-6-1">
+
+<p><a href="http://elementaryforum.org/forum/how-to/customization_aa/desktop/1972-replace-plank-with-docky">Docky替换plank</a> <br/>
+<a href="http://www.linuxnov.com/change-the-position-of-plank-dock-in-elementary-os-luna/">更改plank位置</a> 
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-7" class="outline-2">
+<h2 id="sec-7">elementary字体</h2>
+<div class="outline-text-2" id="text-7">
+
+<p>默认带的中文字体发虚，安装一个雅黑字体：
+</p>
+
+
+<pre class="example">sudo apt-get install ttf-wqy-microhei
+</pre>
+
+</div>
 </div>

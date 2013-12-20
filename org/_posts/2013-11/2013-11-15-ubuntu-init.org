@@ -37,3 +37,22 @@ sudo apt-get update
 sudo apt-get install rabbitvcs-core rabbitvcs-nautilus3 rabbitvcs-gedit rabbitvcs-cli
 #+END_SRC
 注销或重启，在文件夹和文件夹内点击鼠标右键就用RabbitVCS操作工具了.elementary os默认的Pantheon Files文件管理器看不到svn的文件夹标记，右键菜单也没有svn的快捷操作，终端启动nautilus文件管理器即可。
+* elementary 安装tweak
+#+BEGIN_SRC sh
+sudo add-apt-repository ppa:versable/elementary-update
+sudo apt-get update
+sudo apt-get install elementary-tweaks
+#+END_SRC
+* elementary中plank替换为Docky
+1. Sotware Center下载Docky和dconf editor
+2. 打开dconf editor,左侧进入org>pantheon>cerbere，右侧monitored-processes的值由 ['wingpanel', 'plank', 'slingshot-launcher --silent'] 改为 ['wingpanel', 'slingshot-launcher --silent']
+
+3. 重启机器，代开Docky即可。
+** 参考
+[[http://elementaryforum.org/forum/how-to/customization_aa/desktop/1972-replace-plank-with-docky][Docky替换plank]] \\
+[[http://www.linuxnov.com/change-the-position-of-plank-dock-in-elementary-os-luna/][更改plank位置]] 
+* elementary字体
+默认带的中文字体发虚，安装一个雅黑字体：
+#+BEGIN_SRC sh
+sudo apt-get install ttf-wqy-microhei
+#+END_SRC
