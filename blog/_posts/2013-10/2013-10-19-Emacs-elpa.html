@@ -64,14 +64,14 @@ featured: false
 
 
 
-<pre class="src src-sh">(<span style="color: #cd6600;">let</span> ((buffer (url-retrieve-synchronously
-               <span style="color: #8b7355;">"http://tromey.com/elpa/package-install.el"</span>)))
+<pre class="example">(let ((buffer (url-retrieve-synchronously
+               "http://tromey.com/elpa/package-install.el")))
  (save-excursion
    (set-buffer buffer)
    (goto-char (point-min))
-   (re-search-forward <span style="color: #8b7355;">"^$"</span> nil <span style="color: #8b7355;">'move)</span>
-<span style="color: #8b7355;">   (eval-region (point) (point-max))</span>
-<span style="color: #8b7355;">   (kill-buffer (current-buffer))))</span>
+   (re-search-forward "^$" nil 'move)
+   (eval-region (point) (point-max))
+   (kill-buffer (current-buffer))))
 </pre>
 
 
@@ -85,13 +85,13 @@ featured: false
 
 
 
-<pre class="src src-elisp">(<span style="color: #1c86ee;">require</span> '<span style="color: #6e8b3d;">package</span>)
-<span style="color: #7f7f7f;">;; </span><span style="color: #7f7f7f;">Add the original Emacs Lisp Package Archive</span>
+<pre class="example">(require 'package)
+;; Add the original Emacs Lisp Package Archive
 (add-to-list 'package-archives
-             '(<span style="color: #8b7355;">"elpa"</span> . <span style="color: #8b7355;">"http://tromey.com/elpa/"</span>))
-<span style="color: #7f7f7f;">;; </span><span style="color: #7f7f7f;">Add the user-contributed repository</span>
+             '("elpa" . "http://tromey.com/elpa/"))
+;; Add the user-contributed repository
 (add-to-list 'package-archives
-             '(<span style="color: #8b7355;">"marmalade"</span> . <span style="color: #8b7355;">"http://marmalade-repo.org/packages/"</span>))
+             '("marmalade" . "http://marmalade-repo.org/packages/"))
 (package-initialize)
 </pre>
 
@@ -155,11 +155,11 @@ package.el的版本问题。到<a href="http://marmalade-repo.org/">Marmalde</a>
 
 
 
-<pre class="src src-elisp"><span style="color: #7f7f7f;">;; </span><span style="color: #7f7f7f;">So the idea is that you copy/paste this code into your *scratch* buffer,</span>
-<span style="color: #7f7f7f;">;; </span><span style="color: #7f7f7f;">hit C-j, and you have a working el-get.</span>
+<pre class="example">;; So the idea is that you copy/paste this code into your *scratch* buffer,
+;; hit C-j, and you have a working el-get.
 (url-retrieve
- <span style="color: #8b7355;">"https://raw.github.com/dimitri/el-get/master/el-get-install.el"</span>
- (<span style="color: #1c86ee;">lambda</span> (s)
+ "https://raw.github.com/dimitri/el-get/master/el-get-install.el"
+ (lambda (s)
    (end-of-buffer)
    (eval-print-last-sexp))
 </pre>
@@ -173,13 +173,13 @@ package.el的版本问题。到<a href="http://marmalade-repo.org/">Marmalde</a>
 </p>
 
 
-<pre class="src src-elisp">el-get
-(add-to-list 'load-path <span style="color: #8b7355;">"~/.emacs.d/el-get/el-get"</span>)
-(<span style="color: #1c86ee;">unless</span> (<span style="color: #1c86ee;">require</span> '<span style="color: #6e8b3d;">el-get</span> nil 'noerror)
-  (<span style="color: #1c86ee;">with-current-buffer</span>
+<pre class="example">el-get
+(add-to-list 'load-path "~/.emacs.d/el-get/el-get")
+(unless (require 'el-get nil 'noerror)
+  (with-current-buffer
       (url-retrieve-synchronously
-       <span style="color: #8b7355;">"https://raw.github.com/dimitri/el-get/master/el-get-install.el"</span>)
-    (<span style="color: #1c86ee;">let</span> (el-get-master-branch)
+       "https://raw.github.com/dimitri/el-get/master/el-get-install.el")
+    (let (el-get-master-branch)
       (goto-char (point-max))
       (eval-print-last-sexp))))
 (el-get 'sync)

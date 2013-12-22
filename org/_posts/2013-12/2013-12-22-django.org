@@ -1,0 +1,188 @@
+#+BEGIN_HTML
+---
+layout: post
+keywords: 
+description: 
+title: django学习笔记 
+categories: [django]
+tags: [django, python, openstack]
+group: archive
+icon: code
+featured: false
+---
+#+END_HTML
+
+#+OPTIONS: ^:{}
+* 学习资料
+[[http://djangobook.py3k.cn/2.0/][The Django Book]] \\
+[[http://www.cnblogs.com/BeginMan/category/458761.html][Django入门]] \\
+[[http://www.w3school.com.cn/index.html][w3school]] \\
+[[https://github.com/gnemoug/ComPerformance][ComPerformance]]
+* 安装
+ubuntu上
+#+BEGIN_SRC python
+sudo apt-get intall python-django
+#验证
+>>> import django
+>>> django.VERSION
+(1, 3, 1, 'final', 0)
+#+END_SRC
+** 创建一个项目
+*** 创建项目mysqite
+#+BEGIN_SRC sh
+django-admin startproject mysite
+#+END_SRC
+mysite下包含:
+# _init__.py:让Python把该目录当成一个开发包(即一组模块)所需的文件
+# manage.py:一种命令行工具，以多种方式与django项目交互
+# settings.py:该Django项目的设置
+# urls.py:该Django项目的URL设置
+*** 启动服务
+mysite下
+#+BEGIN_SRC sh
+python manage.py runserver
+#+END_SRC
+这将会在端口8000启动一个本地服务器,浏览器访问 http://127.0.0.1:8000/, 可以看到django欢迎页面。
+更改主机端口
+#+BEGIN_SRC sh
+python manage.py runserver 8080
+#让django监听所有的网络接口，因此其他电脑就能连接到。
+python manage.py runserver 0.0.0.0:8000
+#+END_SRC
+* 视图和URL
+views.py(视图):导入声明，定义视图函数. \\
+urls.py(URLconf):URLconf就像是Django所支撑网站的目录。它的本质是URL模式以及要为该URL模式调用的视图函数之间的映射表。用来告诉django某个url调用那个视图函数。
+** demo
+*** views.py
+mysite目录下创建views.py
+#+BEGIN_SRC python
+# -*- coding: utf-8 -*-
+ 
+#从django.http模块中导入HttpResponse类
+from django.http import HttpResponse
+import datetime
+ 
+def hello(request):
+    return HttpResponse("Hello world")
+
+def current_datetime(request):
+    now=datetime.datetime.now()
+    html="<html><body>现在时刻：%s.</body></html>" %now
+    return HttpResponse(html)
+
+def my_homepage_view(request):
+    return HttpResponse("nothing")
+#+END_SRC
+1. HttpResponse类位于django.http模块中,需要导入
+2. (views.py)视图中每一个函数称作视图函数,每个视图函数至少包含一个参数,即request,这是一个触发这个视图、包含当前Web请求信息的对象，是类django.http.HttpRequest的一个实例.
+3. 在每一个视图(views)都需要实例化、处理、返回HttpResponse对象
+一般情况下，创建一个HttpResponse时，以字符串的形式传递页面内容给HttpResponse构造函数。
+*** urls.py
+url就像一座桥梁，通过这个桥梁我们才找到视图中对应的代码，渲染的模板（暂时没有用到模板），而这一切都通过URLConf(即urls.py)，在我们django-admin startproject mysite后，该脚本会自动建立一份URLConf（即urls.py文件），我们可以在settings.py中找到它的真身，如下：
+#+BEGIN_SRC python
+...
+ROOT_URLCONF = 'mysite.urls'
+...
+#+END_SRC
+urls.py打开如下
+#+BEGIN_SRC python
+from django.conf.urls.defaults import * #[1]
+
+# Uncomment the next two lines to enable the admin:
+# from django.contrib import admin
+# admin.autodiscover()
+
+urlpatterns = patterns('',    #[2]
+    # Example:
+    # (r'^mysite/', include('mysite.foo.urls')),
+
+    # Uncomment the admin/doc line below and add 'django.contrib.admindocs'
+    # to INSTALLED_APPS to enable admin documentation:
+    # (r'^admin/doc/', include('django.contrib.admindocs.urls')),
+
+    # Uncomment the next line to enable the admin:
+    # (r'^admin/', include(admin.site.urls)),
+)
+#+END_SRC
+1. 从django.conf.urls.defaults导入所有模块，它们是Django URLconf的基本构造,其中包括了一个叫做patterns的函数
+2. patterns()函数将处理结果保存到urlpatterns变量中,patterns函数当前只有一个参数—一个空的字符串
+编辑该文件以展示hello和current_datetime视图
+#+BEGIN_SRC python
+from django.conf.urls.defaults import *
+from mysite.views import hello, current_datetime, my_homepage_view
+
+urlpatterns = patterns('',
+    ('^hello/$', hello),
+    (r'^time/$',current_datetime),
+    ('^$', my_homepage_view),
+)
+#+END_SRC
+1. patterns函数中的参数其实就是一个元祖，元组第一个元素是一个正则表达式，后边是对应的视图函数
+2. 在浏览器中通过输入http://127.0.0.1:8000/time ，Django在URLconf中的所有URL模式中，查找第一个匹配/time/的条目。如果匹配成功，则视图函数返回一个HttpResponse，调用current_datetime这个视图函数，Django转换HttpResponse为一个适合的HTTP response， 以Web page显示出来，(在没有模板定义的情况下)显示输出结果。
+3. Django在检查URL模式前，移除每一个申请的URL开头的斜杠(/)。这意味着我们为/hello/写URL模式不用包含前面的斜杠(/);任何不匹配或尾部没有斜杠(/)的申请URL，将被重定向至尾部包含斜杠的相同字眼的URL。（这是受配置文件setting中APPEND_SLASH项控制的.
+4. 访问http://127.0.0.1:8000/time 会发现时间是不对的，那是因为django的时区设置有问题，修改setting.py的时区,TIME_ZONE = "Asia/Shanghai"
+*** 常用到的正则表达式
+| 符号     | 匹配                                                                        |
+|----------+-----------------------------------------------------------------------------|
+| .(dot)   | 任意单个字符                                                                |
+| \d       | 任意一位数字                                                                |
+| [A-Z]    | A 到 Z中任意一个字符（大写）                                                |
+| [a-z]    | a 到 z中任意一个字符（小写）                                                |
+| [A-Za-z] | a 到 z中任意一个字符（不区分大小写）                                        |
+| +        | 匹配一个或更多 (例如, \d+ 匹配一个或 多个数字字符)                          |
+| [^/]+    | 一个或多个不为'/'的字符                                                     |
+| ?        | 零个或一个之前的表达式（例如：\d? 匹配零个或一个数字）                      |
+| *        | 匹配0个或更多 (例如, \d* 匹配0个 或更多数字字符)                            |
+| {1,3}    | 介于一个和三个（包含）之前的表达式（例如，\d{1,3}匹配一个或两个或三个数字） |
+|          |                                                                             |
+** django处理请求的工作机制
+1. 用manage.py runserver 启动Django服务器时就载入了在同一目录下的settings.py。该文件包含了项目中的配置信息，如前面将的URLConf等，其中最重要的配置就是ROOT_URLCONF，它告诉Django哪个Python模块应该用作本站的URLConf,默认的是urls.py
+2. 当访问url的时候，Django会根据ROOT_URLCONF的设置来装载URLConf。
+3. 然后按顺序逐个匹配URLConf里的URLpatterns。如果找到则会调用相关联的视图函数，并把HttpRequest对象作为第一个参数(通常是request)
+4. 最后该view函数负责返回一个HttpResponse对象，
+#+BEGIN_HTML
+<img src ="/images/2013-12/django_work.png"/>
+#+END_HTML
+** 更进一步：动态url
+接下来深入一下url的映射，实现动态的url。
+
+我们要做到就是在url后输入一些参数，从而实现不同的调用内容（如在url后输入数字(小时)来显示当前时间累加后的时间，如当前时间是6:20,在浏览器中输入....time/plus/3,则显示9:20）的小实例
+
+这里使用带通配符的URL匹配模式。本例中用\d+匹配一个或多个数字.
+
+urls.py
+#+BEGIN_SRC python
+from django.conf.urls.defaults import *
+from mysite.views import current_datetime, hours_ahead
+
+urlpatterns = patterns('',
+    (r'^time/$', current_datetime),
+    (r'^time/plus/(\d+)/$',hours_ahead), #[1]不加()会报错
+#    (r'^time/plus/(\d{1,2})/$', hours_ahead), #限制最大99
+)
+#+END_SRC
+1. 我们想要把这些数字作为参数，用圆括号把\d+或\d{1,2}包围起来,正则表达式也是用圆括号来从文本里提取数据的
+views.py
+#+BEGIN_SRC python
+# -*- coding: utf-8 -*-
+ 
+#从django.http模块中导入HttpResponse类
+from django.http import HttpResponse
+import datetime
+
+def current_datetime(request):
+    now=datetime.datetime.now()
+    html="<html><body>现在时刻：%s.</body></html>" %now
+    return HttpResponse(html)
+
+def hours_ahead(request,offset): #[1]
+    try:
+        offset=int(offset)
+    except ValueError:
+        raise Http404()
+    dt=datetime.datetime.now()+datetime.timedelta(hours=offset)
+    html="<html><body>In %s hours it will be %s.</body></html>" %(offset,dt)
+    return HttpResponse(html)
+#+END_SRC
+1. hours_ahead有两个参数,offset是从匹配的URL中提取出来的.注意：捕获值永远都是字符串（string）类型，而不会是整数（integer）类型,这个函数做的第一件事就是将字符串转换为整数。如果在一个不能转换为整数的值上调用int()，pyhon将抛出ValueError异常，最终显示404页面.
+test
