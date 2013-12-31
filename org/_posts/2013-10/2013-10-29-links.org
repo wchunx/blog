@@ -41,6 +41,8 @@ featured: true
 [[http://blog.csdn.net/quqi99/article/details/12030851][如何学习OpenStack与精通OpenStack好书推荐]]
 
 [[http://chenpiaoping.blog.51cto.com/5631143/1141728][陈漂评的博客]] openstack ovs
+
+[[http://blogs.ejb.cc/archives/5224/in-depth-understanding-of-openstack-a-openstack-architecture-and-components][深入理解openstack]]
 * 博客
 [[http://coolshell.cn/][酷壳]]
 

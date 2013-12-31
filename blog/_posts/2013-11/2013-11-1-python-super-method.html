@@ -38,11 +38,11 @@ featured: false
 </p>
 
 
-<pre class="example">&gt;&gt;&gt; class Base(object):
-... def func(self,message):
-... print message
+<pre class="src src-python">&gt;&gt;&gt; <span style="color: #1c86ee;">class</span> <span style="color: #00688b;">Base</span>(<span style="color: #cd6600;">object</span>):
+... <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">func</span>(<span style="color: #1c86ee;">self</span>,message):
+... <span style="color: #1c86ee;">print</span> message
 ...
-&gt;&gt;&gt; Base().func('hello world')
+&gt;&gt;&gt; Base().func(<span style="color: #8b7355;">'hello world'</span>)
 hello world
 </pre>
 
@@ -64,18 +64,18 @@ hello world
 
 
 
-<pre class="example">class Base():
-    def meth(self):
-        print "i'm base" 
-class Derived(Base):
-    def meth(self):
-        Base.meth(self)
-        print "this is derived" 
-print Derived().meth()
-#结果
-i'm base
-this is derived
-None
+<pre class="src src-python"><span style="color: #1c86ee;">class</span> <span style="color: #00688b;">Base</span>():
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">meth</span>(<span style="color: #1c86ee;">self</span>):
+        <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"i'm base"</span> 
+<span style="color: #1c86ee;">class</span> <span style="color: #00688b;">Derived</span>(Base):
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">meth</span>(<span style="color: #1c86ee;">self</span>):
+        Base.meth(<span style="color: #1c86ee;">self</span>)
+        <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"this is derived"</span> 
+<span style="color: #1c86ee;">print</span> Derived().meth()
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#32467;&#26524;</span>
+i<span style="color: #8b7355;">'m base</span>
+<span style="color: #8b7355;">this is derived</span>
+<span style="color: #8b7355;">None</span>
 </pre>
 
 <p>
@@ -94,18 +94,18 @@ None
 
 
 
-<pre class="example">class Base(object):
-    def meth(self):
-        print "i'm base" 
-class Derived(Base):
-    def meth(self):
-        super(Derived,self).meth()
-        print "this is derived" 
-print Derived().meth()
-#结果
-i'm base
-this is derived
-None
+<pre class="src src-python"><span style="color: #1c86ee;">class</span> <span style="color: #00688b;">Base</span>(<span style="color: #cd6600;">object</span>):
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">meth</span>(<span style="color: #1c86ee;">self</span>):
+        <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"i'm base"</span> 
+<span style="color: #1c86ee;">class</span> <span style="color: #00688b;">Derived</span>(Base):
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">meth</span>(<span style="color: #1c86ee;">self</span>):
+        <span style="color: #cd6600;">super</span>(Derived,<span style="color: #1c86ee;">self</span>).meth()
+        <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"this is derived"</span> 
+<span style="color: #1c86ee;">print</span> Derived().meth()
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#32467;&#26524;</span>
+i<span style="color: #8b7355;">'m base</span>
+<span style="color: #8b7355;">this is derived</span>
+<span style="color: #8b7355;">None</span>
 </pre>
 
 <p>
@@ -149,46 +149,46 @@ python2.2开始引入新式类。新式类统一了类(class)和类型(type)，�
 
 
 
-<pre class="example">#!/usr/bin/python
-""" classic class """
-class CA():
-    var = 'a'
-class CB(CA):
-    pass
-class CC(CA):
-    var = 'c'
-class CD(CB, CC):
-    pass
-""" new-style class """
-class NA(object):
-    var = 'a'
-class NB(NA):
-    pass
-class NC(NA):
-    var = 'c'
-class ND(NB, NC):
-    pass
-if __name__ == "__main__":
-    print CD.var
-    print ND.var
+<pre class="src src-python"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">!/usr/bin/python</span>
+<span style="color: #8b7355;">""" classic class """</span>
+<span style="color: #1c86ee;">class</span> <span style="color: #00688b;">CA</span>():
+    <span style="color: #2e8b57;">var</span> = <span style="color: #8b7355;">'a'</span>
+<span style="color: #1c86ee;">class</span> <span style="color: #00688b;">CB</span>(CA):
+    <span style="color: #1c86ee;">pass</span>
+<span style="color: #1c86ee;">class</span> <span style="color: #00688b;">CC</span>(CA):
+    <span style="color: #2e8b57;">var</span> = <span style="color: #8b7355;">'c'</span>
+<span style="color: #1c86ee;">class</span> <span style="color: #00688b;">CD</span>(CB, CC):
+    <span style="color: #1c86ee;">pass</span>
+<span style="color: #8b7355;">""" new-style class """</span>
+<span style="color: #1c86ee;">class</span> <span style="color: #00688b;">NA</span>(<span style="color: #cd6600;">object</span>):
+    <span style="color: #2e8b57;">var</span> = <span style="color: #8b7355;">'a'</span>
+<span style="color: #1c86ee;">class</span> <span style="color: #00688b;">NB</span>(NA):
+    <span style="color: #1c86ee;">pass</span>
+<span style="color: #1c86ee;">class</span> <span style="color: #00688b;">NC</span>(NA):
+    <span style="color: #2e8b57;">var</span> = <span style="color: #8b7355;">'c'</span>
+<span style="color: #1c86ee;">class</span> <span style="color: #00688b;">ND</span>(NB, NC):
+    <span style="color: #1c86ee;">pass</span>
+<span style="color: #1c86ee;">if</span> <span style="color: #cd6600;">__name__</span> == <span style="color: #8b7355;">"__main__"</span>:
+    <span style="color: #1c86ee;">print</span> CD.var
+    <span style="color: #1c86ee;">print</span> ND.var
     ca = CA()
     na = NA()
-    print ca.__class__
-    print type(ca)
-    print dir(ca)
-    print na.__class__
-    print type(na)
-    print dir(na)
+    <span style="color: #1c86ee;">print</span> ca.__class__
+    <span style="color: #1c86ee;">print</span> <span style="color: #cd6600;">type</span>(ca)
+    <span style="color: #1c86ee;">print</span> <span style="color: #cd6600;">dir</span>(ca)
+    <span style="color: #1c86ee;">print</span> na.__class__
+    <span style="color: #1c86ee;">print</span> <span style="color: #cd6600;">type</span>(na)
+    <span style="color: #1c86ee;">print</span> <span style="color: #cd6600;">dir</span>(na)
 
-#输出
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#36755;&#20986;</span>
 a
 c
 __main__.CA
-&lt;type 'instance'&gt;
-['__doc__', '__module__', 'var']
-&lt;class '__main__.NA'&gt;
-&lt;class '__main__.NA'&gt;
-['__class__', '__delattr__', '__dict__', '__doc__', '__format__', '__getattribute__', '__hash__', '__init__', '__module__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', '__weakref__', 'var']
+&lt;<span style="color: #cd6600;">type</span> <span style="color: #8b7355;">'instance'</span>&gt;
+[<span style="color: #8b7355;">'__doc__'</span>, <span style="color: #8b7355;">'__module__'</span>, <span style="color: #8b7355;">'var'</span>]
+&lt;<span style="color: #1c86ee;">class</span> <span style="color: #8b7355;">'__main__.NA'</span>&gt;
+&lt;<span style="color: #1c86ee;">class</span> <span style="color: #8b7355;">'__main__.NA'</span>&gt;
+[<span style="color: #8b7355;">'__class__'</span>, <span style="color: #8b7355;">'__delattr__'</span>, <span style="color: #8b7355;">'__dict__'</span>, <span style="color: #8b7355;">'__doc__'</span>, <span style="color: #8b7355;">'__format__'</span>, <span style="color: #8b7355;">'__getattribute__'</span>, <span style="color: #8b7355;">'__hash__'</span>, <span style="color: #8b7355;">'__init__'</span>, <span style="color: #8b7355;">'__module__'</span>, <span style="color: #8b7355;">'__new__'</span>, <span style="color: #8b7355;">'__reduce__'</span>, <span style="color: #8b7355;">'__reduce_ex__'</span>, <span style="color: #8b7355;">'__repr__'</span>, <span style="color: #8b7355;">'__setattr__'</span>, <span style="color: #8b7355;">'__sizeof__'</span>, <span style="color: #8b7355;">'__str__'</span>, <span style="color: #8b7355;">'__subclasshook__'</span>, <span style="color: #8b7355;">'__weakref__'</span>, <span style="color: #8b7355;">'var'</span>]
 </pre>
 
 <p>

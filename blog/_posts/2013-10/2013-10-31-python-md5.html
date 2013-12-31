@@ -91,7 +91,7 @@ featured: false
 
 
 
-<pre class="example">echo -n 'hello'|md5sum|cut -d ' ' -f1
+<pre class="src src-sh"><span style="color: #cd6600;">echo</span> -n <span style="color: #8b7355;">'hello'</span>|md5sum|cut -d <span style="color: #8b7355;">' '</span> -f1
 5d41402abc4b2a76b9719d911017c592
 </pre>
 
@@ -125,7 +125,7 @@ featured: false
 
 
 
-<pre class="example">md5sum REST.docx |cut -d ' ' -f1
+<pre class="src src-sh">md5sum REST.docx |cut -d <span style="color: #8b7355;">' '</span> -f1
 5682f30f1c8338279e5c7ff084467709
 </pre>
 
@@ -140,12 +140,12 @@ featured: false
 
 
 
-<pre class="example">#生成md5文件
+<pre class="src src-sh"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#29983;&#25104;md5&#25991;&#20214;</span>
 md5sum REST.docx &gt; REST.md5
-#将需要校验的文件REST.docx与md5文件放在同一目录
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#23558;&#38656;&#35201;&#26657;&#39564;&#30340;&#25991;&#20214;REST.docx&#19982;md5&#25991;&#20214;&#25918;&#22312;&#21516;&#19968;&#30446;&#24405;</span>
 md5sum -c REST.md5
 REST.docx: OK
-#命令解释：md5 -c: 从文件中读取MD5 的校验值并予以检查
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#21629;&#20196;&#35299;&#37322;&#65306;md5 -c: &#20174;&#25991;&#20214;&#20013;&#35835;&#21462;MD5 &#30340;&#26657;&#39564;&#20540;&#24182;&#20104;&#20197;&#26816;&#26597;</span>
 </pre>
 
 </div>
@@ -168,18 +168,18 @@ REST.docx: OK
 
 
 
-<pre class="example">import hashlib
-m = hashlib.md5()
-m.update('hello')
-#二进制结果
+<pre class="src src-python"><span style="color: #1c86ee;">import</span> hashlib
+<span style="color: #2e8b57;">m</span> = hashlib.md5()
+m.update(<span style="color: #8b7355;">'hello'</span>)
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#20108;&#36827;&#21046;&#32467;&#26524;</span>
 m.digest()
-']A@*\xbcK*v\xb9q\x9d\x91\x10\x17\xc5\x92'
-#十六进制结果
+<span style="color: #8b7355;">']A@*\xbcK*v\xb9q\x9d\x91\x10\x17\xc5\x92'</span>
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#21313;&#20845;&#36827;&#21046;&#32467;&#26524;</span>
 m.hexdigest()
-'5d41402abc4b2a76b9719d911017c592'
-#一条语句实现
-hashlib.md5('hello').hexdigest()
-'5d41402abc4b2a76b9719d911017c592'
+<span style="color: #8b7355;">'5d41402abc4b2a76b9719d911017c592'</span>
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#19968;&#26465;&#35821;&#21477;&#23454;&#29616;</span>
+hashlib.md5(<span style="color: #8b7355;">'hello'</span>).hexdigest()
+<span style="color: #8b7355;">'5d41402abc4b2a76b9719d911017c592'</span>
 </pre>
 
 <p>
@@ -195,42 +195,42 @@ hashlib.md5('hello').hexdigest()
 
 
 
-<pre class="example">import hashlib
-import os,sys
+<pre class="src src-python"><span style="color: #1c86ee;">import</span> hashlib
+<span style="color: #1c86ee;">import</span> os,sys
 
-def CalcSha1(filepath):
-#文件打开方式一定要是二进制方式，既打开文件时使用b模式，否则Hash计算是基于文本的那将得到错误的文件Hash
-    f = open(filepath,'rb')
-    sha1obj = hashlib.sha1()
+<span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">CalcSha1</span>(filepath):
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#25991;&#20214;&#25171;&#24320;&#26041;&#24335;&#19968;&#23450;&#35201;&#26159;&#20108;&#36827;&#21046;&#26041;&#24335;&#65292;&#26082;&#25171;&#24320;&#25991;&#20214;&#26102;&#20351;&#29992;b&#27169;&#24335;&#65292;&#21542;&#21017;Hash&#35745;&#31639;&#26159;&#22522;&#20110;&#25991;&#26412;&#30340;&#37027;&#23558;&#24471;&#21040;&#38169;&#35823;&#30340;&#25991;&#20214;Hash</span>
+    <span style="color: #2e8b57;">f</span> = <span style="color: #cd6600;">open</span>(filepath,<span style="color: #8b7355;">'rb'</span>)
+    <span style="color: #2e8b57;">sha1obj</span> = hashlib.sha1()
     sha1obj.update(f.read())
-    hash = sha1obj.hexdigest()
-    return hash
+    <span style="color: #cd6600;">hash</span> = sha1obj.hexdigest()
+    <span style="color: #1c86ee;">return</span> <span style="color: #cd6600;">hash</span>
 
-def CalcMD5(filepath):
-    f = open(filepath,'rb')
-    md5obj = hashlib.md5()
+<span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">CalcMD5</span>(filepath):
+    <span style="color: #2e8b57;">f</span> = <span style="color: #cd6600;">open</span>(filepath,<span style="color: #8b7355;">'rb'</span>)
+    <span style="color: #2e8b57;">md5obj</span> = hashlib.md5()
     md5obj.update(f.read())
-    hash = md5obj.hexdigest()
-    return hash
+    <span style="color: #cd6600;">hash</span> = md5obj.hexdigest()
+    <span style="color: #1c86ee;">return</span> <span style="color: #cd6600;">hash</span>
 
-if __name__ == "__main__":
-    if len(sys.argv)==2 :
+<span style="color: #1c86ee;">if</span> <span style="color: #cd6600;">__name__</span> == <span style="color: #8b7355;">"__main__"</span>:
+    <span style="color: #1c86ee;">if</span> <span style="color: #cd6600;">len</span>(sys.argv)==2 :
         hashfile = sys.argv[1]
-        if not os.path.exists(hashfile):
+        <span style="color: #1c86ee;">if</span> <span style="color: #1c86ee;">not</span> os.path.exists(hashfile):
             hashfile = os.path.join(os.path.dirname(__file__),hashfile)
-            if not os.path.exists(hashfile):
-                print("cannot found file")
-            else:
-                print "MD5: %s" % CalcMD5(hashfile)
-                print "Sha1: %s" %CalcSha1(hashfile)
-        else:
-                print "MD5: %s" % CalcMD5(hashfile)
-                print "Sha1 %s" % CalcSha1(hashfile)
-            #raw_input("pause")
-    else:
-        print("no filename")
+            <span style="color: #1c86ee;">if</span> <span style="color: #1c86ee;">not</span> os.path.exists(hashfile):
+                <span style="color: #1c86ee;">print</span>(<span style="color: #8b7355;">"cannot found file"</span>)
+            <span style="color: #1c86ee;">else</span>:
+                <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"MD5: %s"</span> % CalcMD5(hashfile)
+                <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"Sha1: %s"</span> %CalcSha1(hashfile)
+        <span style="color: #1c86ee;">else</span>:
+                <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"MD5: %s"</span> % CalcMD5(hashfile)
+                <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"Sha1 %s"</span> % CalcSha1(hashfile)
+            <span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">raw_input("pause")</span>
+    <span style="color: #1c86ee;">else</span>:
+        <span style="color: #1c86ee;">print</span>(<span style="color: #8b7355;">"no filename"</span>)
 
-#输出结果
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#36755;&#20986;&#32467;&#26524;</span>
 python get_md5.py REST.docx
 MD5: 5682f30f1c8338279e5c7ff084467709
 Sha1 17b0a7b828dcedda1b8cdf383926651e75bfdba3

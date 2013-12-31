@@ -57,10 +57,10 @@ featured: false
 
 
 
-<pre class="example">#需安装mysql-client
-mysql -h主机地址 -u用户名 -p密码
-#或者
-mysql -u 用户名 -p #回车后输入密码
+<pre class="src src-sh"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#38656;&#23433;&#35013;mysql-client</span>
+mysql -h&#20027;&#26426;&#22320;&#22336; -u&#29992;&#25143;&#21517; -p&#23494;&#30721;
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#25110;&#32773;</span>
+mysql -u &#29992;&#25143;&#21517; -p <span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#22238;&#36710;&#21518;&#36755;&#20837;&#23494;&#30721;</span>
 </pre>
 
 </div>
@@ -111,10 +111,10 @@ mysql -u 用户名 -p #回车后输入密码
 </p>
 
 
-<pre class="example">#初始设密码
+<pre class="src src-sh"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#21021;&#22987;&#35774;&#23494;&#30721;</span>
 mysqladmin -uroot password 123456
-#改密
-mysqladmin -uroot -p旧密码 password #回车输入新密码
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#25913;&#23494;</span>
+mysqladmin -uroot -p&#26087;&#23494;&#30721; password <span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#22238;&#36710;&#36755;&#20837;&#26032;&#23494;&#30721;</span>
 </pre>
 
 </div>
@@ -128,7 +128,7 @@ mysqladmin -uroot -p旧密码 password #回车输入新密码
 
 
 
-<pre class="example">mysql&gt; UPDATE mysql.user SET password=PASSWORD('新密码') WHERE User=’root’;
+<pre class="src src-sh">mysql&gt; UPDATE mysql.user SET <span style="color: #2e8b57;">password</span>=PASSWORD(<span style="color: #8b7355;">'&#26032;&#23494;&#30721;'</span>) WHERE <span style="color: #2e8b57;">User</span>=&#8217;root&#8217;;
 mysql&gt; FLUSH PRIVILEGES;
 </pre>
 
@@ -152,9 +152,9 @@ mysql&gt; FLUSH PRIVILEGES;
 </p>
 
 
-<pre class="example">[mysqld]
-datadir=/var/lib/mysql
-socket=/var/lib/mysql/mysql.sock
+<pre class="src src-sh">[mysqld]
+<span style="color: #2e8b57;">datadir</span>=/var/lib/mysql
+<span style="color: #2e8b57;">socket</span>=/var/lib/mysql/mysql.sock
 skip-grant-tables 
 </pre>
 
@@ -169,7 +169,7 @@ skip-grant-tables
 
 
 
-<pre class="example">/etc/init.d/mysql restart
+<pre class="src src-sh">/etc/init.d/mysql restart
 </pre>
 
 </div>
@@ -184,7 +184,7 @@ skip-grant-tables
 </p>
 
 
-<pre class="example">mysql&gt; UPDATE mysql.user SET password=PASSWORD('123456') WHERE User='root';
+<pre class="src src-sh">mysql&gt; UPDATE mysql.user SET <span style="color: #2e8b57;">password</span>=PASSWORD(<span style="color: #8b7355;">'123456'</span>) WHERE <span style="color: #2e8b57;">User</span>=<span style="color: #8b7355;">'root'</span>;
 mysql&gt; FLUSH PRIVILEGES;
 </pre>
 
@@ -233,10 +233,10 @@ mysql&gt; grant 权限1,权限2,…权限n on 数据库名称.表名称 to 用�
 </p>
 
 
-<pre class="example">mysql&gt;grant select,insert,update,drop vm_db.* to test1@localhost identified by 'test1'
-#如果不想test1有密码，可以在打一个命令将密码取消
-mysql&gt;grant select,insert,update,drop vm_db.* to test1@localhost identified by ''
-#刷新系统权限表
+<pre class="src src-sh">mysql&gt;grant select,insert,update,drop vm_db.* to test1@localhost identified by <span style="color: #8b7355;">'test1'</span>
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#22914;&#26524;&#19981;&#24819;test1&#26377;&#23494;&#30721;&#65292;&#21487;&#20197;&#22312;&#25171;&#19968;&#20010;&#21629;&#20196;&#23558;&#23494;&#30721;&#21462;&#28040;</span>
+mysql&gt;grant select,insert,update,drop vm_db.* to test1@localhost identified by <span style="color: #8b7355;">''</span>
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#21047;&#26032;&#31995;&#32479;&#26435;&#38480;&#34920;</span>
 mysql&gt;flush privileges;
 </pre>
 
@@ -252,7 +252,7 @@ mysql&gt;flush privileges;
 </p>
 
 
-<pre class="example">mysql&gt; REVOKE DELETE on vm_db.* from test1@'localhost';
+<pre class="src src-sh">mysql&gt; REVOKE DELETE on vm_db.* from test1@<span style="color: #8b7355;">'localhost'</span>;
 </pre>
 
 </div>
@@ -266,7 +266,7 @@ mysql&gt;flush privileges;
 
 
 
-<pre class="example">mysql&gt;update mysql.user set password=password('新密码') where User="test1" and Host="localhost";
+<pre class="src src-sh">mysql&gt;update mysql.user set <span style="color: #2e8b57;">password</span>=password(<span style="color: #8b7355;">'&#26032;&#23494;&#30721;'</span>) where <span style="color: #2e8b57;">User</span>=<span style="color: #8b7355;">"test1"</span> and <span style="color: #2e8b57;">Host</span>=<span style="color: #8b7355;">"localhost"</span>;
 mysql&gt;flush privileges;
 </pre>
 
@@ -282,8 +282,8 @@ mysql&gt;flush privileges;
 </p>
 
 
-<pre class="example">mysql&gt;use mysql;
-mysql&gt;DELETE FROM user WHERE User="test1" and Host="localhost";
+<pre class="src src-sh">mysql&gt;use mysql;
+mysql&gt;DELETE FROM user WHERE <span style="color: #2e8b57;">User</span>=<span style="color: #8b7355;">"test1"</span> and <span style="color: #2e8b57;">Host</span>=<span style="color: #8b7355;">"localhost"</span>;
 mysql&gt;flush privileges;
 </pre>
 
@@ -306,41 +306,41 @@ mysql&gt;flush privileges;
 
 
 
-<pre class="example">#查询时间
+<pre class="src src-sh"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#26597;&#35810;&#26102;&#38388;</span>
 mysql&gt;select now();
-#查询用户
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#26597;&#35810;&#29992;&#25143;</span>
 mysql&gt;select user();
-#查询数据库版本
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#26597;&#35810;&#25968;&#25454;&#24211;&#29256;&#26412;</span>
 mysql&gt;select version();
-#查询当前数据库
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#26597;&#35810;&#24403;&#21069;&#25968;&#25454;&#24211;</span>
 mysql&gt;select database();
 
 mysql&gt;show databases;
-#删除数据库
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#21024;&#38500;&#25968;&#25454;&#24211;</span>
 mysql&gt;drop database if exists vm_db;
-#创建数据库
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#21019;&#24314;&#25968;&#25454;&#24211;</span>
 mysql&gt;create database if not exists vm_db;
 mysql&gt;use vm_db;
 mysql&gt;show tables;
 mysql&gt;create table if not exists vms(name varchar(20), id int);
-#插入数据
-mysql&gt;insert into vms values('vm1', 1)
-#更新数据
-mysql&gt;update vms set name='vm0' where id=1;
-#复制表机构
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#25554;&#20837;&#25968;&#25454;</span>
+mysql&gt;insert into vms values(<span style="color: #8b7355;">'vm1'</span>, 1)
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#26356;&#26032;&#25968;&#25454;</span>
+mysql&gt;update vms set <span style="color: #2e8b57;">name</span>=<span style="color: #8b7355;">'vm0'</span> where <span style="color: #2e8b57;">id</span>=1;
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#22797;&#21046;&#34920;&#26426;&#26500;</span>
 mysql&gt;create table vms1 select * from vms where 1&lt;&gt;1;
-#复制完整表
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#22797;&#21046;&#23436;&#25972;&#34920;</span>
 mysql&gt;create table vms2 select * from vms;
-#表重命名
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#34920;&#37325;&#21629;&#21517;</span>
 mysql&gt;alter table vms rename as vms0;
-#显示表结构
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#26174;&#31034;&#34920;&#32467;&#26500;</span>
 mysql&gt;describe vms0;
-#显示表记录
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#26174;&#31034;&#34920;&#35760;&#24405;</span>
 mysql&gt;select * from vms0;
-#清空表记录
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#28165;&#31354;&#34920;&#35760;&#24405;</span>
 mysql&gt;delete from vms0;
-#删除表
-#mysql&gt;drop table if exists vms0;
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#21024;&#38500;&#34920;</span>
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">mysql&gt;drop table if exists vms0;</span>
 
 </pre>
 
@@ -355,25 +355,25 @@ mysql&gt;delete from vms0;
 
 
 
-<pre class="example">#备份MySQL数据库的命令
+<pre class="src src-sh"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#22791;&#20221;MySQL&#25968;&#25454;&#24211;&#30340;&#21629;&#20196;</span>
 mysqldump -hhostname -uusername -ppassword databasename &gt; backupfile.sql
-#备份MySQL数据库为带删除表的格式，能够让该备份覆盖已有数据库而不需要手动删除原有数据库。
-mysqldump -–add-drop-table -uusername -ppassword databasename &gt; backupfile.sql
-#直接将MySQL数据库压缩备份
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#22791;&#20221;MySQL&#25968;&#25454;&#24211;&#20026;&#24102;&#21024;&#38500;&#34920;&#30340;&#26684;&#24335;&#65292;&#33021;&#22815;&#35753;&#35813;&#22791;&#20221;&#35206;&#30422;&#24050;&#26377;&#25968;&#25454;&#24211;&#32780;&#19981;&#38656;&#35201;&#25163;&#21160;&#21024;&#38500;&#21407;&#26377;&#25968;&#25454;&#24211;&#12290;</span>
+mysqldump -&#8211;add-drop-table -uusername -ppassword databasename &gt; backupfile.sql
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#30452;&#25509;&#23558;MySQL&#25968;&#25454;&#24211;&#21387;&#32553;&#22791;&#20221;</span>
 mysqldump -hhostname -uusername -ppassword databasename | gzip &gt; backupfile.sql.gz
-#备份MySQL数据库某个(些)表
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#22791;&#20221;MySQL&#25968;&#25454;&#24211;&#26576;&#20010;(&#20123;)&#34920;</span>
 mysqldump -hhostname -uusername -ppassword databasename specific_table1 specific_table2 &gt; backupfile.sql
-#同时备份多个MySQL数据库
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#21516;&#26102;&#22791;&#20221;&#22810;&#20010;MySQL&#25968;&#25454;&#24211;</span>
 mysqldump -hhostname -uusername -ppassword --databases databasename1 databasename2 databasename3 &gt; multibackupfile.sql
-#仅仅备份数据库结构
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#20165;&#20165;&#22791;&#20221;&#25968;&#25454;&#24211;&#32467;&#26500;</span>
 mysqldump -hhostname -uusername -ppassword --no-data --databases databasename1 databasename2 databasename3 &gt; structurebackupfile.sql
-#备份服务器上所有数据库
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#22791;&#20221;&#26381;&#21153;&#22120;&#19978;&#25152;&#26377;&#25968;&#25454;&#24211;</span>
 mysqldump --all-databases &gt; allbackupfile.sql
-#还原MySQL数据库的命令
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#36824;&#21407;MySQL&#25968;&#25454;&#24211;&#30340;&#21629;&#20196;</span>
 mysql -hhostname -uusername -ppassword databasename &lt; backupfile.sql
-#还原压缩的MySQL数据库
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#36824;&#21407;&#21387;&#32553;&#30340;MySQL&#25968;&#25454;&#24211;</span>
 gunzip &lt; backupfile.sql.gz | mysql -uusername -ppassword databasename
-#将数据库转移到新服务器
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#23558;&#25968;&#25454;&#24211;&#36716;&#31227;&#21040;&#26032;&#26381;&#21153;&#22120;</span>
 mysqldump -uusername -ppassword databasename | mysql --host=*.*.*.* -C databasename
 </pre>
 

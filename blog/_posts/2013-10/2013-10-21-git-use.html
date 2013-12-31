@@ -61,7 +61,7 @@ featured: false
 </p>
 
 
-<pre class="example">git config http.proxy http://127.0.0.1:8087/
+<pre class="src src-sh">git config http.proxy http://127.0.0.1:8087/
 git config http.sslVerify false
 </pre>
 
@@ -95,13 +95,13 @@ git config http.sslVerify false
 
 
 
-<pre class="example">$ssh-keygen -t rsa
+<pre class="src src-sh">$<span style="color: #2e8b57;">ssh</span>-keygen -t rsa
 Generating public/private rsa key pair.
-Enter file in which to save the key (/home/wchunx/.ssh/id_rsa): [回车]
-Enter passphrase (empty for no passphrase): [第一次输入密码]
-Enter same passphrase again: [重复密码]
-Your identification has been saved in /home/wchunx/.ssh/id_rsa.
-Your public key has been saved in /home/wchunx/.ssh/id_rsa.pub.
+Enter file<span style="color: #1c86ee;"> in</span> which to save the key (/home/wchunx/.ssh/id_rsa): [&#22238;&#36710;]
+Enter passphrase (empty for no passphrase): [&#31532;&#19968;&#27425;&#36755;&#20837;&#23494;&#30721;]
+Enter same passphrase again: [&#37325;&#22797;&#23494;&#30721;]
+Your identification has been saved<span style="color: #1c86ee;"> in</span> /home/wchunx/.ssh/id_rsa.
+Your public key has been saved<span style="color: #1c86ee;"> in</span> /home/wchunx/.ssh/id_rsa.pub.
 </pre>
 
 </div>
@@ -124,9 +124,9 @@ Your public key has been saved in /home/wchunx/.ssh/id_rsa.pub.
 
 
 
-<pre class="example">ssh -T git@github.com
-#看到下面类似内容，表示ok
-Hi wchunx! You've successfully authenticated, but GitHub does not provide shell access.
+<pre class="src src-sh">ssh -T git@github.com
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#30475;&#21040;&#19979;&#38754;&#31867;&#20284;&#20869;&#23481;&#65292;&#34920;&#31034;ok</span>
+Hi wchunx! You<span style="color: #8b7355;">'ve successfully authenticated, but GitHub does not provide shell access.</span>
 </pre>
 
 </div>
@@ -140,7 +140,7 @@ Hi wchunx! You've successfully authenticated, but GitHub does not provide shell 
 
 
 
-<pre class="example">git remote set-url emacs git@github.com:wchunx/.emacs.d.git 
+<pre class="src src-sh">git remote set-url emacs git@github.com:wchunx/.emacs.d.git 
 </pre>
 
 </div>
@@ -183,7 +183,7 @@ Hi wchunx! You've successfully authenticated, but GitHub does not provide shell 
 </p>
 
 
-<pre class="example">error: RPC failed; result=55, HTTP code = 0
+<pre class="src src-sh">error: RPC failed; <span style="color: #2e8b57;">result</span>=55, HTTP code = 0
 fatal: The remote end hung up unexpectedly
 fatal: The remote end hung up unexpectedly
 </pre>
@@ -210,7 +210,7 @@ fatal: The remote end hung up unexpectedly
 </p>
 
 
-<pre class="example">[http]
+<pre class="src src-sh">[http]
 postBuffer = 524288000
 </pre>
 
@@ -225,7 +225,7 @@ postBuffer = 524288000
 
 
 
-<pre class="example">git config http.postBuffer 524288000 
+<pre class="src src-sh">git config http.postBuffer 524288000 
 </pre>
 
 </div>

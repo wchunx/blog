@@ -46,7 +46,7 @@ featured: false
 
 
 
-<pre class="example">mysqladmin -u root password "123456"
+<pre class="src src-sh">mysqladmin -u root password <span style="color: #8b7355;">"123456"</span>
 </pre>
 
 <dl>
@@ -57,7 +57,7 @@ featured: false
 
 
 
-<pre class="example">mysqladmin -u root -p oldpassword newpasswd
+<pre class="src src-sh">mysqladmin -u root -p oldpassword newpasswd
 </pre>
 
 </div>
@@ -71,7 +71,7 @@ featured: false
 
 
 
-<pre class="example">mysql&gt;update user set password=PASSWORD(‘123456’) where User='root';
+<pre class="src src-sh">mysql&gt;update user set <span style="color: #2e8b57;">password</span>=PASSWORD(&#8216;123456&#8217;) where <span style="color: #2e8b57;">User</span>=<span style="color: #8b7355;">'root'</span>;
 </pre>
 
 </div>
@@ -93,9 +93,9 @@ featured: false
 
 
 
-<pre class="example">mysql -u root –p
+<pre class="src src-sh">mysql -u root &#8211;p
 mysql&gt;use mysql;
-mysql&gt;update user set host = '%' where user = 'root';
+mysql&gt;update user set host = <span style="color: #8b7355;">'%'</span> where user = <span style="color: #8b7355;">'root'</span>;
 mysql&gt;select host, user from user;
 </pre>
 
@@ -111,7 +111,7 @@ mysql&gt;select host, user from user;
 </p>
 
 
-<pre class="example">mysql&gt;GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '123456' WITH GRANT OPTION;
+<pre class="src src-sh">mysql&gt;GRANT ALL PRIVILEGES ON *.* TO <span style="color: #8b7355;">'root'</span>@<span style="color: #8b7355;">'%'</span> IDENTIFIED BY <span style="color: #8b7355;">'123456'</span> WITH GRANT OPTION;
 </pre>
 
 <p>
@@ -119,7 +119,7 @@ mysql&gt;select host, user from user;
 </p>
 
 
-<pre class="example">mysql -uroot -p123456 -e "GRANT ALL PRIVILEGES ON *.* TO root@'%' IDENTIFIED BY '123456' WITH GRANT OPTION"
+<pre class="src src-sh">mysql -uroot -p123456 -e <span style="color: #8b7355;">"GRANT ALL PRIVILEGES ON *.* TO root@'%' IDENTIFIED BY '123456' WITH GRANT OPTION"</span>
 </pre>
 
 <p>
@@ -127,7 +127,7 @@ mysql&gt;select host, user from user;
 </p>
 
 
-<pre class="example">mysql&gt;GRANT ALL PRIVILEGES ON *.* TO 'jack'@’10.10.50.127’ IDENTIFIED BY '654321' WITH GRANT OPTION;
+<pre class="src src-sh">mysql&gt;GRANT ALL PRIVILEGES ON *.* TO <span style="color: #8b7355;">'jack'</span>@&#8217;10.10.50.127&#8217; IDENTIFIED BY <span style="color: #8b7355;">'654321'</span> WITH GRANT OPTION;
 mysql&gt;FLUSH RIVILEGES
 </pre>
 
@@ -142,13 +142,13 @@ mysql&gt;FLUSH RIVILEGES
 
 
 
-<pre class="example">#进入MySQL服务器
+<pre class="src src-sh"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#36827;&#20837;MySQL&#26381;&#21153;&#22120;</span>
 mysql -h localhost -u root
-#赋予任何主机访问数据的权限
-mysql&gt;GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
-#使修改生效
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#36171;&#20104;&#20219;&#20309;&#20027;&#26426;&#35775;&#38382;&#25968;&#25454;&#30340;&#26435;&#38480;</span>
+mysql&gt;GRANT ALL PRIVILEGES ON *.* TO <span style="color: #8b7355;">'root'</span>@<span style="color: #8b7355;">'%'</span> WITH GRANT OPTION;
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#20351;&#20462;&#25913;&#29983;&#25928;</span>
 mysql&gt;FLUSH PRIVILEGES;
-#退出MySQL服务器
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#36864;&#20986;MySQL&#26381;&#21153;&#22120;</span>
 mysql&gt;EXIT;
 </pre>
 

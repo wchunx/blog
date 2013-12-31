@@ -1,0 +1,38 @@
+#+BEGIN_HTML
+---
+layout: post
+keywords: 
+description: 
+title: libvirt使用问题 
+categories: [虚拟化]
+tags: [虚拟化, libvirt]
+group: archive
+icon: golbe
+featured: false
+---
+#+END_HTML
+
+#+OPTIONS: ^:{}
+* libvirt日志位置
+1. 源码安装
++ 日志位置: /usr/local/var/log/libvirt/
++ 配置文件(可配置日志等级) /usr/local/etc/libvirt/libvirtd.conf
+2.deb安装
++ 日志位置: /var/log/libvirt/
++ 配置文件(可配置日志等级) /etc/libvirt/libvirtd.cnf
+* 与virtualbox冲突
+装了virtualbox后，virsh define 报错error: internal error unexpected domain type kvm, expecting vbox
+#+BEGIN_SRC sh
+$virsh version
+Compiled against library: libvirt 1.0.1
+Using library: libvirt 1.0.1
+Using API: VBOX 1.0.1
+Running hypervisor: VBOX 4.1.12
+#+END_SRC
+hypervisor默认是vbox,如果使用qemu可以手动指定如：
+#+BEGIN_SRC sh
+virsh -c qemu:///system  list --all
+#+END_SRC
+* 镜像格式转换
+raw->qcow2: qemu-img convert -f raw test.img -O qcow2 test.qcow2
+vmdk->qcow2: qemu-img convert -f vmdk -O qcow2 test.vmdk test.qcow2

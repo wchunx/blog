@@ -36,8 +36,8 @@ featured: false
 
 
 
-<pre class="src src-sh"><span style="color: #586e75; font-style: italic;"># </span><span style="color: #586e75; font-style: italic;">-*- coding: UTF-8 -*-</span>
-<span style="color: #586e75; font-style: italic;">#</span><span style="color: #586e75; font-style: italic;">ubuntu&#19979;</span>
+<pre class="src src-sh"><span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">-*- coding: UTF-8 -*-</span>
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">ubuntu&#19979;</span>
 sudo apt-get install python-mysqldb
 </pre>
 
@@ -52,25 +52,25 @@ sudo apt-get install python-mysqldb
 
 
 
-<pre class="src src-python"><span style="color: #586e75; font-style: italic;">#</span><span style="color: #586e75; font-style: italic;">&#33719;&#21462;keystone&#25968;&#25454;&#24211;user&#34920;&#65292;&#25351;&#23450;id&#30340;&#29992;&#25143;&#30340;&#29992;&#25143;&#21517;</span>
-<span style="color: #859900;">import</span> MySQLdb
-<span style="color: #859900;">import</span> MySQLdb.cursors
+<pre class="src src-python"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#33719;&#21462;keystone&#25968;&#25454;&#24211;user&#34920;&#65292;&#25351;&#23450;id&#30340;&#29992;&#25143;&#30340;&#29992;&#25143;&#21517;</span>
+<span style="color: #1c86ee;">import</span> MySQLdb
+<span style="color: #1c86ee;">import</span> MySQLdb.cursors
 
-<span style="color: #859900;">try</span>:
-    <span style="color: #268bd2;">con</span> = MySQLdb.connect(host=<span style="color: #2aa198;">'localhost'</span>, user=<span style="color: #2aa198;">'root'</span>, passwd=<span style="color: #2aa198;">'123456'</span>, port=3306, cursorclass = MySQLdb.cursors.DictCursor)
-    <span style="color: #268bd2;">cur</span> = conn.cursor()
-    con.select_db(<span style="color: #2aa198;">'keystone'</span>)
-    <span style="color: #268bd2;">sql</span> = <span style="color: #2aa198;">"select * from user where id  = '17a294a7a66c456a94c1c8a5e29eceac'"</span>
+<span style="color: #1c86ee;">try</span>:
+    <span style="color: #2e8b57;">con</span> = MySQLdb.connect(host=<span style="color: #8b7355;">'localhost'</span>, user=<span style="color: #8b7355;">'root'</span>, passwd=<span style="color: #8b7355;">'123456'</span>, port=3306, cursorclass = MySQLdb.cursors.DictCursor)
+    <span style="color: #2e8b57;">cur</span> = conn.cursor()
+    con.select_db(<span style="color: #8b7355;">'keystone'</span>)
+    <span style="color: #2e8b57;">sql</span> = <span style="color: #8b7355;">"select * from user where id  = '17a294a7a66c456a94c1c8a5e29eceac'"</span>
     cur.execute(sql)
-    <span style="color: #268bd2;">result</span> = cur.fetchone()
-    <span style="color: #859900;">if</span> result != <span style="color: #2aa198;">None</span>:
-        <span style="color: #268bd2;">result</span> = result[dst]
+    <span style="color: #2e8b57;">result</span> = cur.fetchone()
+    <span style="color: #1c86ee;">if</span> result != <span style="color: #6e8b3d;">None</span>:
+        <span style="color: #2e8b57;">result</span> = result[dst]
     cur.close()
     con.close()
-    <span style="color: #859900;">print</span> result
+    <span style="color: #1c86ee;">print</span> result
 
-<span style="color: #859900;">except</span> MySQLdb.Error,e:
-    <span style="color: #859900;">print</span> <span style="color: #2aa198;">"Mysql Error"</span>
+<span style="color: #1c86ee;">except</span> MySQLdb.Error,e:
+    <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"Mysql Error"</span>
 </pre>
 
 <p>
@@ -86,26 +86,26 @@ sudo apt-get install python-mysqldb
 
 
 
-<pre class="src src-python"><span style="color: #586e75; font-style: italic;"># </span><span style="color: #586e75; font-style: italic;">-*- coding: UTF-8 -*-</span>
-<span style="color: #859900;">import</span> MySQLdb
+<pre class="src src-python"><span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">-*- coding: UTF-8 -*-</span>
+<span style="color: #1c86ee;">import</span> MySQLdb
 
-<span style="color: #859900;">try</span>:
-    <span style="color: #586e75; font-style: italic;">#</span><span style="color: #586e75; font-style: italic;">&#36830;&#25509;mysql&#30340;&#26041;&#27861;&#65306;connect('ip','user','password','dbname')</span>
-    <span style="color: #268bd2;">con</span> = MySQLdb.connect(host=<span style="color: #2aa198;">'localhost'</span>, user=<span style="color: #2aa198;">'root'</span>,
-        passwd=<span style="color: #2aa198;">'root'</span>, db=<span style="color: #2aa198;">'test'</span>);
+<span style="color: #1c86ee;">try</span>:
+    <span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#36830;&#25509;mysql&#30340;&#26041;&#27861;&#65306;connect('ip','user','password','dbname')</span>
+    <span style="color: #2e8b57;">con</span> = MySQLdb.connect(host=<span style="color: #8b7355;">'localhost'</span>, user=<span style="color: #8b7355;">'root'</span>,
+        passwd=<span style="color: #8b7355;">'root'</span>, db=<span style="color: #8b7355;">'test'</span>);
 
-    <span style="color: #586e75; font-style: italic;">#</span><span style="color: #586e75; font-style: italic;">&#25152;&#26377;&#30340;&#26597;&#35810;&#65292;&#37117;&#22312;&#36830;&#25509;con&#30340;&#19968;&#20010;&#27169;&#22359;cursor&#19978;&#38754;&#36816;&#34892;&#30340;,&#33719;&#21462;&#25805;&#20316;&#28216;&#26631;</span>
-    <span style="color: #268bd2;">cur</span> = con.cursor()
+    <span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#25152;&#26377;&#30340;&#26597;&#35810;&#65292;&#37117;&#22312;&#36830;&#25509;con&#30340;&#19968;&#20010;&#27169;&#22359;cursor&#19978;&#38754;&#36816;&#34892;&#30340;,&#33719;&#21462;&#25805;&#20316;&#28216;&#26631;</span>
+    <span style="color: #2e8b57;">cur</span> = con.cursor()
 
-    <span style="color: #586e75; font-style: italic;">#</span><span style="color: #586e75; font-style: italic;">&#25191;&#34892;&#19968;&#20010;&#26597;&#35810;</span>
-    cur.execute(<span style="color: #2aa198;">"SELECT VERSION()"</span>)
+    <span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#25191;&#34892;&#19968;&#20010;&#26597;&#35810;</span>
+    cur.execute(<span style="color: #8b7355;">"SELECT VERSION()"</span>)
 
-    <span style="color: #586e75; font-style: italic;">#</span><span style="color: #586e75; font-style: italic;">&#21462;&#24471;&#19978;&#20010;&#26597;&#35810;&#30340;&#32467;&#26524;&#65292;&#26159;&#21333;&#20010;&#32467;&#26524;</span>
-    <span style="color: #268bd2;">data</span> = cur.fetchone()
-    <span style="color: #859900;">print</span> <span style="color: #2aa198;">"Database version : %s "</span> % data
-<span style="color: #859900;">finally</span>:
-    <span style="color: #859900;">if</span> con:
-        <span style="color: #586e75; font-style: italic;">#</span><span style="color: #586e75; font-style: italic;">&#26080;&#35770;&#22914;&#20309;&#65292;&#36830;&#25509;&#35760;&#24471;&#20851;&#38381;</span>
+    <span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#21462;&#24471;&#19978;&#20010;&#26597;&#35810;&#30340;&#32467;&#26524;&#65292;&#26159;&#21333;&#20010;&#32467;&#26524;</span>
+    <span style="color: #2e8b57;">data</span> = cur.fetchone()
+    <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"Database version : %s "</span> % data
+<span style="color: #1c86ee;">finally</span>:
+    <span style="color: #1c86ee;">if</span> con:
+        <span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#26080;&#35770;&#22914;&#20309;&#65292;&#36830;&#25509;&#35760;&#24471;&#20851;&#38381;</span>
         con.close()
 </pre>
 
@@ -120,30 +120,30 @@ sudo apt-get install python-mysqldb
 
 
 
-<pre class="src src-python"><span style="color: #586e75; font-style: italic;"># </span><span style="color: #586e75; font-style: italic;">-*- coding: UTF-8 -*-</span>
-<span style="color: #859900;">import</span> MySQLdb
+<pre class="src src-python"><span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">-*- coding: UTF-8 -*-</span>
+<span style="color: #1c86ee;">import</span> MySQLdb
 
-<span style="color: #586e75; font-style: italic;">#</span><span style="color: #586e75; font-style: italic;">&#36830;&#25509;&#25968;&#25454;&#24211;</span>
-<span style="color: #268bd2;">con</span> = MySQLdb.connect(host=<span style="color: #2aa198;">'192.168.60.107'</span>, user=<span style="color: #2aa198;">'root'</span>,
-        passwd=<span style="color: #2aa198;">'123456'</span>)
-<span style="color: #586e75; font-style: italic;">#</span><span style="color: #586e75; font-style: italic;">&#33719;&#21462;&#36830;&#25509;&#30340;cursor&#65292;&#21482;&#26377;&#33719;&#21462;&#20102;cursor&#65292;&#25105;&#20204;&#25165;&#33021;&#36827;&#34892;&#21508;&#31181;&#25805;&#20316;</span>
-<span style="color: #268bd2;">cur</span> = con.cursor()
-<span style="color: #586e75; font-style: italic;">#</span><span style="color: #586e75; font-style: italic;">&#21019;&#24314;&#19968;&#20010;&#25968;&#25454;&#24211;vm_db.  </span>
-cur.execute(<span style="color: #2aa198;">"create database if not exists vm_db"</span>)
-<span style="color: #586e75; font-style: italic;">#</span><span style="color: #586e75; font-style: italic;">&#36827;&#20837;vm_db</span>
-con.select_db(<span style="color: #2aa198;">'vm_db'</span>);
-<span style="color: #586e75; font-style: italic;">#</span><span style="color: #586e75; font-style: italic;">&#21019;&#24314;&#34920;vms</span>
-cur.execute(<span style="color: #2aa198;">"create table vms(name varchar(20), id int)"</span>)
-<span style="color: #586e75; font-style: italic;">#</span><span style="color: #586e75; font-style: italic;">vms&#34920;&#25554;&#20837;&#35760;&#24405;</span>
-cur.execute(<span style="color: #2aa198;">"insert into vms values('vm1', 1)"</span>)
-cur.execute(<span style="color: #2aa198;">"insert into vms values('vm2', 2)"</span>)
-<span style="color: #586e75; font-style: italic;">#</span><span style="color: #586e75; font-style: italic;">&#25554;&#20837;&#22810;&#26465;</span>
-<span style="color: #268bd2;">values</span>=[]
-<span style="color: #859900;">for</span> i <span style="color: #859900;">in</span> <span style="color: #859900;">range</span>(3, 20):
-    values.append((<span style="color: #2aa198;">'vm'</span> + <span style="color: #859900;">str</span>(i), i))
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#36830;&#25509;&#25968;&#25454;&#24211;</span>
+<span style="color: #2e8b57;">con</span> = MySQLdb.connect(host=<span style="color: #8b7355;">'192.168.60.107'</span>, user=<span style="color: #8b7355;">'root'</span>,
+        passwd=<span style="color: #8b7355;">'123456'</span>)
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#33719;&#21462;&#36830;&#25509;&#30340;cursor&#65292;&#21482;&#26377;&#33719;&#21462;&#20102;cursor&#65292;&#25105;&#20204;&#25165;&#33021;&#36827;&#34892;&#21508;&#31181;&#25805;&#20316;</span>
+<span style="color: #2e8b57;">cur</span> = con.cursor()
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#21019;&#24314;&#19968;&#20010;&#25968;&#25454;&#24211;vm_db.  </span>
+cur.execute(<span style="color: #8b7355;">"create database if not exists vm_db"</span>)
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#36827;&#20837;vm_db</span>
+con.select_db(<span style="color: #8b7355;">'vm_db'</span>);
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#21019;&#24314;&#34920;vms</span>
+cur.execute(<span style="color: #8b7355;">"create table vms(name varchar(20), id int)"</span>)
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">vms&#34920;&#25554;&#20837;&#35760;&#24405;</span>
+cur.execute(<span style="color: #8b7355;">"insert into vms values('vm1', 1)"</span>)
+cur.execute(<span style="color: #8b7355;">"insert into vms values('vm2', 2)"</span>)
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#25554;&#20837;&#22810;&#26465;</span>
+<span style="color: #2e8b57;">values</span>=[]
+<span style="color: #1c86ee;">for</span> i <span style="color: #1c86ee;">in</span> <span style="color: #cd6600;">range</span>(3, 20):
+    values.append((<span style="color: #8b7355;">'vm'</span> + <span style="color: #cd6600;">str</span>(i), i))
 
-cur.executemany(<span style="color: #2aa198;">'insert into vms values(%s,%s)'</span>, values)
-<span style="color: #586e75; font-style: italic;">#</span><span style="color: #586e75; font-style: italic;">&#24517;&#39035;&#29992;con.commit()&#26469;&#25552;&#20132;&#20107;&#21153;&#65292;&#19981;&#28982;&#19981;&#33021;&#30495;&#27491;&#25554;&#20837;&#25968;&#25454;</span>
+cur.executemany(<span style="color: #8b7355;">'insert into vms values(%s,%s)'</span>, values)
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#24517;&#39035;&#29992;con.commit()&#26469;&#25552;&#20132;&#20107;&#21153;&#65292;&#19981;&#28982;&#19981;&#33021;&#30495;&#27491;&#25554;&#20837;&#25968;&#25454;</span>
 con.commit()
 cur.close()
 con.close()
@@ -160,46 +160,46 @@ con.close()
 
 
 
-<pre class="src src-python"><span style="color: #586e75; font-style: italic;"># </span><span style="color: #586e75; font-style: italic;">-*- coding: UTF-8 -*-</span>
-<span style="color: #859900;">import</span> MySQLdb
+<pre class="src src-python"><span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">-*- coding: UTF-8 -*-</span>
+<span style="color: #1c86ee;">import</span> MySQLdb
 
-<span style="color: #268bd2;">con</span> = MySQLdb.connect(host=<span style="color: #2aa198;">'192.168.60.107'</span>, user=<span style="color: #2aa198;">'root'</span>,
-        passwd=<span style="color: #2aa198;">'123456'</span>)
-<span style="color: #268bd2;">cur</span> = con.cursor()
-con.select_db(<span style="color: #2aa198;">'vm_db'</span>)
-<span style="color: #268bd2;">count</span> = cur.execute(<span style="color: #2aa198;">'select * from vms'</span>)
-<span style="color: #859900;">print</span> <span style="color: #2aa198;">'&#20849;&#26377; %s &#26465;&#35760;&#24405;'</span> % count
+<span style="color: #2e8b57;">con</span> = MySQLdb.connect(host=<span style="color: #8b7355;">'192.168.60.107'</span>, user=<span style="color: #8b7355;">'root'</span>,
+        passwd=<span style="color: #8b7355;">'123456'</span>)
+<span style="color: #2e8b57;">cur</span> = con.cursor()
+con.select_db(<span style="color: #8b7355;">'vm_db'</span>)
+<span style="color: #2e8b57;">count</span> = cur.execute(<span style="color: #8b7355;">'select * from vms'</span>)
+<span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">'&#20849;&#26377; %s &#26465;&#35760;&#24405;'</span> % count
 
-<span style="color: #586e75; font-style: italic;">#</span><span style="color: #586e75; font-style: italic;">&#33719;&#21462;&#19968;&#26465;&#35760;&#24405;&#65292;&#20316;&#20026;&#20803;&#32452;&#36820;&#22238;</span>
-<span style="color: #859900;">print</span> <span style="color: #2aa198;">'&#33719;&#21462;&#19968;&#26465;&#35760;&#24405;'</span>
-<span style="color: #268bd2;">result</span> = cur.fetchone()
-<span style="color: #859900;">print</span> result
-<span style="color: #859900;">print</span> <span style="color: #2aa198;">'name:%s id:%s'</span> % result
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#33719;&#21462;&#19968;&#26465;&#35760;&#24405;&#65292;&#20316;&#20026;&#20803;&#32452;&#36820;&#22238;</span>
+<span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">'&#33719;&#21462;&#19968;&#26465;&#35760;&#24405;'</span>
+<span style="color: #2e8b57;">result</span> = cur.fetchone()
+<span style="color: #1c86ee;">print</span> result
+<span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">'name:%s id:%s'</span> % result
 
-<span style="color: #586e75; font-style: italic;">#</span><span style="color: #586e75; font-style: italic;">&#33719;&#21462;5&#26465;&#35760;&#24405;&#65292;&#27880;&#24847;&#30001;&#20110;&#20043;&#21069;&#25191;&#34892;&#26377;&#20102;fetchone()&#65292;&#25152;&#20197;&#28216;&#26631;&#24050;&#32463;&#25351;&#21040;&#31532;&#20108;&#26465;&#35760;&#24405;&#20102;&#65292;&#20063;&#23601;&#26159;&#20174;&#31532;&#20108;&#26465;&#24320;&#22987;&#30340;&#25152;&#26377;&#35760;&#24405;  </span>
-<span style="color: #859900;">print</span> <span style="color: #2aa198;">"&#33719;&#21462;5&#26465;&#35760;&#24405;:"</span>  
-<span style="color: #268bd2;">results</span> = cur.fetchmany(5)  
-<span style="color: #859900;">for</span> r <span style="color: #859900;">in</span> results:  
-    <span style="color: #859900;">print</span> r  
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#33719;&#21462;5&#26465;&#35760;&#24405;&#65292;&#27880;&#24847;&#30001;&#20110;&#20043;&#21069;&#25191;&#34892;&#26377;&#20102;fetchone()&#65292;&#25152;&#20197;&#28216;&#26631;&#24050;&#32463;&#25351;&#21040;&#31532;&#20108;&#26465;&#35760;&#24405;&#20102;&#65292;&#20063;&#23601;&#26159;&#20174;&#31532;&#20108;&#26465;&#24320;&#22987;&#30340;&#25152;&#26377;&#35760;&#24405;  </span>
+<span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"&#33719;&#21462;5&#26465;&#35760;&#24405;:"</span>  
+<span style="color: #2e8b57;">results</span> = cur.fetchmany(5)  
+<span style="color: #1c86ee;">for</span> r <span style="color: #1c86ee;">in</span> results:  
+    <span style="color: #1c86ee;">print</span> r  
 
-<span style="color: #859900;">print</span> <span style="color: #2aa198;">"&#33719;&#21462;&#25152;&#26377;&#32467;&#26524;:"</span>  
-<span style="color: #586e75; font-style: italic;">#</span><span style="color: #586e75; font-style: italic;">&#37325;&#32622;&#28216;&#26631;&#20301;&#32622;&#65292;0,&#20026;&#20559;&#31227;&#37327;&#65292;mode&#65309;absolute | relative,&#40664;&#35748;&#20026;relative,  </span>
-cur.scroll(0, mode=<span style="color: #2aa198;">'absolute'</span>)
-<span style="color: #586e75; font-style: italic;">#</span><span style="color: #586e75; font-style: italic;">&#33719;&#21462;&#25152;&#26377;&#32467;&#26524;&#65292;&#23558;&#32467;&#26524;&#38598;(&#22810;&#32500;&#20803;&#32452;)&#23384;&#20837;results</span>
-<span style="color: #268bd2;">results</span> = cur.fetchall()  
-<span style="color: #859900;">for</span> r <span style="color: #859900;">in</span> results:  
-    <span style="color: #859900;">print</span> r
+<span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"&#33719;&#21462;&#25152;&#26377;&#32467;&#26524;:"</span>  
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#37325;&#32622;&#28216;&#26631;&#20301;&#32622;&#65292;0,&#20026;&#20559;&#31227;&#37327;&#65292;mode&#65309;absolute | relative,&#40664;&#35748;&#20026;relative,  </span>
+cur.scroll(0, mode=<span style="color: #8b7355;">'absolute'</span>)
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#33719;&#21462;&#25152;&#26377;&#32467;&#26524;&#65292;&#23558;&#32467;&#26524;&#38598;(&#22810;&#32500;&#20803;&#32452;)&#23384;&#20837;results</span>
+<span style="color: #2e8b57;">results</span> = cur.fetchall()  
+<span style="color: #1c86ee;">for</span> r <span style="color: #1c86ee;">in</span> results:  
+    <span style="color: #1c86ee;">print</span> r
 
-<span style="color: #586e75; font-style: italic;">#</span><span style="color: #586e75; font-style: italic;">&#19981;&#25353;&#20803;&#32452;&#25171;&#21360;</span>
-cur.scroll(0, mode=<span style="color: #2aa198;">'absolute'</span>)
-<span style="color: #586e75; font-style: italic;">#</span><span style="color: #586e75; font-style: italic;">&#20351;&#29992;cur.rowcount&#33719;&#21462;&#32467;&#26524;&#38598;&#30340;&#26465;&#25968;</span>
-<span style="color: #268bd2;">numrows</span> = <span style="color: #859900;">int</span>(cur.rowcount)
-<span style="color: #586e75; font-style: italic;">#</span><span style="color: #586e75; font-style: italic;">&#24490;&#29615;numrows&#27425;&#65292;&#27599;&#27425;&#21462;&#20986;&#19968;&#34892;&#25968;&#25454;</span>
-<span style="color: #859900;">for</span> i <span style="color: #859900;">in</span> <span style="color: #859900;">range</span>(numrows):
-    <span style="color: #586e75; font-style: italic;">#</span><span style="color: #586e75; font-style: italic;">&#27599;&#27425;&#21462;&#20986;&#19968;&#34892;&#65292;&#25918;&#21040;row&#20013;&#65292;&#36825;&#26159;&#19968;&#20010;&#20803;&#32452;(id,name)</span>
-    <span style="color: #268bd2;">row</span> = cur.fetchone()
-    <span style="color: #586e75; font-style: italic;">#</span><span style="color: #586e75; font-style: italic;">&#30452;&#25509;&#36755;&#20986;&#20004;&#20010;&#20803;&#32032;</span>
-    <span style="color: #859900;">print</span> row[0], row[1]
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#19981;&#25353;&#20803;&#32452;&#25171;&#21360;</span>
+cur.scroll(0, mode=<span style="color: #8b7355;">'absolute'</span>)
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#20351;&#29992;cur.rowcount&#33719;&#21462;&#32467;&#26524;&#38598;&#30340;&#26465;&#25968;</span>
+<span style="color: #2e8b57;">numrows</span> = <span style="color: #cd6600;">int</span>(cur.rowcount)
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#24490;&#29615;numrows&#27425;&#65292;&#27599;&#27425;&#21462;&#20986;&#19968;&#34892;&#25968;&#25454;</span>
+<span style="color: #1c86ee;">for</span> i <span style="color: #1c86ee;">in</span> <span style="color: #cd6600;">range</span>(numrows):
+    <span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#27599;&#27425;&#21462;&#20986;&#19968;&#34892;&#65292;&#25918;&#21040;row&#20013;&#65292;&#36825;&#26159;&#19968;&#20010;&#20803;&#32452;(id,name)</span>
+    <span style="color: #2e8b57;">row</span> = cur.fetchone()
+    <span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#30452;&#25509;&#36755;&#20986;&#20004;&#20010;&#20803;&#32032;</span>
+    <span style="color: #1c86ee;">print</span> row[0], row[1]
 
 cur.close()
 con.close()
@@ -224,20 +224,20 @@ con.close()
 </p>
 
 
-<pre class="src src-python"><span style="color: #586e75; font-style: italic;"># </span><span style="color: #586e75; font-style: italic;">-*- coding: UTF-8 -*-</span>
-<span style="color: #859900;">import</span> MySQLdb
+<pre class="src src-python"><span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">-*- coding: UTF-8 -*-</span>
+<span style="color: #1c86ee;">import</span> MySQLdb
 
-<span style="color: #268bd2;">con</span> = MySQLdb.connect(host=<span style="color: #2aa198;">'192.168.60.107'</span>, user=<span style="color: #2aa198;">'root'</span>,
-    passwd=<span style="color: #2aa198;">'123456'</span>)
-<span style="color: #586e75; font-style: italic;">#</span><span style="color: #586e75; font-style: italic;">&#33719;&#21462;&#23383;&#20856;cursor</span>
-<span style="color: #268bd2;">cur</span> = con.cursor(MySQLdb.cursors.DictCursor)
-con.select_db(<span style="color: #2aa198;">'vm_db'</span>)
+<span style="color: #2e8b57;">con</span> = MySQLdb.connect(host=<span style="color: #8b7355;">'192.168.60.107'</span>, user=<span style="color: #8b7355;">'root'</span>,
+    passwd=<span style="color: #8b7355;">'123456'</span>)
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#33719;&#21462;&#23383;&#20856;cursor</span>
+<span style="color: #2e8b57;">cur</span> = con.cursor(MySQLdb.cursors.DictCursor)
+con.select_db(<span style="color: #8b7355;">'vm_db'</span>)
 
-<span style="color: #586e75; font-style: italic;">#</span><span style="color: #586e75; font-style: italic;">&#33719;&#21462;&#21069;10&#26465;&#35760;&#24405;&#32467;&#26524;&#38598;&#21512;&#65292;rows&#26159;&#20803;&#32452;&#65292;&#20803;&#32032;&#26159;&#23383;&#20856;</span>
-cur.execute(<span style="color: #2aa198;">'select * from vms limit 10'</span>)
-<span style="color: #268bd2;">rows</span> = cur.fetchall()
-<span style="color: #859900;">for</span> row <span style="color: #859900;">in</span> rows:
-    <span style="color: #859900;">print</span> row[<span style="color: #2aa198;">'name'</span>], row[<span style="color: #2aa198;">'id'</span>]
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#33719;&#21462;&#21069;10&#26465;&#35760;&#24405;&#32467;&#26524;&#38598;&#21512;&#65292;rows&#26159;&#20803;&#32452;&#65292;&#20803;&#32032;&#26159;&#23383;&#20856;</span>
+cur.execute(<span style="color: #8b7355;">'select * from vms limit 10'</span>)
+<span style="color: #2e8b57;">rows</span> = cur.fetchall()
+<span style="color: #1c86ee;">for</span> row <span style="color: #1c86ee;">in</span> rows:
+    <span style="color: #1c86ee;">print</span> row[<span style="color: #8b7355;">'name'</span>], row[<span style="color: #8b7355;">'id'</span>]
 </pre>
 
 <p>
@@ -253,16 +253,16 @@ cur.execute(<span style="color: #2aa198;">'select * from vms limit 10'</span>)
 
 
 
-<pre class="src src-python"><span style="color: #586e75; font-style: italic;"># </span><span style="color: #586e75; font-style: italic;">-*- coding: UTF-8 -*-</span>
-<span style="color: #859900;">import</span> MySQLdb
+<pre class="src src-python"><span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">-*- coding: UTF-8 -*-</span>
+<span style="color: #1c86ee;">import</span> MySQLdb
 
-<span style="color: #268bd2;">con</span> = MySQLdb.connect(host=<span style="color: #2aa198;">'192.168.60.107'</span>, user=<span style="color: #2aa198;">'root'</span>,
-    passwd=<span style="color: #2aa198;">'123456'</span>)
+<span style="color: #2e8b57;">con</span> = MySQLdb.connect(host=<span style="color: #8b7355;">'192.168.60.107'</span>, user=<span style="color: #8b7355;">'root'</span>,
+    passwd=<span style="color: #8b7355;">'123456'</span>)
 
-<span style="color: #268bd2;">cur</span> = con.cursor()
-con.select_db(<span style="color: #2aa198;">'vm_db'</span>)
-cur.execute(<span style="color: #2aa198;">"update vms set name = 'testvm' where id = '10'"</span>)
-<span style="color: #586e75; font-style: italic;">#</span><span style="color: #586e75; font-style: italic;">&#25552;&#20132;</span>
+<span style="color: #2e8b57;">cur</span> = con.cursor()
+con.select_db(<span style="color: #8b7355;">'vm_db'</span>)
+cur.execute(<span style="color: #8b7355;">"update vms set name = 'testvm' where id = '10'"</span>)
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#25552;&#20132;</span>
 con.commit()
 
 cur.close()
@@ -280,16 +280,16 @@ con.close()
 
 
 
-<pre class="src src-python"><span style="color: #586e75; font-style: italic;"># </span><span style="color: #586e75; font-style: italic;">-*- coding: UTF-8 -*-</span>
-<span style="color: #859900;">import</span> MySQLdb
+<pre class="src src-python"><span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">-*- coding: UTF-8 -*-</span>
+<span style="color: #1c86ee;">import</span> MySQLdb
 
-<span style="color: #268bd2;">con</span> = MySQLdb.connect(host=<span style="color: #2aa198;">'192.168.60.107'</span>, user=<span style="color: #2aa198;">'root'</span>,
-    passwd=<span style="color: #2aa198;">'123456'</span>)
+<span style="color: #2e8b57;">con</span> = MySQLdb.connect(host=<span style="color: #8b7355;">'192.168.60.107'</span>, user=<span style="color: #8b7355;">'root'</span>,
+    passwd=<span style="color: #8b7355;">'123456'</span>)
 
-<span style="color: #268bd2;">cur</span> = con.cursor()
-con.select_db(<span style="color: #2aa198;">'vm_db'</span>)
-cur.execute(<span style="color: #2aa198;">"delete from vms where id &gt; '10'"</span>)
-<span style="color: #586e75; font-style: italic;">#</span><span style="color: #586e75; font-style: italic;">&#25552;&#20132;</span>
+<span style="color: #2e8b57;">cur</span> = con.cursor()
+con.select_db(<span style="color: #8b7355;">'vm_db'</span>)
+cur.execute(<span style="color: #8b7355;">"delete from vms where id &gt; '10'"</span>)
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#25552;&#20132;</span>
 con.commit()
 
 cur.close()

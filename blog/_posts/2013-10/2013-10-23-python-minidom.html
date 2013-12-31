@@ -45,18 +45,18 @@ test.xml
 </p>
 
 
-<pre class="example">&lt;?xml version="1.0"?&gt;
-&lt;doc&gt; 
-  &lt;branch1 name="one" num="001"&gt;
+<pre class="src src-xml">&lt;?<span style="color: #1c86ee;">xml</span> <span style="color: #2e8b57;">version</span>=<span style="color: #8b7355;">"</span><span style="color: #8b7355;">1.0</span><span style="color: #8b7355;">"</span>?&gt;
+&lt;<span style="color: #cd9b1d;">doc</span>&gt; 
+  &lt;<span style="color: #cd9b1d;">branch1</span> <span style="color: #2e8b57;">name</span>=<span style="color: #8b7355;">"</span><span style="color: #8b7355;">one</span><span style="color: #8b7355;">"</span> <span style="color: #2e8b57;">num</span>=<span style="color: #8b7355;">"</span><span style="color: #8b7355;">001</span><span style="color: #8b7355;">"</span>&gt;
      beijing
-  &lt;/branch1&gt;
-  &lt;branch2 name="two" num="002"&gt;
-    &lt;sub-branch2 name="twenty-one"&gt;
+  &lt;/<span style="color: #cd9b1d;">branch1</span>&gt;
+  &lt;<span style="color: #cd9b1d;">branch2</span> <span style="color: #2e8b57;">name</span>=<span style="color: #8b7355;">"</span><span style="color: #8b7355;">two</span><span style="color: #8b7355;">"</span> <span style="color: #2e8b57;">num</span>=<span style="color: #8b7355;">"</span><span style="color: #8b7355;">002</span><span style="color: #8b7355;">"</span>&gt;
+    &lt;<span style="color: #cd9b1d;">sub-branch2</span> <span style="color: #2e8b57;">name</span>=<span style="color: #8b7355;">"</span><span style="color: #8b7355;">twenty-one</span><span style="color: #8b7355;">"</span>&gt;
       heibei
-    &lt;/sub-branch2&gt;
-  &lt;/branch2&gt;
-  &lt;branch3&gt;shanghai&lt;/branch3&gt;
-&lt;/doc&gt;
+    &lt;/<span style="color: #cd9b1d;">sub-branch2</span>&gt;
+  &lt;/<span style="color: #cd9b1d;">branch2</span>&gt;
+  &lt;<span style="color: #cd9b1d;">branch3</span>&gt;shanghai&lt;/<span style="color: #cd9b1d;">branch3</span>&gt;
+&lt;/<span style="color: #cd9b1d;">doc</span>&gt;
 </pre>
 
 
@@ -69,7 +69,7 @@ test.xml
 
 
 
-<pre class="example">import xml.dom.minidom as minidom 
+<pre class="src src-python"><span style="color: #1c86ee;">import</span> xml.dom.minidom <span style="color: #1c86ee;">as</span> minidom 
 </pre>
 
 </div>
@@ -83,13 +83,13 @@ test.xml
 
 
 
-<pre class="example">#解析xml文件，两种方式
-dom = minidom.parse('/home/wchunx/test.xml') # parse an XML file by name
+<pre class="src src-python"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#35299;&#26512;xml&#25991;&#20214;&#65292;&#20004;&#31181;&#26041;&#24335;</span>
+<span style="color: #2e8b57;">dom</span> = minidom.parse(<span style="color: #8b7355;">'/home/wchunx/test.xml'</span>) <span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">parse an XML file by name</span>
 
-datasource = open('/home/wchunx/text.xml')
-dom2 = minidom.parse(datasource)   # parse an open file
-#解析xml字符串
-dom3 = minidom.parseString('&lt;myxml&gt;Some data&lt;empty/&gt; some more data&lt;/myxml&gt;')
+<span style="color: #2e8b57;">datasource</span> = <span style="color: #cd6600;">open</span>(<span style="color: #8b7355;">'/home/wchunx/text.xml'</span>)
+<span style="color: #2e8b57;">dom2</span> = minidom.parse(datasource)   <span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">parse an open file</span>
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#35299;&#26512;xml&#23383;&#31526;&#20018;</span>
+<span style="color: #2e8b57;">dom3</span> = minidom.parseString(<span style="color: #8b7355;">'&lt;myxml&gt;Some data&lt;empty/&gt; some more data&lt;/myxml&gt;'</span>)
 </pre>
 
 <p>
@@ -105,8 +105,8 @@ dom3 = minidom.parseString('&lt;myxml&gt;Some data&lt;empty/&gt; some more data&
 
 
 
-<pre class="example">#获取根节点documentElement,注意没()
-root = dom.documentElement
+<pre class="src src-python"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#33719;&#21462;&#26681;&#33410;&#28857;documentElement,&#27880;&#24847;&#27809;()</span>
+<span style="color: #2e8b57;">root</span> = dom.documentElement
 </pre>
 
 
@@ -120,8 +120,8 @@ root = dom.documentElement
 </p>
 
 
-<pre class="example">&gt;&gt;&gt; print root.nodeName, root.nodeValue, root.nodeType
-doc None 1
+<pre class="src src-python">&gt;&gt;&gt; <span style="color: #1c86ee;">print</span> root.nodeName, root.nodeValue, root.nodeType
+doc <span style="color: #6e8b3d;">None</span> 1
 </pre>
 
 <p>
@@ -153,7 +153,7 @@ nodeType是节点的类型，现在有以下几种：
 </p>
 
 
-<pre class="example">root.getElementsByTagName("branch1") #读取branch1子节点
+<pre class="src src-python">root.getElementsByTagName(<span style="color: #8b7355;">"branch1"</span>) <span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#35835;&#21462;branch1&#23376;&#33410;&#28857;</span>
 </pre>
 
 <p>
@@ -161,8 +161,8 @@ nodeType是节点的类型，现在有以下几种：
 </p>
 
 
-<pre class="example">&gt;&gt;&gt; root.childNodes
-[&lt;DOM Text node "u'\n  '"&gt;, &lt;DOM Element: branch1 at 0xb6f9ae6c&gt;, &lt;DOM Text node "u'\n  '"&gt;, &lt;DOM Element: branch2 at 0xb6fa102c&gt;, &lt;DOM Text node "u'\n  '"&gt;, &lt;DOM Element: branch3 at 0xb6fa128c&gt;, &lt;DOM Text node "u'\n'"&gt;]
+<pre class="src src-python">&gt;&gt;&gt; root.childNodes
+[&lt;DOM Text node <span style="color: #8b7355;">"u'\n  '"</span>&gt;, &lt;DOM Element: branch1 at 0xb6f9ae6c&gt;, &lt;DOM Text node <span style="color: #8b7355;">"u'\n  '"</span>&gt;, &lt;DOM Element: branch2 at 0xb6fa102c&gt;, &lt;DOM Text node <span style="color: #8b7355;">"u'\n  '"</span>&gt;, &lt;DOM Element: branch3 at 0xb6fa128c&gt;, &lt;DOM Text node <span style="color: #8b7355;">"u'\n'"</span>&gt;]
 </pre>
 
 <p>
@@ -173,7 +173,7 @@ getElementsByTagName()可以搜索当前元素的所有子元素，包括所有�
 </p>
 
 
-<pre class="example">&gt;&gt;&gt; root.getElementsByTagName("sub-branch2")
+<pre class="src src-python">&gt;&gt;&gt; root.getElementsByTagName(<span style="color: #8b7355;">"sub-branch2"</span>)
 [&lt;DOM Element: sub-branch2 at 0xb6fa114c&gt;]
 </pre>
 
@@ -182,9 +182,9 @@ getElementsByTagName()可以搜索当前元素的所有子元素，包括所有�
 </p>
 
 
-<pre class="example">&gt;&gt;&gt; for node in root.childNodes:
-...     if node.nodeType == node.ELEMENT_NODE:
-...             print node.nodeName
+<pre class="src src-python">&gt;&gt;&gt; <span style="color: #1c86ee;">for</span> node <span style="color: #1c86ee;">in</span> root.childNodes:
+...     <span style="color: #1c86ee;">if</span> node.nodeType == node.ELEMENT_NODE:
+...             <span style="color: #1c86ee;">print</span> node.nodeName
 ... 
 branch1
 branch2
@@ -205,37 +205,37 @@ branch3
 
 
 
-<pre class="example">import xml.dom.minidom as minidom
-impl = minidom.getDOMImplementation()
-#生成dom对象
-dom = impl.createDocument(None,'root', None)
-#生成文档节点（根节点）
-root = dom.documentElement
-#生成Element_node item
-item = dom.createElement('item')
-#生成文本节点text
-text = dom.createTextNode('test')
-#将text作为子节点加入item，使item有文本内容
+<pre class="src src-python"><span style="color: #1c86ee;">import</span> xml.dom.minidom <span style="color: #1c86ee;">as</span> minidom
+<span style="color: #2e8b57;">impl</span> = minidom.getDOMImplementation()
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#29983;&#25104;dom&#23545;&#35937;</span>
+<span style="color: #2e8b57;">dom</span> = impl.createDocument(<span style="color: #6e8b3d;">None</span>,<span style="color: #8b7355;">'root'</span>, <span style="color: #6e8b3d;">None</span>)
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#29983;&#25104;&#25991;&#26723;&#33410;&#28857;&#65288;&#26681;&#33410;&#28857;&#65289;</span>
+<span style="color: #2e8b57;">root</span> = dom.documentElement
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#29983;&#25104;Element_node item</span>
+<span style="color: #2e8b57;">item</span> = dom.createElement(<span style="color: #8b7355;">'item'</span>)
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#29983;&#25104;&#25991;&#26412;&#33410;&#28857;text</span>
+<span style="color: #2e8b57;">text</span> = dom.createTextNode(<span style="color: #8b7355;">'test'</span>)
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#23558;text&#20316;&#20026;&#23376;&#33410;&#28857;&#21152;&#20837;item&#65292;&#20351;item&#26377;&#25991;&#26412;&#20869;&#23481;</span>
 item.appendChild(text)
-&lt;DOM Text node “test”&gt;
-#使用setAttribute为item添加属性
-item.setAttribute('id', 'idvalue')
-#添加item为root的子节点
+&lt;DOM Text node &#8220;test&#8221;&gt;
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#20351;&#29992;setAttribute&#20026;item&#28155;&#21152;&#23646;&#24615;</span>
+item.setAttribute(<span style="color: #8b7355;">'id'</span>, <span style="color: #8b7355;">'idvalue'</span>)
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#28155;&#21152;item&#20026;root&#30340;&#23376;&#33410;&#28857;</span>
 root.appendChild(item)
 &lt;DOM Element: item at 0xb9cf80&gt;
-print root.toxml()
-&lt;root&gt;&lt;item id="idvalue"&gt;test&lt;/item&gt;&lt;/root&gt;
-print dom.toxml()
-&lt;?xml version="1.0" ?&gt;&lt;root&gt;&lt;item id="idvalue"&gt;test&lt;/item&gt;&lt;/root&gt;
-print dom.toprettyxml()
-&lt;?xml version="1.0" ?&gt;
+<span style="color: #1c86ee;">print</span> root.toxml()
+&lt;root&gt;&lt;item <span style="color: #cd6600;">id</span>=<span style="color: #8b7355;">"idvalue"</span>&gt;test&lt;/item&gt;&lt;/root&gt;
+<span style="color: #1c86ee;">print</span> dom.toxml()
+&lt;?xml <span style="color: #2e8b57;">version</span>=<span style="color: #8b7355;">"1.0"</span> ?&gt;&lt;root&gt;&lt;item <span style="color: #cd6600;">id</span>=<span style="color: #8b7355;">"idvalue"</span>&gt;test&lt;/item&gt;&lt;/root&gt;
+<span style="color: #1c86ee;">print</span> dom.toprettyxml()
+&lt;?xml <span style="color: #2e8b57;">version</span>=<span style="color: #8b7355;">"1.0"</span> ?&gt;
 &lt;root&gt;
-    &lt;item id="idvalue"&gt;test&lt;/item&gt;
+    &lt;item <span style="color: #cd6600;">id</span>=<span style="color: #8b7355;">"idvalue"</span>&gt;test&lt;/item&gt;
 &lt;/root&gt;
-print dom.toprettyxml(encoding='UTF-8')
-&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+<span style="color: #1c86ee;">print</span> dom.toprettyxml(encoding=<span style="color: #8b7355;">'UTF-8'</span>)
+&lt;?xml <span style="color: #2e8b57;">version</span>=<span style="color: #8b7355;">"1.0"</span> <span style="color: #2e8b57;">encoding</span>=<span style="color: #8b7355;">"UTF-8"</span>?&gt;
 &lt;root&gt;
-    &lt;item id="idvalue"&gt;test&lt;/item&gt;
+    &lt;item <span style="color: #cd6600;">id</span>=<span style="color: #8b7355;">"idvalue"</span>&gt;test&lt;/item&gt;
 &lt;/root&gt;
 </pre>
 
@@ -255,42 +255,42 @@ minidom在输出xml文件时操作比较简单，可以用ElementTree创建和�
 
 
 
-<pre class="example">dom对象doc,根节点对象host_node,子节点对象ip_node,port_node,status_node,
-#注意节点对象名称和节点对象的text
-host_ip='192.168.0.1'
-host_port='7443'
-host_status='7202'
+<pre class="src src-python">dom&#23545;&#35937;doc,&#26681;&#33410;&#28857;&#23545;&#35937;host_node,&#23376;&#33410;&#28857;&#23545;&#35937;ip_node,port_node,status_node,
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#27880;&#24847;&#33410;&#28857;&#23545;&#35937;&#21517;&#31216;&#21644;&#33410;&#28857;&#23545;&#35937;&#30340;text</span>
+<span style="color: #2e8b57;">host_ip</span>=<span style="color: #8b7355;">'192.168.0.1'</span>
+<span style="color: #2e8b57;">host_port</span>=<span style="color: #8b7355;">'7443'</span>
+<span style="color: #2e8b57;">host_status</span>=<span style="color: #8b7355;">'7202'</span>
 
-import xml.dom.minidom as minidom
-#生成dom对象
-dom = minidom.Document()
-#生成节点host_node
-host_node = doc.createElement('node')
-host_node.attributes['type'] = 'host'
+<span style="color: #1c86ee;">import</span> xml.dom.minidom <span style="color: #1c86ee;">as</span> minidom
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#29983;&#25104;dom&#23545;&#35937;</span>
+<span style="color: #2e8b57;">dom</span> = minidom.Document()
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#29983;&#25104;&#33410;&#28857;host_node</span>
+<span style="color: #2e8b57;">host_node</span> = doc.createElement(<span style="color: #8b7355;">'node'</span>)
+<span style="color: #2e8b57;">host_node.attributes</span>[<span style="color: #8b7355;">'type'</span>] = <span style="color: #8b7355;">'host'</span>
 doc.appendChild(host_node)
 &lt;DOM Element: node at 0xb72988ac&gt;
-#生成ip节点
-ip_node = doc.createElement('ip')
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#29983;&#25104;ip&#33410;&#28857;</span>
+<span style="color: #2e8b57;">ip_node</span> = doc.createElement(<span style="color: #8b7355;">'ip'</span>)
 ip_node.appendChild(doc.createTextNode(host_ip))
-&lt;DOM Text node "'192.168.0.'..."&gt;
+&lt;DOM Text node <span style="color: #8b7355;">"'192.168.0.'..."</span>&gt;
 host_node.appendChild(ip_node)
 &lt;DOM Element: ip at 0xb6e5bfcc&gt;
-#生成port节点
-port_node = doc.createElement('port')
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#29983;&#25104;port&#33410;&#28857;</span>
+<span style="color: #2e8b57;">port_node</span> = doc.createElement(<span style="color: #8b7355;">'port'</span>)
 port_node.appendChild(doc.createTextNode(host_port))
-&lt;DOM Text node "'7443'"&gt;
+&lt;DOM Text node <span style="color: #8b7355;">"'7443'"</span>&gt;
 host_node.appendChild(port_node)
 &lt;DOM Element: port at 0xb6e6416c&gt;
-#生成status节点
-status_node = doc.createElement('status')
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#29983;&#25104;status&#33410;&#28857;</span>
+<span style="color: #2e8b57;">status_node</span> = doc.createElement(<span style="color: #8b7355;">'status'</span>)
 status_node.appendChild(doc.createTextNode(host_status))
-&lt;DOM Text node "'7202'"&gt;
+&lt;DOM Text node <span style="color: #8b7355;">"'7202'"</span>&gt;
 host_node.appendChild(status_node)
 &lt;DOM Element: status at 0xb6a646cc&gt;
-#输出
-print doc.toprettyxml()
-&lt;?xml version="1.0" ?&gt;
-&lt;node type="host"&gt;
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#36755;&#20986;</span>
+<span style="color: #1c86ee;">print</span> doc.toprettyxml()
+&lt;?xml <span style="color: #2e8b57;">version</span>=<span style="color: #8b7355;">"1.0"</span> ?&gt;
+&lt;node <span style="color: #cd6600;">type</span>=<span style="color: #8b7355;">"host"</span>&gt;
     &lt;ip&gt;192.168.0.1&lt;/ip&gt;
     &lt;port&gt;7443&lt;/port&gt;
     &lt;status&gt;7202&lt;/status&gt;

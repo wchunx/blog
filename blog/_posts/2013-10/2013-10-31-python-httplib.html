@@ -53,10 +53,10 @@ featured: false
 </p>
 
 
-<pre class="example">import httplib
-conn = httplib.HTTPConnection("www.google.cn")
-conn.request('get', '/')
-print conn.getresponse().read()
+<pre class="src src-python"><span style="color: #1c86ee;">import</span> httplib
+<span style="color: #2e8b57;">conn</span> = httplib.HTTPConnection(<span style="color: #8b7355;">"www.google.cn"</span>)
+conn.request(<span style="color: #8b7355;">'get'</span>, <span style="color: #8b7355;">'/'</span>)
+<span style="color: #1c86ee;">print</span> conn.getresponse().read()
 conn.close()
 </pre>
 

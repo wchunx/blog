@@ -1,0 +1,84 @@
+---
+layout: post
+keywords: 
+description: 
+title: libvirt使用问题 
+categories: [虚拟化]
+tags: [虚拟化, libvirt]
+group: archive
+icon: golbe
+featured: false
+---
+
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 libvirt日志位置</a></li>
+<li><a href="#sec-2">2 与virtualbox冲突</a></li>
+<li><a href="#sec-3">3 镜像格式转换</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">libvirt日志位置</h2>
+<div class="outline-text-2" id="text-1">
+
+<ol>
+<li>源码安装
+</li>
+<li>日志位置: <i>usr/local/var/log/libvirt</i>
+</li>
+<li>配置文件(可配置日志等级) /usr/local/etc/libvirt/libvirtd.conf
+</li>
+</ol>
+
+<p>2.deb安装
+</p><ul>
+<li>日志位置: <i>var/log/libvirt</i>
+</li>
+<li>配置文件(可配置日志等级) /etc/libvirt/libvirtd.cnf
+</li>
+</ul>
+
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">与virtualbox冲突</h2>
+<div class="outline-text-2" id="text-2">
+
+<p>装了virtualbox后，virsh define 报错error: internal error unexpected domain type kvm, expecting vbox
+</p>
+
+
+<pre class="src src-sh">$<span style="color: #2e8b57;">virsh</span> version
+Compiled against library: libvirt 1.0.1
+Using library: libvirt 1.0.1
+Using API: VBOX 1.0.1
+Running hypervisor: VBOX 4.1.12
+</pre>
+
+<p>
+hypervisor默认是vbox,如果使用qemu可以手动指定如：
+</p>
+
+
+<pre class="src src-sh">virsh -c qemu:///system  list --all
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3">镜像格式转换</h2>
+<div class="outline-text-2" id="text-3">
+
+<p>raw-&gt;qcow2: qemu-img convert -f raw test.img -O qcow2 test.qcow2
+vmdk-&gt;qcow2: qemu-img convert -f vmdk -O qcow2 test.vmdk test.qcow2
+</p></div>
+</div>

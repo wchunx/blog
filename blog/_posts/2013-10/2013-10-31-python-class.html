@@ -52,8 +52,8 @@ featured: false
 
 
 
-<pre class="example">class MyClass(object):
-    pass
+<pre class="src src-python"><span style="color: #1c86ee;">class</span> <span style="color: #00688b;">MyClass</span>(<span style="color: #cd6600;">object</span>):
+    <span style="color: #1c86ee;">pass</span>
 </pre>
 
 <ol>
@@ -77,13 +77,13 @@ featured: false
 
 
 
-<pre class="example">class Myclass:
+<pre class="src src-pytho">class Myclass:
     '''A simple example class'''
     i = 12345
     def __init__(self, str):
         print str
     def func(self):
-        print "class example"
+        print <span style="color: #8b7355;">"class example"</span>
 </pre>
 
 <ol>
@@ -123,10 +123,10 @@ featured: false
 </p>
 
 
-<pre class="example">x = MyClass()
+<pre class="src src-python"><span style="color: #2e8b57;">x</span> = MyClass()
 hello word
-x.__doc__
-'A simple example class'
+x.<span style="color: #cd6600;">__doc__</span>
+<span style="color: #8b7355;">'A simple example class'</span>
 </pre>
 
 <ol>
@@ -160,11 +160,11 @@ x.__doc__
 </p>
 
 
-<pre class="example">MyClass.i
+<pre class="src src-python">MyClass.i
 12345
 x.i
 12345
-MyClass.i = 54321
+<span style="color: #2e8b57;">MyClass.i</span> = 54321
 MyClass.i
 54321
 x.i
@@ -212,31 +212,31 @@ Myclass.func
 </p>
 
 
-<pre class="example">class Foo(object):
-#定义实例方法
-    def test1(self): 
-        print "object"
-#定义类方法
-    @classmethod 
-    def test2(clss): 
-        print "class"
-#定义静态方法 
-    @staticmethod 
-    def test3():
-        print "static"
-#创建对象
-f = Foo()
-#实例方法传递的参数是实例对象(self)用实例调用，也可以用类的方式调用，但需要将实例引用做为参数传递。
+<pre class="src src-python"><span style="color: #1c86ee;">class</span> <span style="color: #00688b;">Foo</span>(<span style="color: #cd6600;">object</span>):
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#23450;&#20041;&#23454;&#20363;&#26041;&#27861;</span>
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">test1</span>(<span style="color: #1c86ee;">self</span>): 
+        <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"object"</span>
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#23450;&#20041;&#31867;&#26041;&#27861;</span>
+    <span style="color: #00688b;">@classmethod</span> 
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">test2</span>(clss): 
+        <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"class"</span>
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#23450;&#20041;&#38745;&#24577;&#26041;&#27861; </span>
+    <span style="color: #00688b;">@staticmethod</span> 
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">test3</span>():
+        <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"static"</span>
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#21019;&#24314;&#23545;&#35937;</span>
+<span style="color: #2e8b57;">f</span> = Foo()
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#23454;&#20363;&#26041;&#27861;&#20256;&#36882;&#30340;&#21442;&#25968;&#26159;&#23454;&#20363;&#23545;&#35937;(self)&#29992;&#23454;&#20363;&#35843;&#29992;&#65292;&#20063;&#21487;&#20197;&#29992;&#31867;&#30340;&#26041;&#24335;&#35843;&#29992;&#65292;&#20294;&#38656;&#35201;&#23558;&#23454;&#20363;&#24341;&#29992;&#20570;&#20026;&#21442;&#25968;&#20256;&#36882;&#12290;</span>
 f.test1()
-object
+<span style="color: #cd6600;">object</span>
 Foo.test1(f)
-object
-#类方法传递的参数是类对象(clss)使用类和实例均可调用。
+<span style="color: #cd6600;">object</span>
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#31867;&#26041;&#27861;&#20256;&#36882;&#30340;&#21442;&#25968;&#26159;&#31867;&#23545;&#35937;(clss)&#20351;&#29992;&#31867;&#21644;&#23454;&#20363;&#22343;&#21487;&#35843;&#29992;&#12290;</span>
 Foo.test2()
-class
+<span style="color: #1c86ee;">class</span>
 f.test2()
-class
-#静态方法使用类和实例都可以调用
+<span style="color: #1c86ee;">class</span>
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#38745;&#24577;&#26041;&#27861;&#20351;&#29992;&#31867;&#21644;&#23454;&#20363;&#37117;&#21487;&#20197;&#35843;&#29992;</span>
 f.test3()
 static
 Foo.test3()
@@ -293,40 +293,40 @@ static
 </p>
 
 
-<pre class="example">#!/usr/bin/python
-#Filename:Basemodel.py
-class Baseclass:
-    def __init__(self, name, age):
-        self.name = name
-        self.age = age
-        print "baseclass is inited,name:%s,age:%s" % (self.name, self.age)
-    def speak(self, name):
-        print "baseclass can speak : %s" % name
-if(__name__ == "__main__"):
-    b = Baseclass("jack", 20)
-    b.speak("jack"）
+<pre class="src src-python"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">!/usr/bin/python</span>
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">Filename:Basemodel.py</span>
+<span style="color: #1c86ee;">class</span> <span style="color: #00688b;">Baseclass</span>:
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">__init__</span>(<span style="color: #1c86ee;">self</span>, name, age):
+        <span style="color: #1c86ee;">self</span>.name = name
+        <span style="color: #1c86ee;">self</span>.age = age
+        <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"baseclass is inited,name:%s,age:%s"</span> % (<span style="color: #1c86ee;">self</span>.name, <span style="color: #1c86ee;">self</span>.age)
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">speak</span>(<span style="color: #1c86ee;">self</span>, name):
+        <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"baseclass can speak : %s"</span> % name
+<span style="color: #1c86ee;">if</span>(<span style="color: #cd6600;">__name__</span> == <span style="color: #8b7355;">"__main__"</span>):
+    <span style="color: #2e8b57;">b</span> = Baseclass(<span style="color: #8b7355;">"jack"</span>, 20)
+    b.speak(<span style="color: #8b7355;">"jack"</span>&#65289;
 </pre>
 
 
-<pre class="example">#!/usr/bin/python
-#Filename:Subclass.py
-import Basemodel
-class Subclass(Basemodel.Baseclass):
-    def __init__(self, name, age, salary):
-#显示调用基类__init__()方法,注意加self参数
-        Basemodel.Baseclass.__init__(self, name, age)
-        self.salary = salary
-        print "Subclass is inited and the salary is : %s" % self.salary
-    def talk(self, sth):
-        print "%s is talking %s" % (self.name, sth)
-        Basemodel.Baseclass.speak(self, sth)
-if(__name__ == "__main__"):
-    s = Subclass("Joan", 20, 800)
-    s.talk("a story")
+<pre class="src src-python"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">!/usr/bin/python</span>
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">Filename:Subclass.py</span>
+<span style="color: #1c86ee;">import</span> Basemodel
+<span style="color: #1c86ee;">class</span> <span style="color: #00688b;">Subclass</span>(Basemodel.Baseclass):
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">__init__</span>(<span style="color: #1c86ee;">self</span>, name, age, salary):
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#26174;&#31034;&#35843;&#29992;&#22522;&#31867;__init__()&#26041;&#27861;,&#27880;&#24847;&#21152;self&#21442;&#25968;</span>
+        Basemodel.Baseclass.__init__(<span style="color: #1c86ee;">self</span>, name, age)
+        <span style="color: #1c86ee;">self</span>.salary = salary
+        <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"Subclass is inited and the salary is : %s"</span> % <span style="color: #1c86ee;">self</span>.salary
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">talk</span>(<span style="color: #1c86ee;">self</span>, sth):
+        <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"%s is talking %s"</span> % (<span style="color: #1c86ee;">self</span>.name, sth)
+        Basemodel.Baseclass.speak(<span style="color: #1c86ee;">self</span>, sth)
+<span style="color: #1c86ee;">if</span>(<span style="color: #cd6600;">__name__</span> == <span style="color: #8b7355;">"__main__"</span>):
+    <span style="color: #2e8b57;">s</span> = Subclass(<span style="color: #8b7355;">"Joan"</span>, 20, 800)
+    s.talk(<span style="color: #8b7355;">"a story"</span>)
 </pre>
 
 
-<pre class="example">wchunx@wchunx:~$ python Subclass.py
+<pre class="src src-sh">wchunx@wchunx:~$ python Subclass.py
 baseclass is inited,name:Joan,age:20
 Subclass is inited and the salary is : 800
 Joan is talking a story
@@ -334,26 +334,26 @@ baseclass can speak : a story
 </pre>
 
 
-<pre class="example">#!/usr/bin/python
-#Filename:Subclass2.py
-import Basemodel
-class Subclass(Basemodel.Baseclass):
-    def talk(self, sth):
-        print "%s is talking %s,his age is %d" % (self.name, sth, self.age)
-        Basemodel.Baseclass.speak(self, sth)
-if(__name__ == "__main__"):
-#子类没有定义__init__方法，Python自动调用父类的__init__，注意传
-    s = Subclass("Joan", 20)
-    s.talk("a story")
-    s.speak("find baseclass function")
+<pre class="src src-python"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">!/usr/bin/python</span>
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">Filename:Subclass2.py</span>
+<span style="color: #1c86ee;">import</span> Basemodel
+<span style="color: #1c86ee;">class</span> <span style="color: #00688b;">Subclass</span>(Basemodel.Baseclass):
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">talk</span>(<span style="color: #1c86ee;">self</span>, sth):
+        <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"%s is talking %s,his age is %d"</span> % (<span style="color: #1c86ee;">self</span>.name, sth, <span style="color: #1c86ee;">self</span>.age)
+        Basemodel.Baseclass.speak(<span style="color: #1c86ee;">self</span>, sth)
+<span style="color: #1c86ee;">if</span>(<span style="color: #cd6600;">__name__</span> == <span style="color: #8b7355;">"__main__"</span>):
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#23376;&#31867;&#27809;&#26377;&#23450;&#20041;__init__&#26041;&#27861;&#65292;Python&#33258;&#21160;&#35843;&#29992;&#29238;&#31867;&#30340;__init__&#65292;&#27880;&#24847;&#20256;</span>
+    <span style="color: #2e8b57;">s</span> = Subclass(<span style="color: #8b7355;">"Joan"</span>, 20)
+    s.talk(<span style="color: #8b7355;">"a story"</span>)
+    s.speak(<span style="color: #8b7355;">"find baseclass function"</span>)
 </pre>
 
 
-<pre class="example">wchunx@wchunx:~$ python Subprocess2.py
+<pre class="src src-sh">wchunx@wchunx:~$ python Subprocess2.py
 baseclass is inited,name:Joan,age:20
 Joan is talking a story,his age is 20
 baseclass can speak : a story
-baseclass can speak : find baseclass function
+baseclass can speak : find baseclass <span style="color: #1c86ee;">function</span>
 </pre>
 
 </div>

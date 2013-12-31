@@ -157,7 +157,7 @@ featured: false
 </p>
 
 
-<pre class="example">(setq org-startup-indented t)
+<pre class="src src-elisp">(setq org-startup-indented t)
 </pre>
 
 </div>
@@ -177,9 +177,9 @@ featured: false
 
 
 
-<pre class="example">file:~/code/main.c::255                     进入到 255 行
-file:~/xx.org::My Target                    找到目标‘&lt;&lt;My Target&gt;&gt;’
-file:~/xx.org/::#my-custom-id               查找自定义 id 的项
+<pre class="src src-sh">file:~/code/main.c::255                     &#36827;&#20837;&#21040; 255 &#34892;
+file:~/xx.org::My Target                    &#25214;&#21040;&#30446;&#26631;&#8216;&lt;&lt;My Target&gt;&gt;&#8217;
+<span style="color: #ffa54f;">file:~/xx.org/::#my-custom-id               &#26597;&#25214;&#33258;&#23450;&#20041; id &#30340;&#39033;</span>
 </pre>
 
 </li>
@@ -187,7 +187,7 @@ file:~/xx.org/::#my-custom-id               查找自定义 id 的项
 
 
 
-<pre class="example">[[link][description]]
+<pre class="src src-sh">[[link][description]]
 [[link]]
 </pre>
 
@@ -213,13 +213,13 @@ file:~/xx.org/::#my-custom-id               查找自定义 id 的项
 
 
 
-<pre class="example">*粗体*
-/斜体/
-+删除线+
-_下划线_
-下标： H_2 O (这里必须留一个空格要不然2和O都成为小标，目前还不知道怎么去掉空格)
-上标： E=mc^2
-等宽字：  =git= 或者 ~git~
+<pre class="src src-sh">*&#31895;&#20307;*
+/&#26012;&#20307;/
++&#21024;&#38500;&#32447;+
+_&#19979;&#21010;&#32447;_
+&#19979;&#26631;&#65306; H_2 O (&#36825;&#37324;&#24517;&#39035;&#30041;&#19968;&#20010;&#31354;&#26684;&#35201;&#19981;&#28982;2&#21644;O&#37117;&#25104;&#20026;&#23567;&#26631;&#65292;&#30446;&#21069;&#36824;&#19981;&#30693;&#36947;&#24590;&#20040;&#21435;&#25481;&#31354;&#26684;)
+&#19978;&#26631;&#65306; <span style="color: #2e8b57;">E</span>=mc^2
+&#31561;&#23485;&#23383;&#65306;  =<span style="color: #2e8b57;">git</span>= &#25110;&#32773; ~git~
 </pre>
 
 <p>
@@ -240,7 +240,7 @@ org-mode编辑的时候默认没有自动换行，可以在init.el加下面的�
 </p>
 
 
-<pre class="example">(add-hook 'org-mode-hook (lambda () (setq truncate-lines nil))) 
+<pre class="src src-elisp">(add-hook 'org-mode-hook (<span style="color: #1c86ee;">lambda</span> () (setq truncate-lines nil))) 
 </pre>
 
 </div>
@@ -405,7 +405,7 @@ org-mode编辑的时候默认没有自动换行，可以在init.el加下面的�
 </p>
 
 
-<pre class="example">-----
+<pre class="src src-sh">-----
 </pre>
 
 

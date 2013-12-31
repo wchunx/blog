@@ -142,7 +142,7 @@ Open vSwitch的目标，是做一个具有产品级质量的多层虚拟交换�
 </p>
 
 
-<pre class="example">ovs-vsctl add-br br0
+<pre class="src src-sh">ovs-vsctl add-br br0
 wchunx@wchunx-HP:~$ ifconfig
 br0       Link encap:Ethernet  HWaddr 24:be:05:26:bb:96 
           inet addr:192.168.0.204  Bcast:192.168.0.255  Mask:255.255.255.0
@@ -159,7 +159,7 @@ br0       Link encap:Ethernet  HWaddr 24:be:05:26:bb:96
 </p>
 
 
-<pre class="example">ovs-vsctl add-port br0 port
+<pre class="src src-sh">ovs-vsctl add-port br0 port
 </pre>
 
 <p>
@@ -170,7 +170,7 @@ br0       Link encap:Ethernet  HWaddr 24:be:05:26:bb:96
 </p>
 
 
-<pre class="example">ip address add 192.168.1.156/24 dev br0
+<pre class="src src-sh">ip address add 192.168.1.156/24 dev br0
 </pre>
 
 <p>
@@ -178,16 +178,16 @@ br0       Link encap:Ethernet  HWaddr 24:be:05:26:bb:96
 </p>
 
 
-<pre class="example">wchunx@wchunx-HP:~$ sudo ovs-vsctl show
+<pre class="src src-sh">wchunx@wchunx-HP:~$ sudo ovs-vsctl show
 [sudo] password for wchunx:
 d13dfcc3-1467-4d22-808f-20c0c1ac02d7
-    Bridge "br0"
-        Port "br0"
-            Interface "br0"
-                type: internal
-        Port "eth1"
-            Interface "eth1"
-    ovs_version: "1.4.0+build0"
+    Bridge <span style="color: #8b7355;">"br0"</span>
+        Port <span style="color: #8b7355;">"br0"</span>
+            Interface <span style="color: #8b7355;">"br0"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"eth1"</span>
+            Interface <span style="color: #8b7355;">"eth1"</span>
+    ovs_version: <span style="color: #8b7355;">"1.4.0+build0"</span>
 </pre>
 
 <p>
@@ -212,31 +212,31 @@ d13dfcc3-1467-4d22-808f-20c0c1ac02d7
 </p>
 
 
-<pre class="example">apt-cache search openvswitch
-openvswitch-brcompat – Open vSwitch bridge compatibility support
-openvswitch-common – Open vSwitch common components
-openvswitch-controller – Open vSwitch controller implementation
-openvswitch-datapath-dkms – Open vSwitch datapath module source – DKMS version
-openvswitch-datapath-source – Open vSwitch datapath module source – module-assistant version
-openvswitch-dbg – Debug symbols for Open vSwitch packages
-openvswitch-ipsec – Open vSwitch GRE-over-IPsec support
-openvswitch-pki – Open vSwitch public key infrastructure dependency package
-openvswitch-switch – Open vSwitch switch implementations
-openvswitch-test – Open vSwitch test package
-python-openvswitch – Python bindings for Open vSwitch
-quantum-plugin-openvswitch – Quantum is a virtual network service for Openstack. (openvswitch plugin)
-quantum-plugin-openvswitch-agent – Quantum is a virtual network service for Openstack. (openvswitch plugin agent)
+<pre class="src src-sh">apt-cache search openvswitch
+openvswitch-brcompat &#8211; Open vSwitch bridge compatibility support
+openvswitch-common &#8211; Open vSwitch common components
+openvswitch-controller &#8211; Open vSwitch controller implementation
+openvswitch-datapath-dkms &#8211; Open vSwitch datapath module source &#8211; DKMS version
+openvswitch-datapath-source &#8211; Open vSwitch datapath module source &#8211; module-assistant version
+openvswitch-dbg &#8211; Debug symbols for Open vSwitch packages
+openvswitch-ipsec &#8211; Open vSwitch GRE-over-IPsec support
+openvswitch-pki &#8211; Open vSwitch public key infrastructure dependency package
+openvswitch-switch &#8211; Open vSwitch switch implementations
+openvswitch-test &#8211; Open vSwitch test package
+python-openvswitch &#8211; Python bindings for Open vSwitch
+quantum-plugin-openvswitch &#8211; Quantum is a virtual network service for Openstack. (openvswitch plugin)
+quantum-plugin-openvswitch-agent &#8211; Quantum is a virtual network service for Openstack. (openvswitch plugin agent)
 </pre>
 
 
-<pre class="example">apt-get update
-#如果只使用交换机的基本功能，安装下面两个包就够了
+<pre class="src src-sh">apt-get update
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#22914;&#26524;&#21482;&#20351;&#29992;&#20132;&#25442;&#26426;&#30340;&#22522;&#26412;&#21151;&#33021;&#65292;&#23433;&#35013;&#19979;&#38754;&#20004;&#20010;&#21253;&#23601;&#22815;&#20102;</span>
 apt-get install  openvswitch-switch openvswitch-datapath-dkms
-#为了说明bridge兼容模块的问题将brcompat也安了(关于brcompat有多大的好处我还不清楚，但它给ovs的使用带来了不少麻烦，在1.10.0版本中ovs把它删了)
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#20026;&#20102;&#35828;&#26126;bridge&#20860;&#23481;&#27169;&#22359;&#30340;&#38382;&#39064;&#23558;brcompat&#20063;&#23433;&#20102;(&#20851;&#20110;brcompat&#26377;&#22810;&#22823;&#30340;&#22909;&#22788;&#25105;&#36824;&#19981;&#28165;&#26970;&#65292;&#20294;&#23427;&#32473;ovs&#30340;&#20351;&#29992;&#24102;&#26469;&#20102;&#19981;&#23569;&#40635;&#28902;&#65292;&#22312;1.10.0&#29256;&#26412;&#20013;ovs&#25226;&#23427;&#21024;&#20102;)</span>
 apt-get install openvswitch-brcompat
-#如果装了brcompat的话需要卸载bridge模块并在配置文件中打开兼容功能
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#22914;&#26524;&#35013;&#20102;brcompat&#30340;&#35805;&#38656;&#35201;&#21368;&#36733;bridge&#27169;&#22359;&#24182;&#22312;&#37197;&#32622;&#25991;&#20214;&#20013;&#25171;&#24320;&#20860;&#23481;&#21151;&#33021;</span>
 rmmod bridge
-sed -i 's/# BRCOMPAT=no/BRCOMPAT=yes/g' /etc/default/openvswitch-switch
+sed -i <span style="color: #8b7355;">'s/# BRCOMPAT=no/BRCOMPAT=yes/g'</span> /etc/default/openvswitch-switch
 </pre>
 
 </div>
@@ -258,44 +258,44 @@ sed -i 's/# BRCOMPAT=no/BRCOMPAT=yes/g' /etc/default/openvswitch-switch
 </p>
 
 
-<pre class="example">cd /openvswitch-1.9.0/
+<pre class="src src-sh"><span style="color: #cd6600;">cd</span> /openvswitch-1.9.0/
 ./configure --with-linux=/lib/modules/&lt;code&gt;uname -r&lt;/code&gt;/build
 make
 make install
-#卸载bridge模块，可用lsmod | grep bridge查看bridge是否加载
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#21368;&#36733;bridge&#27169;&#22359;&#65292;&#21487;&#29992;lsmod | grep bridge&#26597;&#30475;bridge&#26159;&#21542;&#21152;&#36733;</span>
 rmmod bridge
 insmod datapath/linux/openvswitch.ko
-#创建数据库
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#21019;&#24314;&#25968;&#25454;&#24211;</span>
 mkdir -p /usr/local/etc/openvswitch
 ovsdb-tool create /usr/local/etc/openvswitch/conf.db vswitch/vswitch.ovsschema
-#启动ovsdb-server
-ovsdb-server --remote=punix:/usr/local/var/run/openvswitch/db.sock \
-                     --remote=db:Open_vSwitch,manager_options \
-                     --private-key=db:SSL,private_key \
-                     --certificate=db:SSL,certificate \
-                     --bootstrap-ca-cert=db:SSL,ca_cert \
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#21551;&#21160;ovsdb-server</span>
+ovsdb-server --remote=punix:/usr/local/var/run/openvswitch/db.sock <span style="color: #8b7355;">\</span>
+                     --remote=db:Open_vSwitch,manager_options <span style="color: #8b7355;">\</span>
+                     --private-key=db:SSL,private_key <span style="color: #8b7355;">\</span>
+                     --certificate=db:SSL,certificate <span style="color: #8b7355;">\</span>
+                     --bootstrap-ca-cert=db:SSL,ca_cert <span style="color: #8b7355;">\</span>
                      --pidfile --detach
-#初始化数据库
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#21021;&#22987;&#21270;&#25968;&#25454;&#24211;</span>
 ovs-vsctl --no-wait init
-#启动ovs daemon。这里加入了日志参数
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#21551;&#21160;ovs daemon&#12290;&#36825;&#37324;&#21152;&#20837;&#20102;&#26085;&#24535;&#21442;&#25968;</span>
 ovs-vswitchd --pidfile --detach --verbose=file:info --log-file
-#启动ovs-controller，这步是不必要的
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#21551;&#21160;ovs-controller&#65292;&#36825;&#27493;&#26159;&#19981;&#24517;&#35201;&#30340;</span>
 ovs-controller -v --detach ptcp:
-#加载bridge兼容模块并启动
-#不做这一步，其实并不影响openvswitch的使用。但如果需要兼容基于Linux brige的一些功能就需要这一步。
-#例如用virt-manager创建虚拟机并使用ovs创建的网桥就需要brcompat。在openvswitch1.10.0版本，这一模块被去掉了。
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#21152;&#36733;bridge&#20860;&#23481;&#27169;&#22359;&#24182;&#21551;&#21160;</span>
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#19981;&#20570;&#36825;&#19968;&#27493;&#65292;&#20854;&#23454;&#24182;&#19981;&#24433;&#21709;openvswitch&#30340;&#20351;&#29992;&#12290;&#20294;&#22914;&#26524;&#38656;&#35201;&#20860;&#23481;&#22522;&#20110;Linux brige&#30340;&#19968;&#20123;&#21151;&#33021;&#23601;&#38656;&#35201;&#36825;&#19968;&#27493;&#12290;</span>
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#20363;&#22914;&#29992;virt-manager&#21019;&#24314;&#34394;&#25311;&#26426;&#24182;&#20351;&#29992;ovs&#21019;&#24314;&#30340;&#32593;&#26725;&#23601;&#38656;&#35201;brcompat&#12290;&#22312;openvswitch1.10.0&#29256;&#26412;&#65292;&#36825;&#19968;&#27169;&#22359;&#34987;&#21435;&#25481;&#20102;&#12290;</span>
 insmod datapath/linux/brcompat.ko
 ovs-brcompatd --pidfile --detach
-#使用。将eth0加到br0上，并将IP配到br0
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#20351;&#29992;&#12290;&#23558;eth0&#21152;&#21040;br0&#19978;&#65292;&#24182;&#23558;IP&#37197;&#21040;br0</span>
 ovs-vsctl add-br br0
 ovs-vsctl add-port br0 eth0
-#指定链接的controller，如果之前没启动controller这步不许要
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#25351;&#23450;&#38142;&#25509;&#30340;controller&#65292;&#22914;&#26524;&#20043;&#21069;&#27809;&#21551;&#21160;controller&#36825;&#27493;&#19981;&#35768;&#35201;</span>
 ovs-vsctl set-controller br0 tcp:127.0.0.1
 
 ifconfig eth0 0
 ifconfig br0 192.168.0.156 netmask 255.255.255.0
 route add default gw 192.168.0.1
-echo nameserver 8.8.8.8 &amp;gt; /etc/resolv.conf
+<span style="color: #cd6600;">echo</span> nameserver 8.8.8.8 &amp;gt; /etc/resolv.conf
 </pre>
 
 </div>
@@ -309,13 +309,13 @@ echo nameserver 8.8.8.8 &amp;gt; /etc/resolv.conf
 
 
 
-<pre class="example">#添加网桥br0,将主机网卡eth0加入br0，eth0上的IP设置为0，并配置br0的IP，网关。
+<pre class="src src-sh"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#28155;&#21152;&#32593;&#26725;br0,&#23558;&#20027;&#26426;&#32593;&#21345;eth0&#21152;&#20837;br0&#65292;eth0&#19978;&#30340;IP&#35774;&#32622;&#20026;0&#65292;&#24182;&#37197;&#32622;br0&#30340;IP&#65292;&#32593;&#20851;&#12290;</span>
 ovs-vsctl add-br br0
 ovs-vsctl add-port br0 eth0
 ifconfig eth0 0
 ifconfig br0 192.168.xx.xx netmask 255.255.255.0
 route add default gw 192.168.xx.xx
-echo nameserver 8.8.8.8 &gt; /etc/res0lv.conf
+<span style="color: #cd6600;">echo</span> nameserver 8.8.8.8 &gt; /etc/res0lv.conf
 </pre>
 
 <p>
@@ -323,42 +323,42 @@ echo nameserver 8.8.8.8 &gt; /etc/res0lv.conf
 </p>
 
 
-<pre class="example">#!/bin/bash
-#DIR表示OVS源码包的目录
-DIR=/usr/local/share/openvswitch-1.9.0
-ULOCALBIN=/usr/local/bin
-ULOCALSBIN=/usr/local/sbin
-IP='192.168.0.156'
-NETMASK='255.255.255.0'
-GW='192.168.0.1'
+<pre class="src src-sh"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">!/bin/</span><span style="color: #1c86ee;">bash</span>
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">DIR&#34920;&#31034;OVS&#28304;&#30721;&#21253;&#30340;&#30446;&#24405;</span>
+<span style="color: #2e8b57;">DIR</span>=/usr/local/share/openvswitch-1.9.0
+<span style="color: #2e8b57;">ULOCALBIN</span>=/usr/local/bin
+<span style="color: #2e8b57;">ULOCALSBIN</span>=/usr/local/sbin
+<span style="color: #2e8b57;">IP</span>=<span style="color: #8b7355;">'192.168.0.156'</span>
+<span style="color: #2e8b57;">NETMASK</span>=<span style="color: #8b7355;">'255.255.255.0'</span>
+<span style="color: #2e8b57;">GW</span>=<span style="color: #8b7355;">'192.168.0.1'</span>
 
 lsmod | grep bridge
-if [ $? -eq 0 ]
-then
+<span style="color: #1c86ee;">if</span> [ $<span style="color: #2e8b57;">?</span> -eq 0 ]
+<span style="color: #1c86ee;">then</span>
 rmmod bridge
-fi
+<span style="color: #1c86ee;">fi</span>
 
-/sbin/insmod $DIR/datapath/linux/openvswitch.ko
+/sbin/insmod $<span style="color: #2e8b57;">DIR</span>/datapath/linux/openvswitch.ko
 
-$ULOCALSBIN/ovsdb-server --remote=punix:/usr/local/var/run/openvswitch/db.sock \
-                     --remote=db:Open_vSwitch,manager_options \
-                     --private-key=db:SSL,private_key \
-                     --certificate=db:SSL,certificate \
-                     --bootstrap-ca-cert=db:SSL,ca_cert \
+$<span style="color: #2e8b57;">ULOCALSBIN</span>/ovsdb-server --remote=punix:/usr/local/var/run/openvswitch/db.sock <span style="color: #8b7355;">\</span>
+                     --remote=db:Open_vSwitch,manager_options <span style="color: #8b7355;">\</span>
+                     --private-key=db:SSL,private_key <span style="color: #8b7355;">\</span>
+                     --certificate=db:SSL,certificate <span style="color: #8b7355;">\</span>
+                     --bootstrap-ca-cert=db:SSL,ca_cert <span style="color: #8b7355;">\</span>
                      --pidfile --detach
-$ULOCALBIN/ovs-vsctl --no-wait init
-$ULOCALSBIN/ovs-vswitchd --pidfile --detach
+$<span style="color: #2e8b57;">ULOCALBIN</span>/ovs-vsctl --no-wait init
+$<span style="color: #2e8b57;">ULOCALSBIN</span>/ovs-vswitchd --pidfile --detach
 
-/sbin/insmod $DIR/datapath/linux/brcompat.ko
-$ULOCALSBIN/ovs-brcompatd --pidfile --detach
+/sbin/insmod $<span style="color: #2e8b57;">DIR</span>/datapath/linux/brcompat.ko
+$<span style="color: #2e8b57;">ULOCALSBIN</span>/ovs-brcompatd --pidfile --detach
 
 
 ifconfig eth0 0
-ifconfig br0 ${IP} netmask ${NETMASK}
-route add default gw ${GW}
-echo nameserver 8.8.8.8 &gt; /etc/resolv.conf
+ifconfig br0 ${<span style="color: #2e8b57;">IP</span>} netmask ${<span style="color: #2e8b57;">NETMASK</span>}
+route add default gw ${<span style="color: #2e8b57;">GW</span>}
+<span style="color: #cd6600;">echo</span> nameserver 8.8.8.8 &gt; /etc/resolv.conf
 
-echo 'Done'
+<span style="color: #cd6600;">echo</span> <span style="color: #8b7355;">'Done'</span>
 </pre>
 
 </div>
@@ -372,7 +372,7 @@ echo 'Done'
 
 
 
-<pre class="example">kill `cd /var/run/openvswitch &amp;&amp; cat ovs-brcompatd.pid  ovsdb-server.pid ovs-vswitchd.pid`
+<pre class="src src-sh"><span style="color: #cd6600;">kill</span> <span style="color: #ff00ff;">`cd /var/run/openvswitch &amp;&amp; cat ovs-brcompatd.pid  ovsdb-server.pid ovs-vswitchd.pid`</span>
 </pre>
 
 </div>
@@ -398,8 +398,8 @@ echo 'Done'
 
 
 
-<pre class="example">sudo apt-get install python-simplejson python-qt4 python-twisted-conch automake autoconf gcc uml-utilities libtool build-essential automake pkg-config libssl-dev iproute tcpdump module-assistant debhelper python-all
-sudo apt-get install linux-headers-`uname -r`
+<pre class="src src-sh">sudo apt-get install python-simplejson python-qt4 python-twisted-conch automake autoconf gcc uml-utilities libtool build-essential automake pkg-config libssl-dev iproute tcpdump module-assistant debhelper python-all
+sudo apt-get install linux-headers-<span style="color: #ff00ff;">`uname -r`</span>
 </pre>
 
 </div>
@@ -413,12 +413,12 @@ sudo apt-get install linux-headers-`uname -r`
 
 
 
-<pre class="example">#解压
+<pre class="src src-sh"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#35299;&#21387;</span>
 tar xvzf openvswitch-1.9.0.tar.gz 
-#将压缩包openvswitch-1.9.0.tar.gz 改名为openvswitch_1.9.0.orig.tar.gz
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#23558;&#21387;&#32553;&#21253;openvswitch-1.9.0.tar.gz &#25913;&#21517;&#20026;openvswitch_1.9.0.orig.tar.gz</span>
 mv openvswitch-1.9.0.tar.gz openvswitch_1.9.0.orig.tar.gz
-#进入openvswitch-1.9.0目录,编译源码包
-cd openvswitch-1.9.0/
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#36827;&#20837;openvswitch-1.9.0&#30446;&#24405;,&#32534;&#35793;&#28304;&#30721;&#21253;</span>
+<span style="color: #cd6600;">cd</span> openvswitch-1.9.0/
 sudo dpkg-buildpackage
 </pre>
 
@@ -447,8 +447,8 @@ python-openvswitch_1.9.0-1_all.deb <br/>
 
 
 
-<pre class="example">sudo apt-get install dkms
-#根据需要选择安装
+<pre class="src src-sh">sudo apt-get install dkms
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#26681;&#25454;&#38656;&#35201;&#36873;&#25321;&#23433;&#35013;</span>
 sudo dpkg -i openvswitch-brcompat_1.9.0-1_amd64.deb openvswitch-common_1.9.0-1_amd64.deb  openvswitch-datapath-dkms_1.9.0-1_all.deb  openvswitch-switch_1.9.0-1_amd64.deb python-openvswitch_1.9.0-1_all.deb
 </pre>
 
@@ -463,8 +463,8 @@ sudo dpkg -i openvswitch-brcompat_1.9.0-1_amd64.deb openvswitch-common_1.9.0-1_a
 
 
 
-<pre class="example">mmod bridge
-sed -i 's/# BRCOMPAT=no/BRCOMPAT=yes/g' /etc/default/openvswitch-switch
+<pre class="src src-sh">mmod bridge
+sed -i <span style="color: #8b7355;">'s/# BRCOMPAT=no/BRCOMPAT=yes/g'</span> /etc/default/openvswitch-switch
 </pre>
 
 </div>
@@ -478,8 +478,8 @@ sed -i 's/# BRCOMPAT=no/BRCOMPAT=yes/g' /etc/default/openvswitch-switch
 
 
 
-<pre class="example">sudo service openvswitch-switch restart
-#查看openvswitch运行状态
+<pre class="src src-sh">sudo service openvswitch-switch restart
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#26597;&#30475;openvswitch&#36816;&#34892;&#29366;&#24577;</span>
 service openvswitch-switch status
 
 ovsdb-server is running with pid 1148
@@ -504,7 +504,7 @@ ovs-brcompatd is running with pid 1174
 </p>
 
 
-<pre class="example">auto lo
+<pre class="src src-sh">auto lo
 iface lo inet loopback
 
 auto eth0
@@ -528,11 +528,11 @@ bridge_ports eth0
 </p>
 
 
-<pre class="example">#The loopback network interface
+<pre class="src src-sh"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">The loopback network interface</span>
 auto lo
 iface lo inet loopback
 
-#The OVS bridge interface
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">The OVS bridge interface</span>
 auto br0
 iface br0 inet static
 address 192.168.0.202
@@ -540,11 +540,11 @@ netmask 255.255.255.0
 gateway 192.168.0.1
 dns-nameservers 8.8.8.8
 
-#The primary network interface
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">The primary network interface</span>
 auto eth0
 iface eth0 inet manual
-up ifconfig $IFACE 0.0.0.0 up
-down ifconfig $IFACE down
+up ifconfig $<span style="color: #2e8b57;">IFACE</span> 0.0.0.0 up
+down ifconfig $<span style="color: #2e8b57;">IFACE</span> down
 </pre>
 
 <p>
@@ -552,7 +552,7 @@ down ifconfig $IFACE down
 </p>
 
 
-<pre class="example">sudo /etc/init.d/networking restart
+<pre class="src src-sh">sudo /etc/init.d/networking restart
 </pre>
 
 <p>
@@ -560,8 +560,8 @@ down ifconfig $IFACE down
 </p>
 
 
-<pre class="example">sed -i 's/sleep 40/#sleep 40/g' /etc/init/failsafe.conf
-sed -i 's/sleep 59/#sleep 59/g' /etc/init/failsafe.conf
+<pre class="src src-sh">sed -i <span style="color: #8b7355;">'s/sleep 40/#sleep 40/g'</span> /etc/init/failsafe.conf
+sed -i <span style="color: #8b7355;">'s/sleep 59/#sleep 59/g'</span> /etc/init/failsafe.conf
 </pre>
 
 </div>
@@ -649,7 +649,7 @@ sed -i 's/sleep 59/#sleep 59/g' /etc/init/failsafe.conf
 </p>
 
 
-<pre class="example">ovs-vsctl set port tap1 tag=1
+<pre class="src src-sh">ovs-vsctl set port tap1 <span style="color: #2e8b57;">tag</span>=1
 </pre>
 
 <p>
@@ -698,11 +698,11 @@ VM3，VM6属于VLAN3 <br/>
 </p>
 
 
-<pre class="example">ovs-vsctl add-port v1 tag=1 -- set interface v1 type=internal
-ovs-vsctl add-port v1 tag=2 -- set interface v2 type=internal
-ovs-vsctl set port tap1 tag=1
-ovs-vsctl set port tap2 tag=1
-ovs-vscctl set port tap3 tag=2
+<pre class="src src-sh">ovs-vsctl add-port v1 <span style="color: #2e8b57;">tag</span>=1 -- set interface v1 <span style="color: #2e8b57;">type</span>=internal
+ovs-vsctl add-port v1 <span style="color: #2e8b57;">tag</span>=2 -- set interface v2 <span style="color: #2e8b57;">type</span>=internal
+ovs-vsctl set port tap1 <span style="color: #2e8b57;">tag</span>=1
+ovs-vsctl set port tap2 <span style="color: #2e8b57;">tag</span>=1
+ovs-vscctl set port tap3 <span style="color: #2e8b57;">tag</span>=2
 </pre>
 
 <p>
@@ -717,7 +717,7 @@ eth0会将带有tag=1标签的数据包转发给v1.这个时候VM和主机是可
 </p>
 
 
-<pre class="example">echo 1 &gt; /proc/sys/net/ipv4/ip_forward
+<pre class="src src-sh"><span style="color: #cd6600;">echo</span> 1 &gt; /proc/sys/net/ipv4/ip_forward
 </pre>
 
 <p>
@@ -748,32 +748,32 @@ HOST1 192.168.0.24上的配置。
 </p>
 
 
-<pre class="example">#网桥br1上添加GRE port
-ovs-vsctl add-port br1 gre0 -- set interface gre0 type=gre options:remote_ip=192.168.0.25
-#配置结果
+<pre class="src src-sh"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#32593;&#26725;br1&#19978;&#28155;&#21152;GRE port</span>
+ovs-vsctl add-port br1 gre0 -- set interface gre0 <span style="color: #2e8b57;">type</span>=gre options:<span style="color: #2e8b57;">remote_ip</span>=192.168.0.25
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#37197;&#32622;&#32467;&#26524;</span>
 ovs-vsctl show
 044f6b32-f6c0-4ce7-9d8b-41c9891d4aa7
-    Bridge "br1"
-        Port "br1"
-            Interface "br1"
-                type: internal
-        Port "tap1"
+    Bridge <span style="color: #8b7355;">"br1"</span>
+        Port <span style="color: #8b7355;">"br1"</span>
+            Interface <span style="color: #8b7355;">"br1"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"tap1"</span>
             tag: 1
-            Interface "tap1"
-        Port "tap2"
+            Interface <span style="color: #8b7355;">"tap1"</span>
+        Port <span style="color: #8b7355;">"tap2"</span>
             tag: 2
-            Interface "tap2"
-        Port "gre0"
-            Interface "gre0"
-                type: gre
-                options: {remote_ip="192.168.0.25"}
-    Bridge "br0"
-        Port "br0"
-            Interface "br0"
-                type: internal
-        Port "eth0"
-            Interface "eth1"
-    ovs_version: "1.9.0"
+            Interface <span style="color: #8b7355;">"tap2"</span>
+        Port <span style="color: #8b7355;">"gre0"</span>
+            Interface <span style="color: #8b7355;">"gre0"</span>
+                <span style="color: #cd6600;">type</span>: gre
+                options: {<span style="color: #2e8b57;">remote_ip</span>=<span style="color: #8b7355;">"192.168.0.25"</span>}
+    Bridge <span style="color: #8b7355;">"br0"</span>
+        Port <span style="color: #8b7355;">"br0"</span>
+            Interface <span style="color: #8b7355;">"br0"</span>
+                <span style="color: #cd6600;">type</span>: internal
+        Port <span style="color: #8b7355;">"eth0"</span>
+            Interface <span style="color: #8b7355;">"eth1"</span>
+    ovs_version: <span style="color: #8b7355;">"1.9.0"</span>
 </pre>
 
 <p>
@@ -816,7 +816,7 @@ HOST2(192.168.0.25)做相应配置，remote_ip=192.168.0.24,两台主机即建�
 </p>
 
 
-<pre class="example">ovs-vsctl set interface gre0 type=ipsec_gre options:remote_ip=192.168.0.25 options:certificate=cert.pem options:psk=testpsk
+<pre class="src src-sh">ovs-vsctl set interface gre0 <span style="color: #2e8b57;">type</span>=ipsec_gre options:<span style="color: #2e8b57;">remote_ip</span>=192.168.0.25 options:<span style="color: #2e8b57;">certificate</span>=cert.pem options:<span style="color: #2e8b57;">psk</span>=testpsk
 </pre>
 
 <p>
@@ -844,7 +844,7 @@ HOST2(192.168.0.25)做相应配置，remote_ip=192.168.0.24,两台主机即建�
 </p>
 
 
-<pre class="example">open_vswitch,bridge,port,interface,flow_table,qos,queue,mirror,controller,manager,netflow,ssl,sflow
+<pre class="src src-sh">open_vswitch,bridge,port,interface,flow_table,qos,queue,mirror,controller,manager,netflow,ssl,sflow
 </pre>
 
 <p>
@@ -852,7 +852,7 @@ HOST2(192.168.0.25)做相应配置，remote_ip=192.168.0.24,两台主机即建�
 </p>
 
 
-<pre class="example">ovs-vsctl list/set/get/find/add/remove/clear/destroy table record column [value]
+<pre class="src src-sh">ovs-vsctl list/set/get/find/add/remove/clear/destroy table record column [value]
 </pre>
 
 <p>
@@ -866,7 +866,7 @@ table可为数据表中的任一个，record为数据表中name字段的值，co
 </p>
 
 
-<pre class="example">ovs-vsctl [--bare] [-- --columns=column[,column]...] list table [record]...
+<pre class="src src-sh">ovs-vsctl [--bare] [-- --columns=column[,column]...] list table [record]...
 </pre>
 
 <p>
@@ -874,7 +874,7 @@ table可为数据表中的任一个，record为数据表中name字段的值，co
 </p>
 
 
-<pre class="example">ovs-vsctl [--bare] [-- --columns=column[,column]...] find table [column[:key]=value]...
+<pre class="src src-sh">ovs-vsctl [--bare] [-- --columns=<span style="color: #2e8b57;">column</span>[,column]...] find table [column[:key]=value]...
 </pre>
 
 </div>

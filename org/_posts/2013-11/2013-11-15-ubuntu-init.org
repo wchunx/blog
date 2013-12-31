@@ -3,7 +3,7 @@
 layout: post
 keywords: 
 description: 
-title: 装完ubuntu要做的事
+title: 装ubuntu要做的事
 categories: linux
 tags: [linux,ubuntu]
 group: archive
@@ -56,3 +56,80 @@ sudo apt-get install elementary-tweaks
 #+BEGIN_SRC sh
 sudo apt-get install ttf-wqy-microhei
 #+END_SRC
+* ubuntu server添加国内源
+** 备份文件
+#+BEGIN_SRC sh
+cp /etc/apt/sources.list /etc/apt/sources_bak
+#+END_SRC
+** 添加sohu源
+编辑/etc/apt/sources.list,注释所有
+#+BEGIN_SRC sh
+#sohu源
+deb http://mirrors.sohu.com/ubuntu/ precise main restricted
+deb-src http://mirrors.sohu.com/ubuntu/ precise main restricted
+deb http://mirrors.sohu.com/ubuntu/ precise-updates main restricted
+deb-src http://mirrors.sohu.com/ubuntu/ precise-updates main restricted
+deb http://mirrors.sohu.com/ubuntu/ precise universe
+deb-src http://mirrors.sohu.com/ubuntu/ precise universe
+deb http://mirrors.sohu.com/ubuntu/ precise-updates universe
+deb-src http://mirrors.sohu.com/ubuntu/ precise-updates universe
+deb http://mirrors.sohu.com/ubuntu/ precise multiverse
+deb-src http://mirrors.sohu.com/ubuntu/ precise multiverse
+deb http://mirrors.sohu.com/ubuntu/ precise-updates multiverse
+deb-src http://mirrors.sohu.com/ubuntu/ precise-updates multiverse
+deb http://mirrors.sohu.com/ubuntu/ precise-backports main restricted universe multiverse
+deb-src http://mirrors.sohu.com/ubuntu/ precise-backports main restricted universe multiverse
+deb http://mirrors.sohu.com/ubuntu/ precise-security main restricted
+deb-src http://mirrors.sohu.com/ubuntu/ precise-security main restricted
+deb http://mirrors.sohu.com/ubuntu/ precise-security universe
+deb-src http://mirrors.sohu.com/ubuntu/ precise-security universe
+deb http://mirrors.sohu.com/ubuntu/ precise-security multiverse
+deb-src http://mirrors.sohu.com/ubuntu/ precise-security multiverse
+deb http://extras.ubuntu.com/ubuntu precise main
+deb-src http://extras.ubuntu.com/ubuntu precise main
+
+#163源
+deb http://mirrors.163.com/ubuntu/ precise main restricted
+deb-src http://mirrors.163.com/ubuntu/ precise main restricted
+deb http://mirrors.163.com/ubuntu/ precise-updates main restricted
+deb-src http://mirrors.163.com/ubuntu/ precise-updates main restricted
+deb http://mirrors.163.com/ubuntu/ precise universe
+deb-src http://mirrors.163.com/ubuntu/ precise universe
+deb http://mirrors.163.com/ubuntu/ precise-updates universe
+deb-src http://mirrors.163.com/ubuntu/ precise-updates universe
+deb http://mirrors.163.com/ubuntu/ precise multiverse
+deb-src http://mirrors.163.com/ubuntu/ precise multiverse
+deb http://mirrors.163.com/ubuntu/ precise-updates multiverse
+deb-src http://mirrors.163.com/ubuntu/ precise-updates multiverse
+deb http://mirrors.163.com/ubuntu/ precise-backports main restricted universe multiverse
+deb-src http://mirrors.163.com/ubuntu/ precise-backports main restricted universe multiverse
+deb http://mirrors.163.com/ubuntu/ precise-security main restricted
+deb-src http://mirrors.163.com/ubuntu/ precise-security main restricted
+deb http://mirrors.163.com/ubuntu/ precise-security universe
+deb-src http://mirrors.163.com/ubuntu/ precise-security universe
+deb http://mirrors.163.com/ubuntu/ precise-security multiverse
+deb-src http://mirrors.163.com/ubuntu/ precise-security multiverse
+deb http://extras.ubuntu.com/ubuntu precise main
+deb-src http://extras.ubuntu.com/ubuntu precise main
+#+END_SRC
+** 更新
+#+BEGIN_SRC sh
+sudo apt-get update
+#如果出现key无法找到,需要添加提示中的key
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys <add keys here>
+#sudo apt-get update
+#+END_SRC
+* ubuntu server调整时区
+** 命令行修改
+#+BEGIN_SRC sh
+sudo rm /etc/localtime
+sudo ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+
+sudo vi /etc/timezone
+#写入Asia/Shanghai
+#+END_SRC
+** 交互界面修改
+#+BEGIN_SRC sh
+sudo dpkg-reconfigure tzdata
+#+END_SRC
+** date命令查看当前时间

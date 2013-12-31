@@ -2,7 +2,7 @@
 layout: post
 keywords: 
 description: 
-title: 装完ubuntu要做的事
+title: 装ubuntu要做的事
 categories: linux
 tags: [linux,ubuntu]
 group: archive
@@ -31,6 +31,20 @@ featured: false
 </ul>
 </li>
 <li><a href="#sec-7">7 elementary字体</a></li>
+<li><a href="#sec-8">8 ubuntu server添加国内源</a>
+<ul>
+<li><a href="#sec-8-1">8.1 备份文件</a></li>
+<li><a href="#sec-8-2">8.2 添加sohu源</a></li>
+<li><a href="#sec-8-3">8.3 更新</a></li>
+</ul>
+</li>
+<li><a href="#sec-9">9 ubuntu server调整时区</a>
+<ul>
+<li><a href="#sec-9-1">9.1 命令行修改</a></li>
+<li><a href="#sec-9-2">9.2 交互界面修改</a></li>
+<li><a href="#sec-9-3">9.3 date命令查看当前时间</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -42,7 +56,7 @@ featured: false
 
 
 
-<pre class="example">sudo apt-get update
+<pre class="src src-sh">sudo apt-get update
 </pre>
 
 </div>
@@ -92,7 +106,7 @@ featured: false
 </p>
 
 
-<pre class="example">sudo add-apt-repository ppa:lotem/rime
+<pre class="src src-sh">sudo add-apt-repository ppa:lotem/rime
 sudo apt-get update
 sudo apt-get install ibus-rime
 </pre>
@@ -110,7 +124,7 @@ sudo apt-get install ibus-rime
 
 
 
-<pre class="example">sudo add-apt-repository ppa:rabbitvcs/ppa
+<pre class="src src-sh">sudo add-apt-repository ppa:rabbitvcs/ppa
 sudo apt-get update
 sudo apt-get install rabbitvcs-core rabbitvcs-nautilus3 rabbitvcs-gedit rabbitvcs-cli
 </pre>
@@ -128,7 +142,7 @@ sudo apt-get install rabbitvcs-core rabbitvcs-nautilus3 rabbitvcs-gedit rabbitvc
 
 
 
-<pre class="example">sudo add-apt-repository ppa:versable/elementary-update
+<pre class="src src-sh">sudo add-apt-repository ppa:versable/elementary-update
 sudo apt-get update
 sudo apt-get install elementary-tweaks
 </pre>
@@ -173,8 +187,156 @@ sudo apt-get install elementary-tweaks
 </p>
 
 
-<pre class="example">sudo apt-get install ttf-wqy-microhei
+<pre class="src src-sh">sudo apt-get install ttf-wqy-microhei
 </pre>
 
+</div>
+
+</div>
+
+<div id="outline-container-8" class="outline-2">
+<h2 id="sec-8">ubuntu server添加国内源</h2>
+<div class="outline-text-2" id="text-8">
+
+
+</div>
+
+<div id="outline-container-8-1" class="outline-3">
+<h3 id="sec-8-1">备份文件</h3>
+<div class="outline-text-3" id="text-8-1">
+
+
+
+
+<pre class="src src-sh">cp /etc/apt/sources.list /etc/apt/sources_bak
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-8-2" class="outline-3">
+<h3 id="sec-8-2">添加sohu源</h3>
+<div class="outline-text-3" id="text-8-2">
+
+<p>编辑/etc/apt/sources.list,注释所有
+</p>
+
+
+<pre class="src src-sh"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">sohu&#28304;</span>
+deb http://mirrors.sohu.com/ubuntu/ precise main restricted
+deb-src http://mirrors.sohu.com/ubuntu/ precise main restricted
+deb http://mirrors.sohu.com/ubuntu/ precise-updates main restricted
+deb-src http://mirrors.sohu.com/ubuntu/ precise-updates main restricted
+deb http://mirrors.sohu.com/ubuntu/ precise universe
+deb-src http://mirrors.sohu.com/ubuntu/ precise universe
+deb http://mirrors.sohu.com/ubuntu/ precise-updates universe
+deb-src http://mirrors.sohu.com/ubuntu/ precise-updates universe
+deb http://mirrors.sohu.com/ubuntu/ precise multiverse
+deb-src http://mirrors.sohu.com/ubuntu/ precise multiverse
+deb http://mirrors.sohu.com/ubuntu/ precise-updates multiverse
+deb-src http://mirrors.sohu.com/ubuntu/ precise-updates multiverse
+deb http://mirrors.sohu.com/ubuntu/ precise-backports main restricted universe multiverse
+deb-src http://mirrors.sohu.com/ubuntu/ precise-backports main restricted universe multiverse
+deb http://mirrors.sohu.com/ubuntu/ precise-security main restricted
+deb-src http://mirrors.sohu.com/ubuntu/ precise-security main restricted
+deb http://mirrors.sohu.com/ubuntu/ precise-security universe
+deb-src http://mirrors.sohu.com/ubuntu/ precise-security universe
+deb http://mirrors.sohu.com/ubuntu/ precise-security multiverse
+deb-src http://mirrors.sohu.com/ubuntu/ precise-security multiverse
+deb http://extras.ubuntu.com/ubuntu precise main
+deb-src http://extras.ubuntu.com/ubuntu precise main
+
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">163&#28304;</span>
+deb http://mirrors.163.com/ubuntu/ precise main restricted
+deb-src http://mirrors.163.com/ubuntu/ precise main restricted
+deb http://mirrors.163.com/ubuntu/ precise-updates main restricted
+deb-src http://mirrors.163.com/ubuntu/ precise-updates main restricted
+deb http://mirrors.163.com/ubuntu/ precise universe
+deb-src http://mirrors.163.com/ubuntu/ precise universe
+deb http://mirrors.163.com/ubuntu/ precise-updates universe
+deb-src http://mirrors.163.com/ubuntu/ precise-updates universe
+deb http://mirrors.163.com/ubuntu/ precise multiverse
+deb-src http://mirrors.163.com/ubuntu/ precise multiverse
+deb http://mirrors.163.com/ubuntu/ precise-updates multiverse
+deb-src http://mirrors.163.com/ubuntu/ precise-updates multiverse
+deb http://mirrors.163.com/ubuntu/ precise-backports main restricted universe multiverse
+deb-src http://mirrors.163.com/ubuntu/ precise-backports main restricted universe multiverse
+deb http://mirrors.163.com/ubuntu/ precise-security main restricted
+deb-src http://mirrors.163.com/ubuntu/ precise-security main restricted
+deb http://mirrors.163.com/ubuntu/ precise-security universe
+deb-src http://mirrors.163.com/ubuntu/ precise-security universe
+deb http://mirrors.163.com/ubuntu/ precise-security multiverse
+deb-src http://mirrors.163.com/ubuntu/ precise-security multiverse
+deb http://extras.ubuntu.com/ubuntu precise main
+deb-src http://extras.ubuntu.com/ubuntu precise main
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-8-3" class="outline-3">
+<h3 id="sec-8-3">更新</h3>
+<div class="outline-text-3" id="text-8-3">
+
+
+
+
+<pre class="src src-sh">sudo apt-get update
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#22914;&#26524;&#20986;&#29616;key&#26080;&#27861;&#25214;&#21040;,&#38656;&#35201;&#28155;&#21152;&#25552;&#31034;&#20013;&#30340;key</span>
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys &lt;add keys here&gt;
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">sudo apt-get update</span>
+</pre>
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-9" class="outline-2">
+<h2 id="sec-9">ubuntu server调整时区</h2>
+<div class="outline-text-2" id="text-9">
+
+
+</div>
+
+<div id="outline-container-9-1" class="outline-3">
+<h3 id="sec-9-1">命令行修改</h3>
+<div class="outline-text-3" id="text-9-1">
+
+
+
+
+<pre class="src src-sh">sudo rm /etc/localtime
+sudo ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+
+sudo vi /etc/timezone
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#20889;&#20837;Asia/Shanghai</span>
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-9-2" class="outline-3">
+<h3 id="sec-9-2">交互界面修改</h3>
+<div class="outline-text-3" id="text-9-2">
+
+
+
+
+<pre class="src src-sh">sudo dpkg-reconfigure tzdata
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-9-3" class="outline-3">
+<h3 id="sec-9-3">date命令查看当前时间</h3>
+<div class="outline-text-3" id="text-9-3">
+
+</div>
 </div>
 </div>

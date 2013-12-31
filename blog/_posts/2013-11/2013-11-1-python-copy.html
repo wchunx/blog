@@ -43,26 +43,26 @@ featured: false
 
 
 
-<pre class="example">import copy
-a = [1, 2, 3, 4, ['a', 'b']] #原始对象
+<pre class="src src-python"><span style="color: #1c86ee;">import</span> copy
+<span style="color: #2e8b57;">a</span> = [1, 2, 3, 4, [<span style="color: #8b7355;">'a'</span>, <span style="color: #8b7355;">'b'</span>]] <span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#21407;&#22987;&#23545;&#35937;</span>
 
-b = a #赋值，传对象的引用
-c = copy.copy(a) #对象拷贝，浅拷贝
-d = copy.deepcopy(a) #对象拷贝，深拷贝
+<span style="color: #2e8b57;">b</span> = a <span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#36171;&#20540;&#65292;&#20256;&#23545;&#35937;&#30340;&#24341;&#29992;</span>
+<span style="color: #2e8b57;">c</span> = copy.copy(a) <span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#23545;&#35937;&#25335;&#36125;&#65292;&#27973;&#25335;&#36125;</span>
+<span style="color: #2e8b57;">d</span> = copy.deepcopy(a) <span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#23545;&#35937;&#25335;&#36125;&#65292;&#28145;&#25335;&#36125;</span>
 
-a.append(5) #修改对象a
-a[4].append('c') #修改对象a中的['a', 'b']数组对象
+a.append(5) <span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#20462;&#25913;&#23545;&#35937;a</span>
+a[4].append(<span style="color: #8b7355;">'c'</span>) <span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#20462;&#25913;&#23545;&#35937;a&#20013;&#30340;['a', 'b']&#25968;&#32452;&#23545;&#35937;</span>
 
-print 'a = ', a
-print 'b = ', b
-print 'c = ', c
-print 'd = ', d
+<span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">'a = '</span>, a
+<span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">'b = '</span>, b
+<span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">'c = '</span>, c
+<span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">'d = '</span>, d
 
-#结果
-a = [1, 2, 3, 4, ['a', 'b', 'c'], 5]
-b = [1, 2, 3, 4, ['a', 'b', 'c'], 5]
-c = [1, 2, 3, 4, ['a', 'b', 'c']]
-d = [1, 2, 3, 4, ['a', 'b']]
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#32467;&#26524;</span>
+<span style="color: #2e8b57;">a</span> = [1, 2, 3, 4, [<span style="color: #8b7355;">'a'</span>, <span style="color: #8b7355;">'b'</span>, <span style="color: #8b7355;">'c'</span>], 5]
+<span style="color: #2e8b57;">b</span> = [1, 2, 3, 4, [<span style="color: #8b7355;">'a'</span>, <span style="color: #8b7355;">'b'</span>, <span style="color: #8b7355;">'c'</span>], 5]
+<span style="color: #2e8b57;">c</span> = [1, 2, 3, 4, [<span style="color: #8b7355;">'a'</span>, <span style="color: #8b7355;">'b'</span>, <span style="color: #8b7355;">'c'</span>]]
+<span style="color: #2e8b57;">d</span> = [1, 2, 3, 4, [<span style="color: #8b7355;">'a'</span>, <span style="color: #8b7355;">'b'</span>]]
 </pre>
 
 </div>

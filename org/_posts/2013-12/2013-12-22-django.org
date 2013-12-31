@@ -186,3 +186,112 @@ def hours_ahead(request,offset): #[1]
 #+END_SRC
 1. hours_ahead有两个参数,offset是从匹配的URL中提取出来的.注意：捕获值永远都是字符串（string）类型，而不会是整数（integer）类型,这个函数做的第一件事就是将字符串转换为整数。如果在一个不能转换为整数的值上调用int()，pyhon将抛出ValueError异常，最终显示404页面.
 test
+* 模板
+用模板系统(Template System)实现页面的设计和Python代码分离。
+** 模板组织形式
+#+BEGIN_SRC python
+<html>
+<head><title>标题</title></head>
+<body>
+<p>Dear {{ person_name }},</p>
+<p>Thanks for placing an order from {{ company }}. It's scheduled to
+ship on {{ ship_date|date:"F j, Y" }}.</p>
+<p>Here are the items you've ordered:</p>
+<ul>
+{% for item in item_list %}
+<li>{{ item }}</li>
+{% endfor %}
+</ul>
+{% if ordered_warranty %}
+<p>Your warranty information will be included in the packaging.</p>
+{% endif %}
+<p>Sincerely,<br />{{ company }}</p>
+</body>
+</html>
+#+END_SRC
+** 常用模板标签
+*** if/else
+#+BEGIN_SRC python
+{%if today_is_weekend%}
+    <p>Welcome~</p>
+{%else%}
+    <p>NO!</p>
+{%endif%}
+#+END_SRC
+tag标签检查today_is_weekend值是否为True。如果是，模板系统将显示{% if today_is_weekend %}和{% else %}之间的内容；否则将显示{% else %}和{% endif %}之间的内容。{% else %}是可选的.
+
+{% if %}还可以与and、or、not一起使用，判断一个或多个变量，或者取反(not)
+
+注意：
+1. 不允许同时使用and、or
+2. 不支持圆括号来组合比较操作
+3. 没有{%elif%}标签
+4. 每一个{%if%}标签要对应{%endif%}(中间没空格)关闭标签,否则django会抛出TemplateSyntaxError。
+*** for
+#+BEGIN_SRC python
+<ul>
+{%for person in Person_list%}
+    <li>{{person.name}}</li>
+{%endfor%}
+</ul>
+#+END_SRC
+注意：
+1. 我们也能够嵌套for
+2. Django不支持退出循环，不支持continue
+3. {%for%}标签内置了一个forloop模板变量，它含有一些属性提供循环的信息：
+4. forloop.counter表示循环的次数，它从1开始计数，第一次循环设为1
+5. forloop.counter0类似于forloop.counter，但它是从0开始计数，第一次循环设为0
+6. forloop.revcounter表示循环中剩下的items数量，第一次循环时设为items总数，最后一次设为1
+7. forloop.revcounter0类似于forloop.revcounter，但它是表示的数量少一个，即最后一次循环时设为0
+8. orloop.first当第一次循环时值为True，在特别情况下很有用：
+     #+BEGIN_SRC python
+     {% for object in objects %}
+         {% if forloop.first %}<li class="first">{% else %}<li>{% endif %}
+         {{ object }}
+         </li>
+     {% endfor %}
+     #+END_SRC
+9. forloop.last当最后一次循环时值为True
+10. forloop.parentloop在嵌套循环中表示父循环的forloop：
+*** ifequal/ifnotequal
+{% ifequal %}比较两个值，如果相等，则显示{% ifequal %}和{% endifequal %}之间的所有内容：
+#+BEGIN_SRC python
+{% ifequal a b %}
+    <h1>Welcome!a and b</h1>
+{% endifequal %}
+#+END_SRC
+注意：
+1. {% ifequal %}标签支持{% else %},这一点不再累述
+2. strings，integers和小数都可以作为{% ifequal %}的参数
+3. 其它的Python类型，如字典、列表或booleans不能硬编码在{% ifequal %}里面
+4. 如果你需要测试某个变量是true或false，用{% if %}即可
+*** block
+定义了一个被子模块覆盖的区块，在模板继承知识点可深入
+*** comment
+模板引擎会忽略掉{%comment%}...{%endcomment%}之间的内容
+*** extends
+标记当前模板扩展一个父模板
+
+其他的模板标签可以在以后的章节中详细学习，也可在django 官方文档中查阅
+** 模板注释
+Django模板语言允许注释{# #}，模板渲染时注释不会输出，一个注释不能分成多行
+#+BEGIN_SRC python
+{# This is a comment #}
+#+END_SRC
+** 过滤器
+*** 简介
+1. 模板过滤器是变量显示前,转换它们的值的方式，通过 (|)管道来申请一个过滤器，如姓名转换成小写：
+#+BEGIN_SRC python
+{{ name|lower}}
+#+END_SRC
+2. 过滤器可以串成链，即一个过滤器的结果可以传向下一个
+#+BEGIN_SRC python
+{{ my_text|escape|linebreaks }}  
+#+END_SRC 
+3. 有些过滤器需要参数，过滤器参数一直使用双引号，如显示bio标量的前30个字，
+#+BEGIN_SRC python
+{{ bio|truncatewords:"30" }} 
+#+END_SRC
+*** 常用过滤器
+[[http://doudoubear11.blog.163.com/blog/static/301262432011618103643135/][django模板-过滤器]] \\
+[[http://blog.csdn.net/yima1006/article/details/7201199][Django基础-过滤器]]

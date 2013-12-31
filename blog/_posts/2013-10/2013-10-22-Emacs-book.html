@@ -90,7 +90,7 @@ featured: false
 </p>
 
 
-<pre class="example">sudo apt-get purge emacs23* emacs23-bin-common* emacs23-common* emacsen-common &amp;&amp; sudo apt-get autoremove
+<pre class="src src-sh">sudo apt-get purge emacs23* emacs23-bin-common* emacs23-common* emacsen-common &amp;&amp; sudo apt-get autoremove
 </pre>
 
 </div>
@@ -105,7 +105,7 @@ featured: false
 </p>
 
 
-<pre class="example">sudo add-apt-repository ppa:cassou/emacs
+<pre class="src src-sh">sudo add-apt-repository ppa:cassou/emacs
 sudo apt-get update
 sudo apt-get install emacs24 emacs24-el emacs24-common-non-dfsg
 </pre>
@@ -146,7 +146,7 @@ sudo apt-get install emacs24 emacs24-el emacs24-common-non-dfsg
 </p>
 
 
-<pre class="example">(tool-bar-mode nil)  
+<pre class="src src-elisp">(tool-bar-mode nil)  
 (menu-bar-mode nil)  
 (scroll-bar-mode nil)  
 </pre>
@@ -156,7 +156,7 @@ Emacs24中上面的设置是无效的，需要改为
 </p>
 
 
-<pre class="example">(tool-bar-mode 0)  
+<pre class="src src-elisp">(tool-bar-mode 0)  
 (menu-bar-mode 0)  
 (scroll-bar-mode 0)  
 </pre>
@@ -177,17 +177,17 @@ Emacs24中上面的设置是无效的，需要改为
 
 
 
-<pre class="example">(defadvice org-publish (around fsh-org-publish-advice
-                                        (project &amp;optional force async) activate)
-  "Change theme before publishing, for getting a good html code highlight style through
-htmlize."
-  (let ((thems custom-enabled-themes))
-      (dolist (theme thems)
+<pre class="src src-elisp">(<span style="color: #1c86ee;">defadvice</span> <span style="color: #cd9b1d;">org-publish</span> (around fsh-org-publish-advice
+                                        (project <span style="color: #00688b;">&amp;optional</span> force async) activate)
+  <span style="color: #cd853f;">"Change theme before publishing, for getting a good html code highlight style through</span>
+<span style="color: #cd853f;">htmlize."</span>
+  (<span style="color: #1c86ee;">let</span> ((thems custom-enabled-themes))
+      (<span style="color: #1c86ee;">dolist</span> (theme thems)
         (disable-theme theme))
       (load-theme 'whiteboard)
       ad-do-it
       (disable-theme 'whiteboard)
-      (dolist (theme thems)
+      (<span style="color: #1c86ee;">dolist</span> (theme thems)
         (enable-theme theme))
       ))
 </pre>
@@ -219,7 +219,7 @@ htmlize."
 </p>
 
 
-<pre class="example">cd ~/.emacs.d/plugins/
+<pre class="src src-sh"><span style="color: #cd6600;">cd</span> ~/.emacs.d/plugins/
 git clone https://github.com/alexott/ecb/
 </pre>
 
@@ -228,25 +228,25 @@ init.el中关于ecb的配置
 </p>
 
 
-<pre class="example">;;cedet
-(require 'semantic)
-(require 'semantic/sb)
-(require 'srecode)
-(global-ede-mode 1)
-(semantic-mode 1)
-;;ecb
-(add-to-list 'load-path "~/.emacs.d/plugins/ecb")
-(require 'ecb)
-(setq stack-trace-on-error nil)
-;;鼠标支持：Emacs中执行“M-x ecb-customize-most-important”，找到“Ecb Primary Secondary Mouse Buttons”选项，将其设为“Primary: mouse-1, secondary: mouse-2”，并且&gt;以“Save for Future Sessions”保存。
-;;自动启动ecb
-;; (setq ecb-auto-activate t)
-;;F7:打开ecb
-(global-set-key  [(f7)] 'ecb-activate)
-;;F8:关闭ecb
-(global-set-key  [(f8)] 'ecb-deactivate)
-;;关闭ecb启动窗口
-(setq ecb-tip-of-the-day nil)
+<pre class="src src-sh">;;cedet
+(require <span style="color: #8b7355;">'semantic)</span>
+<span style="color: #8b7355;">(require '</span>semantic/sb)
+(require <span style="color: #8b7355;">'srecode)</span>
+<span style="color: #8b7355;">(global-ede-mode 1)</span>
+<span style="color: #8b7355;">(semantic-mode 1)</span>
+<span style="color: #8b7355;">;;ecb</span>
+<span style="color: #8b7355;">(add-to-list '</span>load-path <span style="color: #8b7355;">"~/.emacs.d/plugins/ecb"</span>)
+(require <span style="color: #8b7355;">'ecb)</span>
+<span style="color: #8b7355;">(setq stack-trace-on-error nil)</span>
+<span style="color: #8b7355;">;;&#40736;&#26631;&#25903;&#25345;&#65306;Emacs&#20013;&#25191;&#34892;&#8220;M-x ecb-customize-most-important&#8221;&#65292;&#25214;&#21040;&#8220;Ecb Primary Secondary Mouse Buttons&#8221;&#36873;&#39033;&#65292;&#23558;&#20854;&#35774;&#20026;&#8220;Primary: mouse-1, secondary: mouse-2&#8221;&#65292;&#24182;&#19988;&gt;&#20197;&#8220;Save for Future Sessions&#8221;&#20445;&#23384;&#12290;</span>
+<span style="color: #8b7355;">;;&#33258;&#21160;&#21551;&#21160;ecb</span>
+<span style="color: #8b7355;">;; (setq ecb-auto-activate t)</span>
+<span style="color: #8b7355;">;;F7:&#25171;&#24320;ecb</span>
+<span style="color: #8b7355;">(global-set-key  [(f7)] '</span>ecb-activate)
+;;F8:&#20851;&#38381;ecb
+(global-set-key  [(f8)] <span style="color: #8b7355;">'ecb-deactivate)</span>
+<span style="color: #8b7355;">;;&#20851;&#38381;ecb&#21551;&#21160;&#31383;&#21475;</span>
+<span style="color: #8b7355;">(setq ecb-tip-of-the-day nil)</span>
 </pre>
 
 
@@ -318,8 +318,8 @@ cedet的详细说明 <br/>
 </p>
 
 
-<pre class="example">(require 'window-numbering)
-(window-numbering-mode 1)
+<pre class="src src-sh">(require <span style="color: #8b7355;">'window-numbering)</span>
+<span style="color: #8b7355;">(window-numbering-mode 1)</span>
 </pre>
 
 </div>
@@ -334,7 +334,7 @@ cedet的详细说明 <br/>
 </p>
 
 
-<pre class="example">(winner-mode t)
+<pre class="src src-sh">(winner-mode t)
 </pre>
 
 </div>
@@ -466,8 +466,8 @@ cedet的详细说明 <br/>
 </p>
 
 
-<pre class="example">`flet' is an obsolete macro (as of 24.3); use either `cl-flet' or `cl-letf'.
-`labels' is an obsolete macro (as of 24.3); use `cl-labels' instead.
+<pre class="src src-sh"><span style="color: #ff00ff;">`flet' is an obsolete macro (as of 24.3); use either `</span>cl-flet<span style="color: #8b7355;">' or `cl-letf'</span>.
+<span style="color: #ff00ff;">`labels' is an obsolete macro (as of 24.3); use `</span>cl-labels<span style="color: #8b7355;">' instead.</span>
 </pre>
 
 <p>

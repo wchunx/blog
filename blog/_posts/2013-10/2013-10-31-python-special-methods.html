@@ -36,13 +36,13 @@ Python类可以定义专用方法,专用方法是在特殊情况下或当使用�
 </p>
 
 
-<pre class="example">#!/usr/bin/python
-class Study:
-    def __init__(self,name=None):
-        self.name = name
-        def say(self):
-            print self.name
-study = Study("Badboy")
+<pre class="src src-python"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">!/usr/bin/python</span>
+<span style="color: #1c86ee;">class</span> <span style="color: #00688b;">Study</span>:
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">__init__</span>(<span style="color: #1c86ee;">self</span>,name=<span style="color: #6e8b3d;">None</span>):
+        <span style="color: #1c86ee;">self</span>.name = name
+        <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">say</span>(<span style="color: #1c86ee;">self</span>):
+            <span style="color: #1c86ee;">print</span> <span style="color: #1c86ee;">self</span>.name
+<span style="color: #2e8b57;">study</span> = Study(<span style="color: #8b7355;">"Badboy"</span>)
 study.say()
 </pre>
 
@@ -58,15 +58,15 @@ study.say()
 </p>
 
 
-<pre class="example">#!/usr/bin/python
-class Study:
-    def __init__(self,name=None):
-        self.name = name
-    def __del__(self):
-        print "Iamaway,baby!"
-    def say(self):
-        print self.name
-study = Study("zhuzhengjun")
+<pre class="src src-python"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">!/usr/bin/python</span>
+<span style="color: #1c86ee;">class</span> <span style="color: #00688b;">Study</span>:
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">__init__</span>(<span style="color: #1c86ee;">self</span>,name=<span style="color: #6e8b3d;">None</span>):
+        <span style="color: #1c86ee;">self</span>.name = name
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">__del__</span>(<span style="color: #1c86ee;">self</span>):
+        <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"Iamaway,baby!"</span>
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">say</span>(<span style="color: #1c86ee;">self</span>):
+        <span style="color: #1c86ee;">print</span> <span style="color: #1c86ee;">self</span>.name
+<span style="color: #2e8b57;">study</span> = Study(<span style="color: #8b7355;">"zhuzhengjun"</span>)
 study.say()
 </pre>
 
@@ -83,21 +83,21 @@ study.say()
 </p>
 
 
-<pre class="example">#!/usr/bin/python
-class Study:
-    def __init__(self,name=None):
-        self.name = name
-    def __del__(self):
-        print "Iamaway,baby!"
-    def say(self):
-        print self.name
-    def __repr__(self):
-        return "Study(‘jacky’)"
-study = Study(“zhuzhengjun”)
+<pre class="src src-python"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">!/usr/bin/python</span>
+<span style="color: #1c86ee;">class</span> <span style="color: #00688b;">Study</span>:
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">__init__</span>(<span style="color: #1c86ee;">self</span>,name=<span style="color: #6e8b3d;">None</span>):
+        <span style="color: #1c86ee;">self</span>.name = name
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">__del__</span>(<span style="color: #1c86ee;">self</span>):
+        <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"Iamaway,baby!"</span>
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">say</span>(<span style="color: #1c86ee;">self</span>):
+        <span style="color: #1c86ee;">print</span> <span style="color: #1c86ee;">self</span>.name
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">__repr__</span>(<span style="color: #1c86ee;">self</span>):
+        <span style="color: #1c86ee;">return</span> <span style="color: #8b7355;">"Study(&#8216;jacky&#8217;)"</span>
+<span style="color: #2e8b57;">study</span> = Study(&#8220;zhuzhengjun&#8221;)
 study.say()
-print type(repr(Study(“zhuzhengjun”))) # str
-print type(eval(repr(Study(“zhuzhengjun”)))) # instance
-study = eval(repr(Study(“zhuzhengjun”)))
+<span style="color: #1c86ee;">print</span> <span style="color: #cd6600;">type</span>(<span style="color: #cd6600;">repr</span>(Study(&#8220;zhuzhengjun&#8221;))) <span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">str</span>
+<span style="color: #1c86ee;">print</span> <span style="color: #cd6600;">type</span>(<span style="color: #cd6600;">eval</span>(<span style="color: #cd6600;">repr</span>(Study(&#8220;zhuzhengjun&#8221;)))) <span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">instance</span>
+<span style="color: #2e8b57;">study</span> = <span style="color: #cd6600;">eval</span>(<span style="color: #cd6600;">repr</span>(Study(&#8220;zhuzhengjun&#8221;)))
 study.say()
 </pre>
 
@@ -117,22 +117,22 @@ print objectOfClass <br/>
 </p>
 
 
-<pre class="example">class PhoneNumber:
-    def __init__(self,number):
-        self.areaCode=number[1:4]
-        self.exchange=number[6:9]
-        self.line=number[10:14]
+<pre class="src src-python"><span style="color: #1c86ee;">class</span> <span style="color: #00688b;">PhoneNumber</span>:
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">__init__</span>(<span style="color: #1c86ee;">self</span>,number):
+        <span style="color: #1c86ee;">self</span>.areaCode=number[1:4]
+        <span style="color: #1c86ee;">self</span>.exchange=number[6:9]
+        <span style="color: #1c86ee;">self</span>.line=number[10:14]
 
-    def __str__(self):
-        return "(%s) %s-%s"%(self.areaCode,self.exchange,self.line)
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">__str__</span>(<span style="color: #1c86ee;">self</span>):
+        <span style="color: #1c86ee;">return</span> <span style="color: #8b7355;">"(%s) %s-%s"</span>%(<span style="color: #1c86ee;">self</span>.areaCode,<span style="color: #1c86ee;">self</span>.exchange,<span style="color: #1c86ee;">self</span>.line)
 
-    def test():
-        newNumber=raw_input("Enter phone number in the form. (123) 456-7890: \n")
-        phone=PhoneNumber(newNumber)
-        print "The phone number is:"
-        print phone
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">test</span>():
+        <span style="color: #2e8b57;">newNumber</span>=<span style="color: #cd6600;">raw_input</span>(<span style="color: #8b7355;">"Enter phone number in the form. (123) 456-7890: \n"</span>)
+        <span style="color: #2e8b57;">phone</span>=PhoneNumber(newNumber)
+        <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"The phone number is:"</span>
+        <span style="color: #1c86ee;">print</span> phone
 
-if__name__=="__main__":
+if__name__==<span style="color: #8b7355;">"__main__"</span>:
          test()
 </pre>
 
@@ -163,19 +163,19 @@ print phone.__str_<sub>()</sub>
 </p>
 
 
-<pre class="example">class Study: 
-    def __cmp__(self, other): 
-        if other &gt; 0 : 
-            return 1 
-        elif other &lt; 0: 
-            return - 1 
-        else: 
-            return 0 
+<pre class="src src-python"><span style="color: #1c86ee;">class</span> <span style="color: #00688b;">Study</span>: 
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">__cmp__</span>(<span style="color: #1c86ee;">self</span>, other): 
+        <span style="color: #1c86ee;">if</span> other &gt; 0 : 
+            <span style="color: #1c86ee;">return</span> 1 
+        <span style="color: #1c86ee;">elif</span> other &lt; 0: 
+            <span style="color: #1c86ee;">return</span> - 1 
+        <span style="color: #1c86ee;">else</span>: 
+            <span style="color: #1c86ee;">return</span> 0 
 
-study = Study() 
-if study &gt; -10:print 'ok1' 
-if study &lt; -10:print 'ok2' 
-if study == 0:print 'ok3'
+<span style="color: #2e8b57;">study</span> = Study() 
+<span style="color: #1c86ee;">if</span> study &gt; -10:<span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">'ok1'</span> 
+<span style="color: #1c86ee;">if</span> study &lt; -10:<span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">'ok2'</span> 
+<span style="color: #1c86ee;">if</span> study == 0:<span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">'ok3'</span>
 </pre>
 
 <p>
@@ -195,17 +195,17 @@ if study == 0:print 'ok3'
 </p>
 
 
-<pre class="example">class Zoo: 
-    def __getitem__(self, key): 
-        if key == 'dog':return 'dog' 
-        elif key == 'pig':return  'pig' 
-        elif key == 'wolf':return 'wolf' 
-        else:return 'unknown' 
+<pre class="src src-python"><span style="color: #1c86ee;">class</span> <span style="color: #00688b;">Zoo</span>: 
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">__getitem__</span>(<span style="color: #1c86ee;">self</span>, key): 
+        <span style="color: #1c86ee;">if</span> key == <span style="color: #8b7355;">'dog'</span>:<span style="color: #1c86ee;">return</span> <span style="color: #8b7355;">'dog'</span> 
+        <span style="color: #1c86ee;">elif</span> key == <span style="color: #8b7355;">'pig'</span>:<span style="color: #1c86ee;">return</span>  <span style="color: #8b7355;">'pig'</span> 
+        <span style="color: #1c86ee;">elif</span> key == <span style="color: #8b7355;">'wolf'</span>:<span style="color: #1c86ee;">return</span> <span style="color: #8b7355;">'wolf'</span> 
+        <span style="color: #1c86ee;">else</span>:<span style="color: #1c86ee;">return</span> <span style="color: #8b7355;">'unknown'</span> 
 
 zoo = Zoo() 
-print zoo['dog'] 
-print zoo['pig'] 
-print zoo['wolf']
+<span style="color: #1c86ee;">print</span> zoo[<span style="color: #8b7355;">'dog'</span>] 
+<span style="color: #1c86ee;">print</span> zoo[<span style="color: #8b7355;">'pig'</span>] 
+<span style="color: #1c86ee;">print</span> zoo[<span style="color: #8b7355;">'wolf'</span>]
 </pre>
 
 <p>
@@ -222,14 +222,14 @@ print zoo['wolf']
 </p>
 
 
-<pre class="example">class Zoo: 
-    def __setitem__(self, key, value): 
-        print 'key=%s,value=%s' % (key, value) 
+<pre class="src src-python"><span style="color: #1c86ee;">class</span> <span style="color: #00688b;">Zoo</span>: 
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">__setitem__</span>(<span style="color: #1c86ee;">self</span>, key, value): 
+        <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">'key=%s,value=%s'</span> % (key, value) 
 
-zoo = Zoo() 
-zoo['a'] = 'a' 
-zoo['b'] = 'b' 
-zoo['c'] = 'c'
+<span style="color: #2e8b57;">zoo</span> = Zoo() 
+<span style="color: #2e8b57;">zoo</span>[<span style="color: #8b7355;">'a'</span>] = <span style="color: #8b7355;">'a'</span> 
+<span style="color: #2e8b57;">zoo</span>[<span style="color: #8b7355;">'b'</span>] = <span style="color: #8b7355;">'b'</span> 
+<span style="color: #2e8b57;">zoo</span>[<span style="color: #8b7355;">'c'</span>] = <span style="color: #8b7355;">'c'</span>
 </pre>
 
 <p>
@@ -251,12 +251,12 @@ key=c,value=c <br/>
 </p>
 
 
-<pre class="example">class A: 
-    def __delitem__(self, key): 
-        print 'delete item:%s' %key 
+<pre class="src src-python"><span style="color: #1c86ee;">class</span> <span style="color: #00688b;">A</span>: 
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">__delitem__</span>(<span style="color: #1c86ee;">self</span>, key): 
+        <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">'delete item:%s'</span> %key 
 
-a = A() 
-del a['key'] 
+<span style="color: #2e8b57;">a</span> = A() 
+<span style="color: #1c86ee;">del</span> a[<span style="color: #8b7355;">'key'</span>] 
 </pre>
 
 </div>
