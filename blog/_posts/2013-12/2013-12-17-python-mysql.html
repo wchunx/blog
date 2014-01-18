@@ -128,7 +128,7 @@ sudo apt-get install python-mysqldb
         passwd=<span style="color: #8b7355;">'123456'</span>)
 <span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#33719;&#21462;&#36830;&#25509;&#30340;cursor&#65292;&#21482;&#26377;&#33719;&#21462;&#20102;cursor&#65292;&#25105;&#20204;&#25165;&#33021;&#36827;&#34892;&#21508;&#31181;&#25805;&#20316;</span>
 <span style="color: #2e8b57;">cur</span> = con.cursor()
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#21019;&#24314;&#19968;&#20010;&#25968;&#25454;&#24211;vm_db.  </span>
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#21019;&#24314;&#19968;&#20010;&#25968;&#25454;&#24211;vm_db.</span><span style="background-color: #ffd700;">  </span>
 cur.execute(<span style="color: #8b7355;">"create database if not exists vm_db"</span>)
 <span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#36827;&#20837;vm_db</span>
 con.select_db(<span style="color: #8b7355;">'vm_db'</span>);
@@ -176,18 +176,18 @@ con.select_db(<span style="color: #8b7355;">'vm_db'</span>)
 <span style="color: #1c86ee;">print</span> result
 <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">'name:%s id:%s'</span> % result
 
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#33719;&#21462;5&#26465;&#35760;&#24405;&#65292;&#27880;&#24847;&#30001;&#20110;&#20043;&#21069;&#25191;&#34892;&#26377;&#20102;fetchone()&#65292;&#25152;&#20197;&#28216;&#26631;&#24050;&#32463;&#25351;&#21040;&#31532;&#20108;&#26465;&#35760;&#24405;&#20102;&#65292;&#20063;&#23601;&#26159;&#20174;&#31532;&#20108;&#26465;&#24320;&#22987;&#30340;&#25152;&#26377;&#35760;&#24405;  </span>
-<span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"&#33719;&#21462;5&#26465;&#35760;&#24405;:"</span>  
-<span style="color: #2e8b57;">results</span> = cur.fetchmany(5)  
-<span style="color: #1c86ee;">for</span> r <span style="color: #1c86ee;">in</span> results:  
-    <span style="color: #1c86ee;">print</span> r  
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#33719;&#21462;5&#26465;&#35760;&#24405;&#65292;&#27880;&#24847;&#30001;&#20110;&#20043;&#21069;&#25191;&#34892;&#26377;&#20102;fetchone()&#65292;&#25152;&#20197;&#28216;&#26631;&#24050;&#32463;&#25351;&#21040;&#31532;&#20108;&#26465;&#35760;&#24405;&#20102;&#65292;&#20063;&#23601;&#26159;&#20174;&#31532;&#20108;&#26465;&#24320;&#22987;&#30340;&#25152;&#26377;&#35760;&#24405;</span><span style="background-color: #ffd700;">  </span>
+<span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"&#33719;&#21462;5&#26465;&#35760;&#24405;:"</span><span style="background-color: #ffd700;">  </span>
+<span style="color: #2e8b57;">results</span> = cur.fetchmany(5)<span style="background-color: #ffd700;">  </span>
+<span style="color: #1c86ee;">for</span> r <span style="color: #1c86ee;">in</span> results:<span style="background-color: #ffd700;">  </span>
+    <span style="color: #1c86ee;">print</span> r<span style="background-color: #ffd700;">  </span>
 
-<span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"&#33719;&#21462;&#25152;&#26377;&#32467;&#26524;:"</span>  
-<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#37325;&#32622;&#28216;&#26631;&#20301;&#32622;&#65292;0,&#20026;&#20559;&#31227;&#37327;&#65292;mode&#65309;absolute | relative,&#40664;&#35748;&#20026;relative,  </span>
+<span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">"&#33719;&#21462;&#25152;&#26377;&#32467;&#26524;:"</span><span style="background-color: #ffd700;">  </span>
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#37325;&#32622;&#28216;&#26631;&#20301;&#32622;&#65292;0,&#20026;&#20559;&#31227;&#37327;&#65292;mode&#65309;absolute | relative,&#40664;&#35748;&#20026;relative,</span><span style="background-color: #ffd700;">  </span>
 cur.scroll(0, mode=<span style="color: #8b7355;">'absolute'</span>)
 <span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#33719;&#21462;&#25152;&#26377;&#32467;&#26524;&#65292;&#23558;&#32467;&#26524;&#38598;(&#22810;&#32500;&#20803;&#32452;)&#23384;&#20837;results</span>
-<span style="color: #2e8b57;">results</span> = cur.fetchall()  
-<span style="color: #1c86ee;">for</span> r <span style="color: #1c86ee;">in</span> results:  
+<span style="color: #2e8b57;">results</span> = cur.fetchall()<span style="background-color: #ffd700;">  </span>
+<span style="color: #1c86ee;">for</span> r <span style="color: #1c86ee;">in</span> results:<span style="background-color: #ffd700;">  </span>
     <span style="color: #1c86ee;">print</span> r
 
 <span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#19981;&#25353;&#20803;&#32452;&#25171;&#21360;</span>

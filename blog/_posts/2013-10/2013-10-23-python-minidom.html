@@ -46,7 +46,7 @@ test.xml
 
 
 <pre class="src src-xml">&lt;?<span style="color: #1c86ee;">xml</span> <span style="color: #2e8b57;">version</span>=<span style="color: #8b7355;">"</span><span style="color: #8b7355;">1.0</span><span style="color: #8b7355;">"</span>?&gt;
-&lt;<span style="color: #cd9b1d;">doc</span>&gt; 
+&lt;<span style="color: #cd9b1d;">doc</span>&gt;<span style="background-color: #ffd700;"> </span>
   &lt;<span style="color: #cd9b1d;">branch1</span> <span style="color: #2e8b57;">name</span>=<span style="color: #8b7355;">"</span><span style="color: #8b7355;">one</span><span style="color: #8b7355;">"</span> <span style="color: #2e8b57;">num</span>=<span style="color: #8b7355;">"</span><span style="color: #8b7355;">001</span><span style="color: #8b7355;">"</span>&gt;
      beijing
   &lt;/<span style="color: #cd9b1d;">branch1</span>&gt;
@@ -69,7 +69,7 @@ test.xml
 
 
 
-<pre class="src src-python"><span style="color: #1c86ee;">import</span> xml.dom.minidom <span style="color: #1c86ee;">as</span> minidom 
+<pre class="src src-python"><span style="color: #1c86ee;">import</span> xml.dom.minidom <span style="color: #1c86ee;">as</span> minidom<span style="background-color: #ffd700;"> </span>
 </pre>
 
 </div>
@@ -185,7 +185,7 @@ getElementsByTagName()可以搜索当前元素的所有子元素，包括所有�
 <pre class="src src-python">&gt;&gt;&gt; <span style="color: #1c86ee;">for</span> node <span style="color: #1c86ee;">in</span> root.childNodes:
 ...     <span style="color: #1c86ee;">if</span> node.nodeType == node.ELEMENT_NODE:
 ...             <span style="color: #1c86ee;">print</span> node.nodeName
-... 
+...<span style="background-color: #ffd700;"> </span>
 branch1
 branch2
 branch3

@@ -200,7 +200,7 @@ tcpdump <span style="color: #8b7355;">'ether dst ff:ff:ff:ff:ff:ff'</span>
 </p>
 
 
-<pre class="src src-sh">tcpdump <span style="color: #8b7355;">'ip src 192.168.240.69'</span> 
+<pre class="src src-sh">tcpdump <span style="color: #8b7355;">'ip src 192.168.240.69'</span><span style="background-color: #ffd700;"> </span>
 </pre>
 
 </div>
@@ -218,8 +218,8 @@ tcpdump <span style="color: #8b7355;">'ether dst ff:ff:ff:ff:ff:ff'</span>
 </p>
 
 
-<pre class="src src-sh">tcpdump <span style="color: #8b7355;">'tcp dst port 80'</span> 
-wget http://www.baidu.com 2&gt;1 &gt;/dev/null &amp; sudo tcpdump -c 5 <span style="color: #8b7355;">'tcp port 80'</span> 
+<pre class="src src-sh">tcpdump <span style="color: #8b7355;">'tcp dst port 80'</span><span style="background-color: #ffd700;"> </span>
+wget http://www.baidu.com 2&gt;1 &gt;/dev/null &amp; sudo tcpdump -c 5 <span style="color: #8b7355;">'tcp port 80'</span><span style="background-color: #ffd700;"> </span>
 </pre>
 
 </div>
@@ -236,7 +236,7 @@ wget http://www.baidu.com 2&gt;1 &gt;/dev/null &amp; sudo tcpdump -c 5 <span sty
 
 <pre class="src src-sh"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#26597;&#30475;DNS&#25968;&#25454;&#21253;</span>
 tcpdump <span style="color: #8b7355;">'upd port 53'</span>
-ping -c 1 www.baidu.com &gt; /dev/null&amp; sudo tcpdump -p udp port 53 
+ping -c 1 www.baidu.com &gt; /dev/null&amp; sudo tcpdump -p udp port 53<span style="background-color: #ffd700;"> </span>
 </pre>
 
 </div>

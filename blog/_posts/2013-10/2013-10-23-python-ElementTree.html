@@ -147,17 +147,17 @@ attrib:节点属性，通常为字典类型 {'hash': '1cdf045c', 'name': 'testin
 <span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#19968;&#20010;&#33410;&#28857;&#30340;&#23383;&#33410;&#28857;&#24418;&#25104;&#19968;&#20010;&#21015;&#34920;&#65292;&#35775;&#38382;&#26681;&#33410;&#28857;&#30340;&#23376;&#33410;&#28857;</span>
 &gt;&gt;&gt; <span style="color: #1c86ee;">for</span> i <span style="color: #1c86ee;">in</span> <span style="color: #cd6600;">range</span>(0, <span style="color: #cd6600;">len</span>(root)):
 ...     <span style="color: #1c86ee;">print</span> root[i].tag, root[i].text, root[i].attrib
-... 
-branch1 
+...<span style="background-color: #ffd700;"> </span>
+branch1<span style="background-color: #ffd700;"> </span>
      beijing
    {<span style="color: #8b7355;">'num'</span>: <span style="color: #8b7355;">'001'</span>, <span style="color: #8b7355;">'name'</span>: <span style="color: #8b7355;">'one'</span>}
-branch2 
+branch2<span style="background-color: #ffd700;"> </span>
      {<span style="color: #8b7355;">'num'</span>: <span style="color: #8b7355;">'002'</span>, <span style="color: #8b7355;">'name'</span>: <span style="color: #8b7355;">'two'</span>}
 branch3 shanghai {}
 <span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">iter()&#26041;&#27861;&#21487;&#20197;&#33410;&#28857;&#36827;&#34892;&#28145;&#24230;&#36941;&#21382;&#65292;&#36941;&#21382;&#25152;&#26377;&#33410;&#28857;&#65292;&#21253;&#25324;&#33258;&#24049;&#65292;&#36820;&#22238;&#19968;&#20010;&#36845;&#20195;&#22120;&#23545;&#35937;</span>
 &gt;&gt;&gt; <span style="color: #1c86ee;">for</span> elem <span style="color: #1c86ee;">in</span> root.<span style="color: #cd6600;">iter</span>():
 ...     <span style="color: #1c86ee;">print</span> elem.tag,elem.attrib
-... 
+...<span style="background-color: #ffd700;"> </span>
 doc {}
 branch1 {<span style="color: #8b7355;">'num'</span>: <span style="color: #8b7355;">'001'</span>, <span style="color: #8b7355;">'name'</span>: <span style="color: #8b7355;">'one'</span>}
 branch2 {<span style="color: #8b7355;">'num'</span>: <span style="color: #8b7355;">'002'</span>, <span style="color: #8b7355;">'name'</span>: <span style="color: #8b7355;">'two'</span>}
@@ -165,17 +165,17 @@ sub-branch2 {<span style="color: #8b7355;">'name'</span>: <span style="color: #8
 branch3 {}
 <span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">iter()&#65292;&#36941;&#21382;&#26377;&#25351;&#23450;&#26631;&#31614;&#30340;&#33410;&#28857;</span>
 &gt;&gt;&gt; <span style="color: #1c86ee;">for</span> elem <span style="color: #1c86ee;">in</span> root.<span style="color: #cd6600;">iter</span>(tag=<span style="color: #8b7355;">'branch2'</span>):
-...     <span style="color: #1c86ee;">print</span> elem.tag, elem.attrib     
-... 
+...     <span style="color: #1c86ee;">print</span> elem.tag, elem.attrib<span style="background-color: #ffd700;">     </span>
+...<span style="background-color: #ffd700;"> </span>
 branch2 {<span style="color: #8b7355;">'num'</span>: <span style="color: #8b7355;">'002'</span>, <span style="color: #8b7355;">'name'</span>: <span style="color: #8b7355;">'two'</span>}
-&gt;&gt;&gt; 
+&gt;&gt;&gt;<span style="background-color: #ffd700;"> </span>
 <span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#21024;&#38500;&#33410;&#28857;,&#20004;&#31181;&#26041;&#27861;</span>
 &gt;&gt;&gt;root.remove(root[0])
 &gt;&gt;&gt;<span style="color: #1c86ee;">del</span> root[1]
 
 &gt;&gt;&gt; <span style="color: #1c86ee;">for</span> elem <span style="color: #1c86ee;">in</span> root:
 ...     <span style="color: #1c86ee;">print</span> elem
-... 
+...<span style="background-color: #ffd700;"> </span>
 &lt;Element <span style="color: #8b7355;">'branch2'</span> at 0xb6b5c5ac&gt;
 <span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">&#21024;&#38500;&#26576;&#33410;&#28857;&#19979;&#30340;&#25152;&#26377;&#23376;&#33410;&#28857;</span>
 &gt;&gt;&gt; root[0].clear()
@@ -232,7 +232,7 @@ root.getiterator()获取root和其下层全部子节点root,a,b,c,d的列表
 &gt;&gt;&gt; <span style="color: #1c86ee;">for</span> parent <span style="color: #1c86ee;">in</span> root.getiterator():
 ...     <span style="color: #1c86ee;">for</span> child <span style="color: #1c86ee;">in</span> parent:
 ...             <span style="color: #1c86ee;">print</span> (parent, child)
-... 
+...<span style="background-color: #ffd700;"> </span>
 (&lt;Element <span style="color: #8b7355;">'root'</span> at 0xb72541cc&gt;, &lt;Element <span style="color: #8b7355;">'one'</span> at 0xb725c18c&gt;)
 (&lt;Element <span style="color: #8b7355;">'root'</span> at 0xb72541cc&gt;, &lt;Element <span style="color: #8b7355;">'two'</span> at 0xb6b1adac&gt;)
 (&lt;Element <span style="color: #8b7355;">'root'</span> at 0xb72541cc&gt;, &lt;Element <span style="color: #8b7355;">'three'</span> at 0xb6b1e36c&gt;)

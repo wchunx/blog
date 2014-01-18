@@ -540,10 +540,10 @@ mutex.release()
 
 <span style="color: #1c86ee;">class</span> <span style="color: #00688b;">MyThread</span>(threading.Thread):
     <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">run</span>(<span style="color: #1c86ee;">self</span>):
-        <span style="color: #1c86ee;">global</span> num 
+        <span style="color: #1c86ee;">global</span> num<span style="background-color: #ffd700;"> </span>
         time.sleep(1)
 
-        <span style="color: #1c86ee;">if</span> mutex.acquire(1):  
+        <span style="color: #1c86ee;">if</span> mutex.acquire(1):<span style="background-color: #ffd700;">  </span>
             <span style="color: #2e8b57;">num</span> = num+1
             <span style="color: #2e8b57;">msg</span> = <span style="color: #1c86ee;">self</span>.name+<span style="color: #8b7355;">' set num to '</span>+<span style="color: #cd6600;">str</span>(num)
             <span style="color: #1c86ee;">print</span> msg
@@ -753,7 +753,7 @@ threading.Event可以使一个线程等待其他线程的通知。其内置了�
 
 <pre class="src src-sh">I am Thread-1,I will sleep ...
 I am Thread-2,I will sleep ...
-main thread sleep 3 seconds... 
+main thread sleep 3 seconds...<span style="background-color: #ffd700;"> </span>
 I am Thread-3,I will sleep ...
 I am Thread-1, I awake...
 I am Thread-2, I awake...

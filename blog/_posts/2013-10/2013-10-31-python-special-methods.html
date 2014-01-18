@@ -163,18 +163,18 @@ print phone.__str_<sub>()</sub>
 </p>
 
 
-<pre class="src src-python"><span style="color: #1c86ee;">class</span> <span style="color: #00688b;">Study</span>: 
-    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">__cmp__</span>(<span style="color: #1c86ee;">self</span>, other): 
-        <span style="color: #1c86ee;">if</span> other &gt; 0 : 
-            <span style="color: #1c86ee;">return</span> 1 
-        <span style="color: #1c86ee;">elif</span> other &lt; 0: 
-            <span style="color: #1c86ee;">return</span> - 1 
-        <span style="color: #1c86ee;">else</span>: 
-            <span style="color: #1c86ee;">return</span> 0 
+<pre class="src src-python"><span style="color: #1c86ee;">class</span> <span style="color: #00688b;">Study</span>:<span style="background-color: #ffd700;"> </span>
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">__cmp__</span>(<span style="color: #1c86ee;">self</span>, other):<span style="background-color: #ffd700;"> </span>
+        <span style="color: #1c86ee;">if</span> other &gt; 0 :<span style="background-color: #ffd700;"> </span>
+            <span style="color: #1c86ee;">return</span> 1<span style="background-color: #ffd700;"> </span>
+        <span style="color: #1c86ee;">elif</span> other &lt; 0:<span style="background-color: #ffd700;"> </span>
+            <span style="color: #1c86ee;">return</span> - 1<span style="background-color: #ffd700;"> </span>
+        <span style="color: #1c86ee;">else</span>:<span style="background-color: #ffd700;"> </span>
+            <span style="color: #1c86ee;">return</span> 0<span style="background-color: #ffd700;"> </span>
 
-<span style="color: #2e8b57;">study</span> = Study() 
-<span style="color: #1c86ee;">if</span> study &gt; -10:<span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">'ok1'</span> 
-<span style="color: #1c86ee;">if</span> study &lt; -10:<span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">'ok2'</span> 
+<span style="color: #2e8b57;">study</span> = Study()<span style="background-color: #ffd700;"> </span>
+<span style="color: #1c86ee;">if</span> study &gt; -10:<span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">'ok1'</span><span style="background-color: #ffd700;"> </span>
+<span style="color: #1c86ee;">if</span> study &lt; -10:<span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">'ok2'</span><span style="background-color: #ffd700;"> </span>
 <span style="color: #1c86ee;">if</span> study == 0:<span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">'ok3'</span>
 </pre>
 
@@ -195,16 +195,16 @@ print phone.__str_<sub>()</sub>
 </p>
 
 
-<pre class="src src-python"><span style="color: #1c86ee;">class</span> <span style="color: #00688b;">Zoo</span>: 
-    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">__getitem__</span>(<span style="color: #1c86ee;">self</span>, key): 
-        <span style="color: #1c86ee;">if</span> key == <span style="color: #8b7355;">'dog'</span>:<span style="color: #1c86ee;">return</span> <span style="color: #8b7355;">'dog'</span> 
-        <span style="color: #1c86ee;">elif</span> key == <span style="color: #8b7355;">'pig'</span>:<span style="color: #1c86ee;">return</span>  <span style="color: #8b7355;">'pig'</span> 
-        <span style="color: #1c86ee;">elif</span> key == <span style="color: #8b7355;">'wolf'</span>:<span style="color: #1c86ee;">return</span> <span style="color: #8b7355;">'wolf'</span> 
-        <span style="color: #1c86ee;">else</span>:<span style="color: #1c86ee;">return</span> <span style="color: #8b7355;">'unknown'</span> 
+<pre class="src src-python"><span style="color: #1c86ee;">class</span> <span style="color: #00688b;">Zoo</span>:<span style="background-color: #ffd700;"> </span>
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">__getitem__</span>(<span style="color: #1c86ee;">self</span>, key):<span style="background-color: #ffd700;"> </span>
+        <span style="color: #1c86ee;">if</span> key == <span style="color: #8b7355;">'dog'</span>:<span style="color: #1c86ee;">return</span> <span style="color: #8b7355;">'dog'</span><span style="background-color: #ffd700;"> </span>
+        <span style="color: #1c86ee;">elif</span> key == <span style="color: #8b7355;">'pig'</span>:<span style="color: #1c86ee;">return</span>  <span style="color: #8b7355;">'pig'</span><span style="background-color: #ffd700;"> </span>
+        <span style="color: #1c86ee;">elif</span> key == <span style="color: #8b7355;">'wolf'</span>:<span style="color: #1c86ee;">return</span> <span style="color: #8b7355;">'wolf'</span><span style="background-color: #ffd700;"> </span>
+        <span style="color: #1c86ee;">else</span>:<span style="color: #1c86ee;">return</span> <span style="color: #8b7355;">'unknown'</span><span style="background-color: #ffd700;"> </span>
 
-zoo = Zoo() 
-<span style="color: #1c86ee;">print</span> zoo[<span style="color: #8b7355;">'dog'</span>] 
-<span style="color: #1c86ee;">print</span> zoo[<span style="color: #8b7355;">'pig'</span>] 
+zoo = Zoo()<span style="background-color: #ffd700;"> </span>
+<span style="color: #1c86ee;">print</span> zoo[<span style="color: #8b7355;">'dog'</span>]<span style="background-color: #ffd700;"> </span>
+<span style="color: #1c86ee;">print</span> zoo[<span style="color: #8b7355;">'pig'</span>]<span style="background-color: #ffd700;"> </span>
 <span style="color: #1c86ee;">print</span> zoo[<span style="color: #8b7355;">'wolf'</span>]
 </pre>
 
@@ -222,13 +222,13 @@ zoo = Zoo()
 </p>
 
 
-<pre class="src src-python"><span style="color: #1c86ee;">class</span> <span style="color: #00688b;">Zoo</span>: 
-    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">__setitem__</span>(<span style="color: #1c86ee;">self</span>, key, value): 
-        <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">'key=%s,value=%s'</span> % (key, value) 
+<pre class="src src-python"><span style="color: #1c86ee;">class</span> <span style="color: #00688b;">Zoo</span>:<span style="background-color: #ffd700;"> </span>
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">__setitem__</span>(<span style="color: #1c86ee;">self</span>, key, value):<span style="background-color: #ffd700;"> </span>
+        <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">'key=%s,value=%s'</span> % (key, value)<span style="background-color: #ffd700;"> </span>
 
-<span style="color: #2e8b57;">zoo</span> = Zoo() 
-<span style="color: #2e8b57;">zoo</span>[<span style="color: #8b7355;">'a'</span>] = <span style="color: #8b7355;">'a'</span> 
-<span style="color: #2e8b57;">zoo</span>[<span style="color: #8b7355;">'b'</span>] = <span style="color: #8b7355;">'b'</span> 
+<span style="color: #2e8b57;">zoo</span> = Zoo()<span style="background-color: #ffd700;"> </span>
+<span style="color: #2e8b57;">zoo</span>[<span style="color: #8b7355;">'a'</span>] = <span style="color: #8b7355;">'a'</span><span style="background-color: #ffd700;"> </span>
+<span style="color: #2e8b57;">zoo</span>[<span style="color: #8b7355;">'b'</span>] = <span style="color: #8b7355;">'b'</span><span style="background-color: #ffd700;"> </span>
 <span style="color: #2e8b57;">zoo</span>[<span style="color: #8b7355;">'c'</span>] = <span style="color: #8b7355;">'c'</span>
 </pre>
 
@@ -251,12 +251,12 @@ key=c,value=c <br/>
 </p>
 
 
-<pre class="src src-python"><span style="color: #1c86ee;">class</span> <span style="color: #00688b;">A</span>: 
-    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">__delitem__</span>(<span style="color: #1c86ee;">self</span>, key): 
-        <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">'delete item:%s'</span> %key 
+<pre class="src src-python"><span style="color: #1c86ee;">class</span> <span style="color: #00688b;">A</span>:<span style="background-color: #ffd700;"> </span>
+    <span style="color: #1c86ee;">def</span> <span style="color: #cd9b1d;">__delitem__</span>(<span style="color: #1c86ee;">self</span>, key):<span style="background-color: #ffd700;"> </span>
+        <span style="color: #1c86ee;">print</span> <span style="color: #8b7355;">'delete item:%s'</span> %key<span style="background-color: #ffd700;"> </span>
 
-<span style="color: #2e8b57;">a</span> = A() 
-<span style="color: #1c86ee;">del</span> a[<span style="color: #8b7355;">'key'</span>] 
+<span style="color: #2e8b57;">a</span> = A()<span style="background-color: #ffd700;"> </span>
+<span style="color: #1c86ee;">del</span> a[<span style="color: #8b7355;">'key'</span>]<span style="background-color: #ffd700;"> </span>
 </pre>
 
 </div>
